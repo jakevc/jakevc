@@ -1,0 +1,11 @@
+---
+title: New GATK 4.0
+author: Jake VanCampen
+date: '2018-06-26'
+slug: new-gatk-4-0
+tags: [gatk, software, news, gccbosc]
+---
+
+
+## What's new in GATK 4.0 
+
