@@ -181,7 +181,7 @@ Hail is a genomic analysis framework for downstream analyses in jupyter notebook
 
 ### Best Practices Workflows 
 
-
+GATK 4.0 best practice workflows are hosted on [github](https://github.com/gatk-workflows/). 
 
 
 
