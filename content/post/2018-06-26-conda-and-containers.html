@@ -44,13 +44,17 @@ planemo conda_install seqtk_seq.xml
 . &lt;(planemo conda_env seqtk seqtk_seq.xml)
 
 planemo test seqtk_seq.xml </code></pre>
-<p>Look for the requirements using: - <code>planemo conda_search seqt</code> - conda search</p>
+<p>Look for the requirements using:
+- <code>planemo conda_search seqt</code>
+- conda search</p>
 <p>Add the requirement to the {tool}.xml with the <requirements></requirements> tag.</p>
 <p>test the tool using <code>planemo --lint</code></p>
 </div>
 <div id="writing-conda-recipes" class="section level2">
 <h2>Writing conda recipes</h2>
-<p>Two components: - meta.yml (metadata for the recipe) - build.sh (unix script that installs the files)</p>
+<p>Two components:
+- meta.yml (metadata for the recipe)
+- build.sh (unix script that installs the files)</p>
 <p>Metadata should contain tests that return 0 upon success.</p>
 <p>example (verify that the installation worked)</p>
 <pre><code>test:

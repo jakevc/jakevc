@@ -47,7 +47,8 @@ tags: [gatk, software, news, gccbosc]
 <h2>Workshop examples</h2>
 <p>The workshop bundle was downloaded from google drive:</p>
 <p><a href="https://drive.google.com/drive/folders/1U6Zm_tYn_3yeEgrD1bdxye4SXf5OseIt?usp=sharing" class="uri">https://drive.google.com/drive/folders/1U6Zm_tYn_3yeEgrD1bdxye4SXf5OseIt?usp=sharing</a></p>
-<p>Grab the docker image: <code>docker pull broadinstitute/gatk:4.0.5.1</code></p>
+<p>Grab the docker image:
+<code>docker pull broadinstitute/gatk:4.0.5.1</code></p>
 <p>Spin up the container, and mount the location of the data bundle inside the docker.</p>
 <p><code>docker run -v /path/gatk_data:/gatk/gatk_data -it broadinstitute/gatk:4.0.5.1</code></p>
 <p>GATK can be called by running <code>gatk</code> from the command line followed by the tool name, e.g.: <code>gatk HaplotypeCaller --help</code></p>
@@ -98,7 +99,8 @@ Tool returned:
 <h3>GCLOUD</h3>
 <p>To run the same command on a GCLOUD instance, because the docker image has the gcloud binary, we initalize the instance by typing:</p>
 <p><code>gcloud init</code></p>
-<p>then setup a jar cache so that the jar file doesn’t have to be re-uploaded: export GATK_GCS_STAGING=gs://gatk-jar-cache/</p>
+<p>then setup a jar cache so that the jar file doesn’t have to be re-uploaded:
+export GATK_GCS_STAGING=gs://gatk-jar-cache/</p>
 <p>The same command line can then be called on dataproc</p>
 <pre><code>gatk --java-options &quot;-Xmx6G&quot; MarkDuplicatesSpark \
   -R gs://gatk-workshops/GCCBOSC2018/ref/ref.fasta \
@@ -108,7 +110,8 @@ Tool returned:
   -- \ # spark library convention to setoff spark options
   --spark-runner GCS \
   --cluster [cluster name]</code></pre>
-<p>Notice the different paths, they point to where the data was copied to on google cloud. Geraldine talked about their use of google cloud for all their computing. All sequencing data is uploaded to the cloud as unstructured bams, and analyzed from there. Once data is generated it can be shunted to deep storage. All upload is free, download costs money.</p>
+<p>Notice the different paths, they point to where the data was copied to on google cloud.
+Geraldine talked about their use of google cloud for all their computing. All sequencing data is uploaded to the cloud as unstructured bams, and analyzed from there. Once data is generated it can be shunted to deep storage. All upload is free, download costs money.</p>
 </div>
 <div id="four-classes-of-variation" class="section level3">
 <h3>Four classes of variation</h3>
@@ -139,6 +142,6 @@ Tool returned:
 <div id="best-practices-workflows" class="section level3">
 <h3>Best Practices Workflows</h3>
 <p>GATK 4.0 best practice workflows are hosted on <a href="https://github.com/gatk-workflows/">github</a>.</p>
-<p>JVC</p>
+<pre><code>    JVC</code></pre>
 </div>
 </div>
