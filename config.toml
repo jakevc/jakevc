@@ -1,0 +1,52 @@
+baseurl = "/"
+languageCode = "en"
+title = "Jake VanCampen"
+theme = "kiss"
+# copyright = "&copy; <a href=\"https://github.com/ribice\"></a> 2017"
+disqusShortname = "jakevc"
+
+# Number of posts per page
+Paginate = 5
+enableRobotsTXT = true
+ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown", "_files$", "_cache$"]
+
+
+[params.assets]
+customCSS = ["css/custom.css"]
+
+[params.info]
+adsense = "" # Adsense ID (ID only, without ca-pub-)
+enableSocial = false # Adds OpenGraph and Twitter cards
+homeTitle = "" # Title for home page
+poweredby = true # Adds powered by Hugo and Kiss below Copyright section
+related = true # Includes related articles
+
+[params.opengraph.facebook]
+admins = [] # array of Facebook IDs
+appID = ""
+pageID = ""
+
+[params.opengraph.twitter]
+page = "jake_vancampen" # Twitter Page username. If not set, params.social.twitter will be used.
+
+[params.social]
+
+twitter = "jake_vancampen"
+github = "jakevc"
+email = "jake.vancampen7@gmail.com"
+linkedin = "jakevancampen"
+
+# about
+[params.sections_left]
+"/about" = "About"
+
+[params.matomoAnalytics]
+siteID = 1
+rootURL = "//matomo.example.com/"
+
+[taxonomies]
+tag ="tags"
+
+[blackfriday]
+hrefTargetBlank = true
+

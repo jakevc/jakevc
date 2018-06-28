@@ -1,0 +1,9 @@
+---
+title: commmon workflow language
+author: Jake VanCampen
+date: '2018-06-26'
+slug: commmon-workflow-language
+categories: []
+tags:
+  - CWL
+---

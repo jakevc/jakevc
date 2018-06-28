@@ -1,0 +1,148 @@
+---
+title: Intro to galaxy1
+author: Jake VanCampen
+date: '2018-06-25'
+slug: intro-to-galaxy1
+categories: []
+tags:
+  - GCCBOSC
+  - galaxy
+  - open_source
+---
+
+
+# Into to Galaxy Admin
+
+## Using Ansible to setup a Galaxy 
+
+What is ansible:
+
+  - Automation of tool config and computer management. 
+  - multi-node software dev, ad-hoc task execution, configurmation managemnet.
+
+Why: 
+  - avoid forgetting what you did to install and configure some software
+  - codify knowledge about system 
+  - "make infastructure programmable"
+
+Ansible features: 
+  - easy to learn (YAML playbooks, jinja2 templates, INI inventory )
+  - sequential execution
+  
+Ansible scripts are called playbooks, written as yaml files, can be structured in folder hierarchy with mnay available modules. 
+
+
+## Install Galaxy with ansible:
+  
+To use GalaxyKickStart (GKS) playbook, we need to get a local copy by cloning the repo, and installing using the requirements_roles.yml
+
+```
+sudo pip install ansible
+git clone https://github.com/ARTbio/GalaxyKickStart
+cd GalaxyKickStart
+git checkout 2018-gccbosc
+ansible-galaxy install -r requirements_roles.yml -p roles --force
+```
+
+You will see output similar to the following:
+
+```
+TASK [galaxyprojectdotorg.galaxy-extras : Yarn: Make sure package key is present] ***
+changed: [localhost]
+
+TASK [galaxyprojectdotorg.galaxy-extras : Yarn: Add Debian/Ubuntu package to sources list] ***
+changed: [localhost]
+
+TASK [galaxyprojectdotorg.galaxy-extras : Yarn: Install] ***********************
+changed: [localhost]
+
+RUNNING HANDLER [galaxyprojectdotorg.galaxy-extras : restart nginx] ************
+changed: [localhost]
+
+TASK [galaxyprojectdotorg.galaxy-tools : include] ******************************
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=119  changed=95   unreachable=0    failed=0   
+```
+
+Deter
+
+
+```
+ubuntu@2018-gcc-training-42:~/GalaxyKickStart$ sinfo
+PARTITION AVAIL  TIMELIMIT  NODES  STATE NODELIST
+debug*       up   infinite      1   idle 2018-gcc-training-42
+ubuntu@2018-gcc-training-42:~/GalaxyKickStart$ sudo supervisorctl status 
+autofs                           RUNNING   pid 3611, uptime 0:03:18
+cron                             STOPPED   Not started
+galaxy:galaxy_web                RUNNING   pid 3612, uptime 0:03:18
+munge                            RUNNING   pid 3604, uptime 0:03:18
+nginx                            RUNNING   pid 3606, uptime 0:03:18
+postgresql                       RUNNING   pid 3602, uptime 0:03:18
+pre_postgresql                   EXITED    Jun 25 05:22 PM
+proftpd                          RUNNING   pid 3610, uptime 0:03:18
+reports                          STOPPED   Not started
+slurmctld                        RUNNING   pid 3605, uptime 0:03:18
+slurmd                           RUNNING   pid 3607, uptime 0:03:18
+ubuntu@2018-gcc-training-42:~/GalaxyKickStart$ 
+
+```
+
+
+
+make yourself an admin 
+
+```
+ sudo su galaxy 
+```
+
+
+
+
+# Noon 
+
+## example 1,23 
+
+
+# afternooon 
+
+## Example 1,2,3 
+
+
+Connecting Galaxy to a compute cluster 
+
+- how to connect galaxy to a compute cluster 
+- what else can I do? 
+
+
+Why run jobs on a cluster? 
+- Will eventually hit a wall 
+- Running jobs on a cluster means you can eventually
+
+
+
+Debug with 
+
+iostat
+gdb
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
