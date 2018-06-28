@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Software on Jake VanCampen</title>
+    <link>/tags/software/</link>
+    <description>Recent content in Software on Jake VanCampen</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 26 Jun 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/software/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>New GATK 4.0</title>
+      <link>/post/new-gatk-4-0/</link>
+      <pubDate>Tue, 26 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/new-gatk-4-0/</guid>
+      <description>What’s new in GATK 4.0  Catered to illumina short read sequencing Pre-processing, variant analysis. Goal is to identify variation between genomes  GATK 4.0 was rewritten from scratch for dramatic performance improvements and new functional capabilities such as:
+ structural variant detection advanced machine learning techniques best-practice workflows All Picard tools bundled in GATK executable  Speed optimizations  Intel genomics kernal library (GKL) increased spead and hardware optimizations.</description>
+    </item>
+    
+  </channel>
+</rss>
