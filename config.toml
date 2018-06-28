@@ -1,7 +1,6 @@
 baseurl = "/"
 languageCode = "en"
 title = "Jake VanCampen"
-theme = "kiss"
 # copyright = "&copy; <a href=\"https://github.com/ribice\"></a> 2017"
 disqusShortname = "jakevc"
 
