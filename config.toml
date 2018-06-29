@@ -3,6 +3,9 @@ languageCode = "en"
 title = "Jake VanCampen"
 # copyright = "&copy; <a href=\"https://github.com/ribice\"></a> 2017"
 disqusShortname = "jakevc"
+theme = "kiss"
+relaltiveurls=true
+connonifyurls=false
 
 # Number of posts per page
 Paginate = 5
