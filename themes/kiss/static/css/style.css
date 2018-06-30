@@ -158,7 +158,7 @@ td img {
 pre,
 pre code {
   background-color: #f5f7fa;
-  color: #42464c;
+  color: #070707;
 }
 *,
 :after,
@@ -299,7 +299,7 @@ pre {
   line-height: 1.25;
 }
 body {
-  color: #42464c;
+  color: #070707;
   font-size: 1rem;
   line-height: 1.428571428571429;
 }
@@ -1158,13 +1158,14 @@ a.box:active {
 .content ul:not(:last-child) {
   margin-bottom: 1em;
 }
+/* Markdown headers */
 .content h1,
 .content h2,
 .content h3,
 .content h4,
 .content h5,
 .content h6 {
-  color: #b52323;
+  color: #070707;
   font-weight: 300;
   margin-bottom: 20px;
 }

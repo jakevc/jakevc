@@ -11,6 +11,7 @@
 {{ if .Site.Params.Info.enableSocial }}
 {{- partial "social/opengraph" . -}}
 {{ end }}
+<link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
 <link rel="stylesheet" href="{{ "css/style.css" | relURL }}"/>
 {{- range .Site.Params.Assets.customCSS -}}
 <link rel='stylesheet' href='{{ . | absURL }}'>

@@ -32,7 +32,8 @@ linkedin = "jakevancampen"
 
 # about
 [params.sections_left]
-"/about" = "About"
+"/bio" = "Bio"
+"/cv" = "CV"
 
 [taxonomies]
 tag ="tags"
