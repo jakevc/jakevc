@@ -24,14 +24,28 @@ Graduate Researcher (Genomics) - Stowers Institute for Medical Research - (04/20
   
 **Skills**
 
-Languages: 
+Languages: `Python` `R` `bash` `git`
 
-  - Python 
-  - R
-  - Bash
-  - git
   
+**CONFERENCES AND PRESENTATIONS**
 
+> VanCampen J., Norris B., Claridge S.E., Simons N.D., Ting N., Eick G., Sterner K.N. De novo
+miRNA prediction in the Ugandan red colobus genome reveals miRNAs unique to SIV
+non-progressors. Genomics in Action, University of Oregon, 2018.
+
+> Technical Session Assistant at the ACS Green Chemistry conference. Portland, OR. July
+2016.
+
+> VanCampen J., Rodriguez M. 2016. Spectroscopic investigation
+of HCl and DCl gas: vibrational dynamics and isotopic comparison. University of Portland
+undergraduate poster session. April, 2016.
+
+> VanCampen J., Hoffman A. 2015. Anti-hyaluronidase activity of various methanolic plant
+extracts and implications in neurodegenerative repair. Poster # CHED 1132
+
+> American Chemical Society National Meeting. San Diego, CA. March 2016.
+VanCampen J., Hoffman A. Anti-hyaluronidase activity of various methanolic plant
+extracts, and implications in neurodegenerative repair. Presented at the M.
   
 
 
