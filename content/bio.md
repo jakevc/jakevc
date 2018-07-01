@@ -6,7 +6,7 @@ permalink: /about/
 
 ![headshot!](/img/headshot.jpg#r)
 
-I work as a bioinformatics researcher in the genomics core at the Stowers Institute for Medical Research. I am passionate about applying computational tools to biological questions. I am interested in providing reproducible solutions to biological data analysis, for example: I like to use well-maintained workflow management systems such as [Snakemake](https://snakemake.readthedocs.io/en/stable/), and git for version control.
+I work as a bioinformatics researcher in the Genomics core at the Stowers Institute for Medical Research. I am passionate about applying computational tools to biological questions. I am interested in providing reproducible solutions to biological data analysis, for example: I like to use well-maintained workflow management systems such as [Snakemake](https://snakemake.readthedocs.io/en/stable/), and git for version control.
 
 I am currently working on genomic investigation of three populations of *Astyanax mexicanus* with strikingly different morphologies. This work is being carried out in support of the primary investigator [Nicolas Rohner](https://www.stowers.org/faculty/rohner-lab).
 

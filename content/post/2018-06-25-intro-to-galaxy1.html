@@ -1,42 +1,33 @@
 ---
-title: Intro to galaxy1
+title: Intro to galaxy admin
 author: Jake VanCampen
 date: '2018-06-25'
-slug: intro-to-galaxy1
-categories: []
+slug: intro-to-galaxy
 tags:
-  - GCCBOSC
-  - galaxy
-  - open_source
+  - gccbosc
+  - usegalaxy
+  - ansible
 ---
 
 
 
-<div id="into-to-galaxy-admin" class="section level1">
-<h1>Into to Galaxy Admin</h1>
+<div id="into-to-galaxy-admin-morning" class="section level1">
+<h1>Into to Galaxy Admin – Morning</h1>
 <div id="using-ansible-to-setup-a-galaxy" class="section level2">
 <h2>Using Ansible to setup a Galaxy</h2>
-<p>What is ansible:</p>
-<ul>
-<li>Automation of tool config and computer management.</li>
-<li>multi-node software dev, ad-hoc task execution, configurmation managemnet.</li>
-</ul>
-<p>Why:
-- avoid forgetting what you did to install and configure some software
-- codify knowledge about system
-- “make infastructure programmable”</p>
-<p>Ansible features:
-- easy to learn (YAML playbooks, jinja2 templates, INI inventory )
-- sequential execution</p>
-<p>Ansible scripts are called playbooks, written as yaml files, can be structured in folder hierarchy with mnay available modules.</p>
+<p>Ansible is an automated computer management system that can be used to install and configure software infastructure. Ansible scripts are called playbooks, written as yaml files, can be structured in folder hierarchy with mnay available modules.</p>
+<p>Why: - avoid forgetting what you did to install and configure some software - codify knowledge about system - “make infastructure programmable”</p>
+<p>Ansible features: - easy to learn (YAML playbooks, jinja2 templates, INI inventory ) - sequential execution</p>
 </div>
 <div id="install-galaxy-with-ansible" class="section level2">
 <h2>Install Galaxy with ansible:</h2>
-<p>To use GalaxyKickStart (GKS) playbook, we need to get a local copy by cloning the repo, and installing using the requirements_roles.yml</p>
+<p>Exercise using ansible to install Galaxy <a href="https://github.com/galaxyproject/dagobah-training/blob/2018-gccbosc/sessions/14-ansible/ex2-galaxy-ansible.md">here</a>.</p>
+<p>Install the GalaxyKickStart (GKS) playbook onto a server or VM by cloning the repo, and installing using the requirements_roles.yml. The GKS playbook is a pre-configured playbook for configuration of an operating-system independent, standard galaxy server.</p>
 <pre><code>sudo pip install ansible
 git clone https://github.com/ARTbio/GalaxyKickStart
 cd GalaxyKickStart
 git checkout 2018-gccbosc
+# install all dependent roles
 ansible-galaxy install -r requirements_roles.yml -p roles --force</code></pre>
 <p>You will see output similar to the following:</p>
 <pre><code>TASK [galaxyprojectdotorg.galaxy-extras : Yarn: Make sure package key is present] ***
@@ -55,7 +46,81 @@ TASK [galaxyprojectdotorg.galaxy-tools : include] ******************************
 
 PLAY RECAP *********************************************************************
 localhost                  : ok=119  changed=95   unreachable=0    failed=0   </code></pre>
-<p>Deter</p>
+<p>Taking a look at the playbook <code>galaxy.yml</code> we see it contains many roles that sequentially execute to produce the desired structure. We can make our own set of variables in <code>group_vars/gccbosc18.yml</code>, only including those variables that will override the default values of <code>group_vars/all</code>. E.g.</p>
+<pre><code>galaxy_root_dir: /srv/galaxy
+galaxy_server_dir: &quot;{{ galaxy_root_dir }}/server&quot;
+galaxy_venv_dir: &quot;{{ galaxy_root_dir }}/venv&quot;
+galaxy_mutable_data_dir: &quot;{{ galaxy_data }}&quot;
+proftpd_files_dir: &quot;{{ galaxy_data }}/ftp&quot;
+galaxy_config_dir: &quot;{{ galaxy_root_dir }}/config&quot;
+galaxy_mutable_config_dir: &quot;{{ galaxy_config_dir }}&quot;
+galaxy_shed_tools_dir: &quot;{{ galaxy_root_dir }}/shed_tools&quot;
+galaxy_tool_dependency_dir: &quot;{{ galaxy_root_dir }}/dependencies&quot;
+tool_dependency_dir: &quot;{{ galaxy_tool_dependency_dir }}&quot;
+galaxy_job_conf_path: &quot;{{ galaxy_config_dir }}/job_conf.xml&quot;
+galaxy_job_metrics_conf_path: &quot;{{ galaxy_config_dir }}/job_metrics_conf.xml&quot;
+nginx_upload_store_path: &quot;{{ galaxy_data }}/upload_store&quot;
+tool_data_table_config_path: &quot;{{ galaxy_config_dir }}/tool_data_table_conf.xml,/cvmfs/data.galaxyproject.org/managed/location/tool_data_table_conf.xml&quot;
+len_file_path: &quot;{{ galaxy_config_dir }}/len&quot;
+galaxy_log_dir: &quot;{{ galaxy_root_dir }}/log&quot;
+supervisor_slurm_config_dir: &quot;{{ galaxy_log_dir }}&quot;
+
+galaxy_manage_trackster: False
+galaxy_extras_config_cvmfs: True
+galaxy_restart_handler_enabled: True
+galaxy_mule_handlers: True
+galaxy_handler_processes: 1
+
+galaxy_config_style: yaml
+galaxy_config_file: &quot;{{ galaxy_config_dir }}/galaxy.yml&quot;
+
+galaxy_config:
+  galaxy:
+    database_connection: &quot;{{ galaxy_db }}&quot;
+    file_path: &quot;{{ galaxy_data }}/datasets&quot;
+    new_file_path: &quot;{{ galaxy_data }}/tmp&quot;
+    galaxy_data_manager_data_path: &quot;{{ galaxy_data }}/tool-data&quot;
+    job_config_file: &quot;{{ galaxy_job_conf_path }}&quot;
+    ftp_upload_dir: &quot;{{ proftpd_files_dir }}&quot;
+    ftp_upload_site: ftp://[server IP address]
+    tool_data_table_config_path: &quot;{{ tool_data_table_config_path }}&quot;
+    len_file_path: &quot;{{ len_file_path }}&quot;
+    check_migrate_tools: False
+  uwsgi:
+    module: galaxy.webapps.galaxy.buildapp:uwsgi_app()
+    logfile-chmod: 644
+
+
+additional_files_list:
+  - { src: &quot;extra-files/galaxy-kickstart/logo.png&quot;, dest: &quot;{{ galaxy_server_dir }}/static/images/&quot; }
+  - { src: &quot;extra-files/tool_sheds_conf.xml&quot;, dest: &quot;{{ galaxy_config_dir }}&quot; }
+  - { src: &quot;extra-files/cloud_setup/vimrc&quot;, dest: &quot;/etc/vim/&quot; }</code></pre>
+<p>Then add the following code-chunk to the end of the <code>pre-tasks</code> section of the playbook in the toplevel <code>galaxy.yml</code>.</p>
+<pre><code>  - name: Create galaxy system user
+      user:
+        name: &quot;galaxy&quot;
+        home: &quot;/srv/galaxy&quot;
+        skeleton: &quot;/etc/skel&quot;
+        shell: &quot;/bin/bash&quot;
+        system: yes
+      tags:
+          - always</code></pre>
+<p>This creates the local system user. Then the follwoing lines were added to a new inventory file:</p>
+<pre><code>[gccbosc18]
+localhost ansible_connection=local</code></pre>
+<p>Now running <code>ansible-playbook -i inventory galaxy.yml --tags &quot;install_galaxy,install_extras&quot;</code> will run the playbook and install everything in it’s desired locaiton (~20min).</p>
+<ul>
+<li><code>sudo supervisorctl status</code> lists all programs</li>
+<li><code>sudo supervisorctl restart galaxy:</code> restarts the server with new variables if anything is changed in <code>/srv/galaxy/config/</code>.</li>
+</ul>
+<p>You can add yourself as a user, so you see an Admin tab on your running server:</p>
+<pre><code>$ sudo su galaxy
+$ vi /srv/galaxy/config/galaxy.yml
+# Add the following line under galaxy: section
+    admin_users: your@email.address
+$ exit  # change back to ubuntu user
+$ sudo supervisorctl restart galaxy:</code></pre>
+<p>Determine what is running:</p>
 <pre><code>ubuntu@2018-gcc-training-42:~/GalaxyKickStart$ sinfo
 PARTITION AVAIL  TIMELIMIT  NODES  STATE NODELIST
 debug*       up   infinite      1   idle 2018-gcc-training-42
@@ -73,30 +138,63 @@ slurmctld                        RUNNING   pid 3605, uptime 0:03:18
 slurmd                           RUNNING   pid 3607, uptime 0:03:18
 ubuntu@2018-gcc-training-42:~/GalaxyKickStart$ 
 </code></pre>
-<p>make yourself an admin</p>
-<pre><code> sudo su galaxy </code></pre>
+<p>More about galaxy and ansible is found by searching ansible on the galaxy <a href="https://github.com/galaxyproject">github</a>.</p>
+<p>Summary:</p>
+<p>Galaxy setup can be continerized and reprodicible. Ansible provides the tools to be able to write your setup as a recipe, and easily manage config in YAML format.</p>
+<p>More: <a href="https://github.com/galaxyproject/dagobah-training/blob/2018-gccbosc/sessions/06-extending-installation/ex1-proftpd.md">Configure FTP upload</a> | <a href="https://github.com/galaxyproject/dagobah-training/blob/2018-gccbosc/sessions/05-reference-genomes/ex1-reference-genomes.md#exercise-3-install-a-datamanager-from-the-toolshed">Reference data and Data Managers</a></p>
 </div>
 </div>
-<div id="noon" class="section level1">
-<h1>Noon</h1>
-<div id="example-123" class="section level2">
-<h2>example 1,23</h2>
+<div id="intro-to-galaxy-admin-noon" class="section level1">
+<h1>Intro to Galaxy Admin – Noon</h1>
+<div id="building-galaxy-tools-with-planemo" class="section level2">
+<h2>Building Galaxy tools with planemo</h2>
+<p>Planemo provides useful tools for testing and writing galaxy tools, a tutorial for writing a basic galaxy tools using a template can be found on the Planemo <a href="http://planemo.readthedocs.io/en/latest/writing_standalone.html">documenation</a>.</p>
+<p>In summary: The command <code>planemo tool_init</code> takes a variety of flags to auto-generate boilerplate XML for tool generation, tool files are just XML configuration files. Useful flags include <code>--example_command</code>, <code>--example_output</code>, and <code>--example_input</code>; passing values to these parameters includes them in the XML tool file.</p>
+<p>Once the tools is built out well, you can test the validity of the tool file by panemo lint: <code>planemo l [tool.xml]</code>. The tool can be tested using plantemo test: <code>planemo t [tool.xml]</code>, will output if the test passed or failed. Then you can <strong>serve</strong> the new tool to Galaxy to view it <code>planemo s</code>. There are many more ways to tweak the tool XML for additional functionality such as wrapping custom scripts. Planemo provides a nice way to establish a tool development workflow, if that’s what you are into.</p>
+</div>
+<div id="run-tools-in-containers" class="section level2">
+<h2>Run tools in containers</h2>
+<p>If your Galaxy install already has a local Docker image you can instruct a tool to be run in a container by setting it’s destination as docker in <code>/srv/galaxy/config/job_conf.xml</code>:</p>
+<pre><code>&lt;tools&gt;
+   &lt;tool id=&quot;jq&quot; destination=&quot;local_docker&quot;/&gt;
+&lt;/tools&gt;</code></pre>
+<p>You must also enable containers in <code>galaxy.yml</code>:</p>
+<pre><code>galaxy:
+    enable_beta_mulled_containers: true</code></pre>
+<p>, and make sure that the correct docker image has been pulled in this case for the <code>jq</code> tool:</p>
+<pre><code>$ sudo docker images
+REPOSITORY                 TAG                 IMAGE ID            CREATED             SIZE
+quay.io/biocontainers/jq   1.5--4              1fe0f3d31487        7 weeks ago         15.6MB</code></pre>
 </div>
 </div>
-<div id="afternooon" class="section level1">
-<h1>afternooon</h1>
-<div id="example-123-1" class="section level2">
-<h2>Example 1,2,3</h2>
-<p>Connecting Galaxy to a compute cluster</p>
+<div id="intro-to-galaxy-admin-afternoon" class="section level1">
+<h1>Intro to Galaxy Admin – Afternoon</h1>
+<div id="send-tool-jobs-to-compute-cluster" class="section level2">
+<h2>Send tool jobs to compute cluster</h2>
+<p>Galaxy can be setup to send jobs to SLURM, instructions for the setup are at the top of this <a href="http://galaxyproject.github.io/training-material/topics/admin/tutorials/connect-to-compute-cluster/tutorial.html">document</a>. Once that is setup, tools can be configured to use multiple cores by editing the tool configuration file <code>/srv/galaxy/config/tool_conf.xml</code>. You have to make sure galaxy knows which tool config file you are using by editing the <code>/srv/galaxy/config/galaxy.yml</code> to include the correct path:</p>
+<pre><code>galaxy:
+    tool_config_file: /srv/galaxy/config/tool_conf.xml,/srv/galaxy/config/shed_tool_conf.xml</code></pre>
+<p>You can specify destinations to map tools to in <code>tool_conf.xml</code>, for example, a slurm destnation:</p>
+<pre><code>&lt;destination id=&quot;slurm-2c&quot; runner=&quot;slurm&quot;&gt;
+    &lt;param id=&quot;nativeSpecification&quot;&gt;--nodes=1 --ntasks=2&lt;/param&gt;
+&lt;/destination&gt;</code></pre>
+<p>Then map the tool to this destination in the same file by:</p>
+<pre><code>&lt;tools&gt;
+   &lt;tool id=[tool id] destination=&quot;slurm-2c&quot;/&gt;
+&lt;/tools&gt;</code></pre>
+<p>You can also specify dynamic tool destinations by creating a <code>/srv/galaxy/config/tool_destinations.yml</code>. This file allows you to specify dynamic destinations, for example if the dataset is greater than a certain size, send to multi-core destination, else send to single-core destination.</p>
+</div>
+<div id="expanding-galaxy-file-space" class="section level2">
+<h2>Expanding galaxy file space</h2>
+<p><a href="https://github.com/galaxyproject/dagobah-training/blob/2018-gccbosc/sessions/19-storage/ex1-objectstore.md#section-1---hierarchical-object-store">Hierarchical Object storage</a> allows you direct newer datasets to a different place on disk by creating and <code>object_store_config.xml</code> that is pointed to in <code>galaxy.yml</code>.</p>
+<p><a href="https://github.com/galaxyproject/dagobah-training/blob/2018-gccbosc/sessions/19-storage/ex1-objectstore.md#section-2---distributed-object-store">Distributed Object storage</a> could instead be used to defer datsets to different locations with different weights, for example you can configure a <code>newdata</code> location to get 3 times more than an <code>newnewdata</code> location.</p>
+</div>
+</div>
+<div id="end" class="section level1">
+<h1>End</h1>
+<p>The full training course for galaxy admin, and other galaxy training can be found at:</p>
 <ul>
-<li>how to connect galaxy to a compute cluster</li>
-<li>what else can I do?</li>
+<li><a href="https://github.com/galaxyproject/dagobah-training">dagobah training</a></li>
+<li><a href="https://galaxyproject.github.io/training-material/">galaxy training</a></li>
 </ul>
-<p>Why run jobs on a cluster?
-- Will eventually hit a wall
-- Running jobs on a cluster means you can eventually</p>
-<p>Debug with</p>
-<p>iostat
-gdb</p>
-</div>
 </div>

@@ -11,31 +11,21 @@ tags:
 
 
 
-## Conda and Containers
-
+# Conda and Containers
 
 Planemo [documentation](https://planemo.readthedocs.io/en/latest/appliance.html) 
 
-
 Galaxy dependencies are resolved by dependency resolvers (conda). Conda **recipes** build **packages** that are published to **chanels**. 
 
-
-Conda Features for galaxy: 
-
-Conda manages multiple versions maybe better than brew, apt. 
-
-YAML and shell recipes. Annotated source packages provides better reproducibility. 
-
+For Galacy, Conda manages multiple versions maybe better than brew, apt. YAML and shell recipes. Annotated source packages provides better reproducibility. 
 
 Why not just use docker? 
 
   - Singularity has been a solution for those that don't want to just run docker. 
   
-
 Best Practice Channels 
 
   - iuc, bioconda, conda-forge, defaults
-  
   
 To use conda outside Planemo: 
 
@@ -46,7 +36,6 @@ In an isolated env:
   - `conda create -n yaml pyyaml && source activate yaml` 
   
   
-
 Planemo provides tool-centric use of conda dependencies, i.e. for galaxy tool dev.
 
 ```
@@ -71,9 +60,7 @@ Add the requirement to the {tool}.xml with the <requirements></requirements> tag
 test the tool using `planemo --lint`
 
 
-
 ## Writing conda recipes
-
 
 Two components: 
   - meta.yml (metadata for the recipe) 
@@ -98,10 +85,24 @@ make
 make install
 ```
 
-
 Conda recipe skeletons provide guidelines for writing conda packages
 
 `conda skeleton {pypi, cran}`
+
+
+# Common Workflow Language
+
+Common Workflow Language is a way to wrap tools and workflows in a very user-friendly way.
+  - Abstracted and high level. 
+  - Rabix composer GUI
+  - Support for containers, nested workflows. 
+  - I would rather use snakemake
+  
+
+  
+
+
+
 
 
 

@@ -11,13 +11,11 @@ tags:
 
 
 
-<div id="conda-and-containers" class="section level2">
-<h2>Conda and Containers</h2>
+<div id="conda-and-containers" class="section level1">
+<h1>Conda and Containers</h1>
 <p>Planemo <a href="https://planemo.readthedocs.io/en/latest/appliance.html">documentation</a></p>
 <p>Galaxy dependencies are resolved by dependency resolvers (conda). Conda <strong>recipes</strong> build <strong>packages</strong> that are published to <strong>chanels</strong>.</p>
-<p>Conda Features for galaxy:</p>
-<p>Conda manages multiple versions maybe better than brew, apt.</p>
-<p>YAML and shell recipes. Annotated source packages provides better reproducibility.</p>
+<p>For Galacy, Conda manages multiple versions maybe better than brew, apt. YAML and shell recipes. Annotated source packages provides better reproducibility.</p>
 <p>Why not just use docker?</p>
 <ul>
 <li>Singularity has been a solution for those that don’t want to just run docker.</li>
@@ -44,17 +42,12 @@ planemo conda_install seqtk_seq.xml
 . &lt;(planemo conda_env seqtk seqtk_seq.xml)
 
 planemo test seqtk_seq.xml </code></pre>
-<p>Look for the requirements using:
-- <code>planemo conda_search seqt</code>
-- conda search</p>
+<p>Look for the requirements using: - <code>planemo conda_search seqt</code> - conda search</p>
 <p>Add the requirement to the {tool}.xml with the <requirements></requirements> tag.</p>
 <p>test the tool using <code>planemo --lint</code></p>
-</div>
 <div id="writing-conda-recipes" class="section level2">
 <h2>Writing conda recipes</h2>
-<p>Two components:
-- meta.yml (metadata for the recipe)
-- build.sh (unix script that installs the files)</p>
+<p>Two components: - meta.yml (metadata for the recipe) - build.sh (unix script that installs the files)</p>
 <p>Metadata should contain tests that return 0 upon success.</p>
 <p>example (verify that the installation worked)</p>
 <pre><code>test:
@@ -67,4 +60,9 @@ make
 make install</code></pre>
 <p>Conda recipe skeletons provide guidelines for writing conda packages</p>
 <p><code>conda skeleton {pypi, cran}</code></p>
+</div>
+</div>
+<div id="common-workflow-language" class="section level1">
+<h1>Common Workflow Language</h1>
+<p>Common Workflow Language is a way to wrap tools and workflows in a very user-friendly way. - Abstracted and high level. - Rabix composer GUI - Support for containers, nested workflows. - I would rather use snakemake</p>
 </div>

@@ -1,0 +1,38 @@
+---
+title: "Curriculum Vitae"
+author: "Jake VanCampen"
+date: "7/1/2018"
+output: html_document
+---
+
+
+## Curriculum Vitae 
+
+**Education** 
+
+MS Bioinformatics and Genomics | University of Oregon | Expected Dec. 2018
+
+BS Biochemistry, ACS Certified | University of Portland | May 2017
+
+**Work Experience**
+
+Graduate Researcher (Genomics) - Stowers Institute for Medical Research - (04/2018-current)
+
+  - Perform Bioinformatic analyses in the Computational Biology/Genomics department.
+  - Utilize workflow management (snakemkae) and version control (git) for maximal reproducibility, and reusability of computational pipelines. 
+  
+  
+**Skills**
+
+Languages: 
+
+  - Python 
+  - R
+  - Bash
+  - git
+  
+
+  
+
+
+

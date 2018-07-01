@@ -20,7 +20,7 @@ GATK 4.0 was rewritten from scratch for dramatic performance improvements and ne
   - best-practice workflows
   - All Picard tools bundled in GATK executable
   
-### Speed optimizations
+## Speed optimizations
 
   - Intel genomics kernal library (GKL) increased spead and hardware optimizations. 
   
@@ -29,7 +29,7 @@ GATK 4.0 was rewritten from scratch for dramatic performance improvements and ne
   
   - Picard tools greatly benifit from Apache spark. 
   
-###  Pipeline Standardization 
+##  Pipeline Standardization 
   
 - Want to develope *functional equivalence* accross studies to eliminae batch effects
 - Reduce cost of pipeline 
@@ -60,7 +60,7 @@ Spin up the container, and mount the location of the data bundle inside the dock
 
 GATK can be called by running `gatk` from the command line followed by the tool name, e.g.: `gatk HaplotypeCaller --help`
 
-### GATK
+## GATK
 
 Run a full GATK4 command:
 
@@ -79,7 +79,7 @@ Runtime.totalMemory()=218103808
 ```
 
 
-### Picard
+## Picard
 
 Run a Picard Command! 
 
@@ -100,7 +100,7 @@ Tool returned:
 ```
 
 
-### Spark
+## Spark
 
 Run command with Spark multithreading: 
 
@@ -125,7 +125,7 @@ Two output files were created:
 The file extension .splitting-bai shows evidence of how spark may break up the bam file to execute on multiple cores.
 
 
-### GCLOUD 
+## GCLOUD 
 
 To run the same command on a GCLOUD instance, because the docker image has the gcloud binary, we initalize the instance by typing: 
 
@@ -152,7 +152,7 @@ Notice the different paths, they point to where the data was copied to on google
 Geraldine talked about their use of google cloud for all their computing. All sequencing data is uploaded to the cloud as unstructured bams, and analyzed from there. Once data is generated it can be shunted to deep storage. All upload is free, download costs money.
 
 
-### Four classes of variation 
+## Four classes of variation 
 
   - SNP/SNV
   - INDEL 
@@ -160,7 +160,7 @@ Geraldine talked about their use of google cloud for all their computing. All se
   - Structural Variation (SV) 
   
   
-#### Germline Short Variant Discovery 
+## Germline Short Variant Discovery 
 
   - pre-processing
   - per-sample variant calling
@@ -168,24 +168,22 @@ Geraldine talked about their use of google cloud for all their computing. All se
 New tool "Funcotator" will predict variant effects based on annotation files. 
 
 
-### WDL 
+## WDL 
 
 All best practices workflows are available at github.com/gatk-workflows, they are written in wdl. 
 
-### Firecloud 
+## Firecloud 
 
 Broad designed system for pipeline analysis, and collaboration built on google cloud. Firecloud now supports jupyter notebooks so you can go do downstream analyses on the cloud also. 
 
 Hail is a genomic analysis framework for downstream analyses in jupyter notebooks. This allows for th
 
 
-### Best Practices Workflows 
+## Best Practices Workflows 
 
 GATK 4.0 best practice workflows are hosted on [github](https://github.com/gatk-workflows/). 
 
 
-
-        JVC
 
 
 
