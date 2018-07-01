@@ -6,28 +6,48 @@ output: html_document
 ---
 
 
-## Curriculum Vitae 
+# Curriculum Vitae 
 
-**Education** 
+# Education
 
 MS Bioinformatics and Genomics | University of Oregon | Expected Dec. 2018
 
 BS Biochemistry, ACS Certified | University of Portland | May 2017
 
-**Work Experience**
 
-Graduate Researcher (Genomics) - Stowers Institute for Medical Research - (04/2018-current)
+# Skills
+
+Languages: `Python` `R` `bash` `git` `Stan`
+
+
+# Work Experience 
+
+**Graduate Researcher (Genomics) - Stowers Institute for Medical Research - (04/2018-current)**
 
   - Perform Bioinformatic analyses in the Computational Biology/Genomics department.
-  - Utilize workflow management (snakemkae) and version control (git) for maximal reproducibility, and reusability of computational pipelines. 
+  - Utilize workflow management (snakemake) and version control (git) for maximal reproducibility, and reusability of computational pipelines. 
   
   
-**Skills**
+**Chemistry Workshop Leader - University of Portland - (01/2015 - 04/2017)**
 
-Languages: `Python` `R` `bash` `git`
+  - Taught a weekly chemistry workshop to help general chemistry students learn core concepts.
+  - Graded homework, and held weekly office hours for one-on-one tutoring.
+  
+
+**Chemistry Research Assistant - Univeristy of Portland - (05/2017 - 12/2016)**
+
+  - Optimized a gel-electrophoresis assay to determine hyaluronidase inhibition of plant extract polyphenols. 
+  - Determined novel plant-extract inhibitors with implications for neurodegenerative repair.
+  - Presented work at professional conferences.
+  
+  
+**Bicycle Mechanic - University of Portland - (10/2013 - 04/2017)**
+
+  - Performed new bike builds, routine repairs, and complex overhauls.
+  - Managed shop inventory for weekly parts orders.
 
   
-**CONFERENCES AND PRESENTATIONS**
+# CONFERENCES AND PRESENTATIONS
 
 > VanCampen J., Norris B., Claridge S.E., Simons N.D., Ting N., Eick G., Sterner K.N. De novo
 miRNA prediction in the Ugandan red colobus genome reveals miRNAs unique to SIV
