@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>Align and count RNA-seq reads with STAR | Jake VanCampen</title>
+
+
+<link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='/css/custom.css'><link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+<link rel="manifest" href="/favicon/site.webmanifest">
+<link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+</head>
+<body>
+
+
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="/"><h1 class="title is-4">Jake VanCampen</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile"><a class="level-item" aria-label="email" href='mailto:jake.vancampen7@gmail.com' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+    
+    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+    <polyline points="22,6 12,13 2,6"/>
+    
+  </svg></i>
+            </span>
+          </a><a class="level-item" aria-label="github" href='https://github.com/jakevc' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+    
+    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+    
+  </svg></i>
+            </span>
+          </a><a class="level-item" aria-label="linkedin" href='https://linkedin.com/in/jakevancampen' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+    
+    <path stroke-width="1.8" d="m5.839218,4.101561c0,1.211972 -0.974141,2.194011 -2.176459,2.194011s-2.176459,-0.982039 -2.176459,-2.194011c0,-1.211094 0.974141,-2.194011 2.176459,-2.194011s2.176459,0.982917 2.176459,2.194011zm0.017552,3.94922l-4.388022,0l0,14.04167l4.388022,0l0,-14.04167zm7.005038,0l-4.359939,0l0,14.04167l4.360816,0l0,-7.370999c0,-4.098413 5.291077,-4.433657 5.291077,0l0,7.370999l4.377491,0l0,-8.89101c0,-6.915523 -7.829986,-6.66365 -9.669445,-3.259423l0,-1.891237z"/>
+    
+  </svg></i>
+            </span>
+          </a><a class="level-item" aria-label="twitter" href='https://twitter.com/jake_vancampen' target='_blank' rel='noopener'>
+            <span class="icon">
+              <i class><svg viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+    
+    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+    
+  </svg></i>
+            </span>
+          </a></nav>
+      </div>
+    </nav>
+
+    <nav class="nav">
+      
+        <div class="nav-left"><a class="nav-item" href="/bio">
+                <h2 class="title is-5">Bio</h2>
+              </a><a class="nav-item" href="/cv">
+                <h2 class="title is-5">CV</h2>
+              </a></div>
+      
+
+      
+    </nav>
+
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="subtitle tags is-6 is-pulled-right">
+      
+    </div>
+    <h2 class="subtitle is-6">November 14, 2017</h2>
+    
+    <div class="content">
+      
+
+<p>DNA makes RNA makes Protein, as goes the central dogma of molecular biology. RNA sequencing (RNA-seq) allows researchers to quantify which genes of the DNA are being expressed at any given time, in a given sample of DNA. This tool is very powerful because it allows us to ask questions about the difference in gene expression between different individuals, or between time points in the same individual.</p>
+
+<p>RNA-seq produces a text file with millions of sequences we call &lsquo;reads&rsquo; that represent the genes they came from in the genome. These reads are then aligned to the genome, so that the genes they represent can be detected. To look at the differential expression of these genes, the number of RNA-seq reads that align to genes in the known genome are counted.</p>
+
+<p>This post shows my process for aligning RNA-seq reads to a mouse genome, and counting the number of reads that map to specific genes using a program called STAR, and a Python program I wrote to organize the output.</p>
+
+<p>There are a number of programs used to align RNA-seq reads to the genome, but here I will discuss my experience using STAR, which stands for &ldquo;Spliced Transcripts Alignment to a Reference.&rdquo; STAR is a fully open-source software implemented in C++ code, that is known for being greater than 50 times faster than other aligners, while also improving alignment sensitivity and precision. STAR is also capable of detecting known and novel spice junctions in aligned reads.<sup><a href="https://academic.oup.com/bioinformatics/article/29/1/15/272537" target="_blank">1</a></sup></p>
+
+<h2 id="genome-index">Genome Index</h2>
+
+<p>The first step in alignment with STAR is to generate a genome index for the reads to be aligned to. The two components needed to do this are the reference genome you are using, and the GTF file associated with this genome. It can be a bit confusing which genome version, or GTF file version to use because there are a number of databases with quality genomes for common organisms; for example, <a href="https://www.gencodegenes.org/" target="_blank">GENCODE</a>, <a href="https://genome.ucsc.edu/encode/" target="_blank">ENCODE</a>, or <a href="https://www.ncbi.nlm.nih.gov/" target="_blank">NCBI</a> all have multiple assemblies for mouse and human. STAR recommends in their documentation to use the GENCODE primary assemblies, when available. In this case, I did because I was working with the widely available mouse genome.</p>
+
+<p>I first downloaded both the genome FASTA file and it&rsquo;s associatedd GTF file from GENCDE using the following commands:</p>
+
+<pre><code>$ wget ftp://ftp.sanger.ac.uk/pub/gencode/Gencode_mouse/release_M15/GRCm38.primary_assembly.genome.fa.gz
+
+$ wget ftp://ftp.sanger.ac.uk/pub/gencode/Gencode_mouse/release_M15/gencode.vM15.primary_assembly.annotation.gtf.gz
+</code></pre>
+
+<p>I next created a new directory called <code>star_index</code> to place both files in. To generate a genome index, I ran the following command as a script on the high-performance computing cluster:</p>
+
+<pre><code># load star
+ml STAR
+
+# generate genome index
+STAR --runMode genomeGenerate --genomeDir ./star_index \
+--readFilesCommand zcat \
+--genomeFastaFiles ./star_index/GRCm38.primary_assembly.genome.fa \
+--runThreadN 28 \
+--outFileNamePrefix ./star_index/ \
+--sjdbGTFfile ./star_index/gencode.vM15.primary_assembly.annotation.gtf
+</code></pre>
+
+<p>This took about 35 minutes, after which my <code>star_index</code> directory contained the following files:</p>
+
+<pre><code>└── star_index
+    ├── chrLength.txt
+    ├── chrNameLength.txt
+    ├── chrName.txt
+    ├── chrStart.txt
+    ├── exonGeTrInfo.tab
+    ├── exonInfo.tab
+    ├── gencode.vM15.primary_assembly.annotation.gtf
+    ├── geneInfo.tab
+    ├── Genome
+    ├── genomeParameters.txt
+    ├── GRCm38.primary_assembly.genome.fa
+    ├── Log.out
+    ├── SA
+    ├── SAindex
+    ├── sjdbInfo.txt
+    ├── sjdbList.fromGTF.out.tab
+    ├── sjdbList.out.tab
+    └── transcriptInfo.tab
+</code></pre>
+
+<p>These are all necessary for subsequents steps, so make sure they were generated, specifically the <code>geneInfo.tab</code> and <code>exonInfo.tab</code> files, which are used to determine reads mapping to specific genes.</p>
+
+<h2 id="align-reads">Align Reads</h2>
+
+<p>To organize my output, I created a new directory called <code>aligned_reads</code> that will contain the output from STAR. Making sure that all files were in a directory called <code>reads</code>, I then aligned 24 files of reads to the genome using the following script:</p>
+
+<pre><code># load star
+ml STAR
+
+cd reads
+
+for i in *_R1_001.1.fq.gz;
+do STAR --genomeDir ../star_index \
+	--readFilesIn $i ${i%_R1_001.1.fq.gz}_R2_001.2.fq.gz \
+	--outFileNamePrefix ../aligned_reads/${i%_R1_001.1.fq.gz} \
+	--quantMode GeneCounts \
+	--runThreadN 28 \
+	--readFilesCommand zcat;
+done
+</code></pre>
+
+<p>The <code>--quantMode GeneCounts</code> option creates a file <code>ReadsPerGene.out.tab</code> that counts the number of reads uniquely mapping to each gene, for each file of aligned reads. This will be very helpful for organizing the data to use in a differential expression analysis. I aligned just under 300 million reads using this script in around 1.5 hours.</p>
+
+<p>For each file of reads, the program outputs a number of summary files. For differential expression analysis, <code>ReadsPerGene.out.tab</code> is the most important, another useful file is the <code>log.final.out</code> file which is the final alignment statistics report.</p>
+
+<p>To summarize all output in a total of two files I wrote a Python script to make a file for use in differential expression analysis, and a file that represents summary statistics for each set of paired-end reads. The two files have the following format:</p>
+
+<p><strong>counts_per_gene.tsv</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>gene</th>
+<th>library_1</th>
+<th>library_2</th>
+<th>&hellip;</th>
+<th>library_n</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>gene_1</td>
+<td>counts</td>
+<td>counts</td>
+<td>counts</td>
+<td>counts</td>
+</tr>
+
+<tr>
+<td>gene_2</td>
+<td>counts</td>
+<td>counts</td>
+<td>counts</td>
+<td>counts</td>
+</tr>
+
+<tr>
+<td>&hellip;</td>
+<td>counts</td>
+<td>counts</td>
+<td>counts</td>
+<td>counts</td>
+</tr>
+
+<tr>
+<td>gene_n</td>
+<td>counts</td>
+<td>counts</td>
+<td>counts</td>
+<td>counts</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>count_stats.tsv</strong></p>
+
+<p>File contains the following columns:</p>
+
+<p>| <strong>file</strong> | <strong>total_reads</strong> | <strong>uniq_reads</strong> | <strong>reads_on_genes</strong> |</p>
+
+<p>The python script use to organize these data is shown here, and the full script can be downloaded from my <a href="https://github.com/jakevc/nxgn-tools/blob/master/alignment_tools/count_stats.py" target="_blank">github</a>.</p>
+
+<pre><code class="language-python">
+import pandas as pd
+import os
+
+# Generate a table of counts for each gene, for each file.
+
+# firstline case
+firstone = True
+
+# loop over all files in working directory
+for file in os.listdir():
+    filename = file
+    if firstone &amp; filename.endswith('ReadsPerGene.out.tab'):
+        # grab the filename
+        name = filename.split('_L')[0]
+        data = pd.read_csv(file, delimiter='\t',
+                           header=None, index_col=0,
+                           usecols=(0, 3), names=['gene', name])
+        # exit firstline case
+        firstone = False
+
+    elif filename.endswith('ReadsPerGene.out.tab'):
+        name = filename.split('_L')[0]
+
+        # joine each files counts on the gene column
+        data = data.join(pd.read_csv(
+                         file, delimiter='\t', header=None,
+                         index_col=0, usecols=(0, 3),
+                         names=['gene', name]))
+
+# write file to output
+data.to_csv('counts_per_gene.tsv', sep='\t')
+
+
+# Generate mapping statistics for each file
+
+# open file for writing
+with open('count_stats.tsv', 'w') as fh:
+    # write header
+    fh.write('file\ttotal_reads\tuniq_reads\treads_on_genes\n')
+
+    # loop over directory
+    for file in os.listdir():
+
+        # if it's the log file
+        if file.endswith('Log.final.out'):
+
+            # grab the file name
+            name = file.split('_L')[0]
+            # retain file
+            fi = pd.read_csv(
+                    file, delimiter='\t', header=None, names=['key', 'value']
+                    )
+            # retain stats of interest
+            fi = fi[
+                    fi['key'].str.contains('Number of input reads') |
+                    fi['key'].str.contains('Uniquely mapped reads number')
+                    ]
+            # set index to first column
+            fi.set_index('key', inplace=True)
+
+            # cache stats from data frame
+            total_reads = fi.value[0]
+            uniq_reads = fi.value[1]
+
+            # loop over dir to count reads/gene-model
+            for counts in os.listdir():
+                if counts.endswith('ReadsPerGene.out.tab'):
+
+                    # to reference current filename
+                    if name in counts:
+                        current = pd.read_csv(
+                                    counts, header=None, delimiter='\t')
+                        num_reads_on_gene = sum(current[4:][2])
+
+                        # write to output file
+                        fh.write(f'{name}\t{total_reads}\t\
+                                    {uniq_reads}\t{num_reads_on_gene}\n')
+</code></pre>
+
+<p>The great thing about this script is it could be used again, given a similar directory structure, and that I still wanted to split the filename on &ldquo;_L&rdquo;, on another set of reads from any RNA-seq experiment to generate the necessary counts file for differentail expression analysis!</p>
+
+      
+      <div class="related">
+</div>
+      
+    </div>
+    
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <aside><div id="disqus_thread"></div></aside>
+    <script type="text/javascript">
+      var disqus_shortname = 'jakevc';
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p></p>
+    
+  </div>
+</section>
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//yihui.name/js/math-code.js"></script>
+<script async
+src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+<script>
+hljs.configure({languages: []});
+hljs.initHighlightingOnLoad();
+</script>
+
+</body>
+</html>
+
