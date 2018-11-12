@@ -17,7 +17,7 @@
       <pubDate>Tue, 26 Jun 2018 00:00:00 +0000</pubDate>
       
       <guid>/post/new-gatk-4-0/</guid>
-      <description>What’s new in GATK 4.0  Catered to illumina short read sequencing Pre-processing, variant analysis. Goal is to identify variation between genomes  GATK 4.0 was rewritten from scratch for dramatic performance improvements and new functional capabilities such as:
+      <description>What&amp;rsquo;s new in GATK 4.0  Catered to illumina short read sequencing Pre-processing, variant analysis. Goal is to identify variation between genomes  GATK 4.0 was rewritten from scratch for dramatic performance improvements and new functional capabilities such as:
  structural variant detection advanced machine learning techniques best-practice workflows All Picard tools bundled in GATK executable   Speed optimizations  Intel genomics kernal library (GKL) increased spead and hardware optimizations.</description>
     </item>
     

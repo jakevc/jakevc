@@ -1,11 +1,15 @@
 baseurl = "/"
 languageCode = "en"
 title = "Jake VanCampen"
-# copyright = "&copy; <a href=\"https://github.com/ribice\"></a> 2017"
 disqusShortname = "jakevc"
 theme = "kiss"
 relaltiveurls=true
 connonifyurls=false
+
+pygmentsCodefences=true
+pygmentsCodefencesGuessSyntax=true
+pygmentsUseClasses=true
+
 
 # Number of posts per page
 Paginate = 5
@@ -20,7 +24,6 @@ customCSS = ["css/custom.css"]
 adsense = "" # Adsense ID (ID only, without ca-pub-)
 enableSocial = false # Adds OpenGraph and Twitter cards
 homeTitle = "" # Title for home page
-poweredby = false # Adds powered by Hugo dd Kiss below Copyright section
 related = true # Includes related articles
 
 # social features

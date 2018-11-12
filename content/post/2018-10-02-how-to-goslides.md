@@ -35,6 +35,9 @@ $ mkdir -p $HOME/go/src/hello
 $ cd $HOME/go/src/hello
 
 $ vim hello.go
+```
+
+```
 package main
 
 import "fmt"
@@ -42,8 +45,9 @@ import "fmt"
 func main() {
 	fmt.Printf("hello, world\n")
 }
-# :wq 
+```
 
+```
 # build hello world
 $ go build
 

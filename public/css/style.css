@@ -157,8 +157,12 @@ td img {
 }
 pre,
 pre code {
-  background-color: #f5f7fa;
-  color: #070707;
+  /*background-color: grey;*/
+  /*color: #eff3ed;*/
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 *,
 :after,
@@ -1165,12 +1169,12 @@ a.box:active {
 .content h4,
 .content h5,
 .content h6 {
-  color: #070707;
+  color: #101110;
   font-weight: 300;
   margin-bottom: 20px;
 }
 .content blockquote {
-  background-color: #f5f7fa;
+  background-color: #f5f8fa;
   border-left: 5px solid #d3d6db;
   padding: 1.5em;
 }
@@ -5582,7 +5586,7 @@ article + article {
 }
 .content {
   font-size: 16px;
-  line-height: 1.75;
+  line-height: 1.6;
 }
 .media-content .subtitle + .title {
   margin-bottom: 10px;
@@ -5618,7 +5622,9 @@ article + article {
   font-size: 20vw;
 }
 code {
+  /*
   color: inherit;
+  */
   font-size: 90%;
 }
 .content h1::before,
@@ -5683,13 +5689,14 @@ code {
   margin: 0 2px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  background-color: #f8f8f8;
-  color: #42464c;
+  /*background-color: #fffbfb;*/
+  /*color: #95999e;*/
 }
 .content pre code {
   font-size: 90%;
   padding: 1em;
   line-height: 1.5;
+  /*background-color: #a8a8a4*/
 }
 .content li pre,
 .content li table {

@@ -6,10 +6,20 @@
     <description>Recent content on Jake VanCampen</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 04 Sep 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 03 Oct 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>How to make goslides</title>
+      <link>/post/how-to-goslides/</link>
+      <pubDate>Wed, 03 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/how-to-goslides/</guid>
+      <description>Creating Slides in Golang I am about to give a journal club presentation on a recent epigenetics paper. I have also been learning golang. Many learning materials, and golang presentations I run into are very clean html presentations with absolutely no bells and whistles, that appear to run in the browser.
+I soon found out these presentations are generated from the &amp;lsquo;present&amp;rsquo; package, which is a builtin golang tool at golang.</description>
+    </item>
     
     <item>
       <title>Learning golang for bioinformatics</title>
@@ -19,7 +29,7 @@
       <guid>/post/learning-golang-for-bioinformatics/</guid>
       <description>What is Go? Go, or &amp;ldquo;golang&amp;rdquo; is a compiled language that was developped at Google in 2009. Golang is an open source language designed for simplicity, and portability within modern computational infrastructures. Golang is statically typed. In practice this means defining the types of variables, and explicitly keeping track of how those types are passed into and out of functions.
 Hello World in go looks like this:
-package main import &amp;quot;fmt&amp;quot; func main() { fmt.</description>
+package main import &amp;#34;fmt&amp;#34; func main() { fmt.</description>
     </item>
     
     <item>
@@ -32,8 +42,8 @@ package main import &amp;quot;fmt&amp;quot; func main() { fmt.</description>
 Galaxy dependencies are resolved by dependency resolvers (conda). Conda recipes build packages that are published to chanels.
 For Galacy, Conda manages multiple versions maybe better than brew, apt. YAML and shell recipes. Annotated source packages provides better reproducibility.
 Why not just use docker?
- Singularity has been a solution for those that don’t want to just run docker.  Best Practice Channels
- iuc, bioconda, conda-forge, defaults  To use conda outside Planemo:</description>
+ Singularity has been a solution for those that don&amp;rsquo;t want to just run docker.   Best Practice Channels
+ iuc, bioconda, conda-forge, defaults   To use conda outside Planemo:</description>
     </item>
     
     <item>
@@ -42,7 +52,7 @@ Why not just use docker?
       <pubDate>Tue, 26 Jun 2018 00:00:00 +0000</pubDate>
       
       <guid>/post/new-gatk-4-0/</guid>
-      <description>What’s new in GATK 4.0  Catered to illumina short read sequencing Pre-processing, variant analysis. Goal is to identify variation between genomes  GATK 4.0 was rewritten from scratch for dramatic performance improvements and new functional capabilities such as:
+      <description>What&amp;rsquo;s new in GATK 4.0  Catered to illumina short read sequencing Pre-processing, variant analysis. Goal is to identify variation between genomes  GATK 4.0 was rewritten from scratch for dramatic performance improvements and new functional capabilities such as:
  structural variant detection advanced machine learning techniques best-practice workflows All Picard tools bundled in GATK executable   Speed optimizations  Intel genomics kernal library (GKL) increased spead and hardware optimizations.</description>
     </item>
     
@@ -52,8 +62,8 @@ Why not just use docker?
       <pubDate>Mon, 25 Jun 2018 00:00:00 +0000</pubDate>
       
       <guid>/post/intro-to-galaxy/</guid>
-      <description>Into to Galaxy Admin – Morning Using Ansible to setup a Galaxy Ansible is an automated computer management system that can be used to install and configure software infastructure. Ansible scripts are called playbooks, written as yaml files, can be structured in folder hierarchy with mnay available modules.
-Why: - avoid forgetting what you did to install and configure some software - codify knowledge about system - “make infastructure programmable”</description>
+      <description>Into to Galaxy Admin &amp;ndash; Morning Using Ansible to setup a Galaxy Ansible is an automated computer management system that can be used to install and configure software infastructure. Ansible scripts are called playbooks, written as yaml files, can be structured in folder hierarchy with mnay available modules.
+Why: - avoid forgetting what you did to install and configure some software - codify knowledge about system - &amp;ldquo;make infastructure programmable&amp;rdquo;</description>
     </item>
     
     <item>
@@ -104,15 +114,6 @@ Advances in SMRT sequencing The seminar kicked off with Steve Turner, Chief Tech
       <guid>/post/2017-10-26-my-development-environment/</guid>
       <description>When I began working on the computer full time earlier this year, I was still using the GUIs of my computer and had little intuition for how to organize my work in a coding Environment. Now I use exclusively the command line to navigate my MacBook Pro; collaborate and track my work using Github; and I write most assignments, and now blog posts in markdown.
 The largest behavioral change for me was working primarily in text editors, Github, and the command line.</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/post/2018-09-04-learning-golang-for-bioinformatics/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/post/2018-09-04-learning-golang-for-bioinformatics/</guid>
-      <description>Learning golang for bioinformatics       code{white-space: pre;} pre:not([class]) { background-color: white; }  if (window.hljs) { hljs.configure({languages: []}); hljs.initHighlightingOnLoad(); if (document.readyState &amp;&amp; document.readyState === &#34;complete&#34;) { window.setTimeout(function() { hljs.initHighlighting(); }, 0); } }  h1 { font-size: 34px; } h1.title { font-size: 38px; } h2 { font-size: 30px; } h3 { font-size: 24px; } h4 { font-size: 18px; } h5 { font-size: 16px; } h6 { font-size: 12px; } .</description>
     </item>
     
     <item>
