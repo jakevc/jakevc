@@ -21,8 +21,8 @@
 Galaxy dependencies are resolved by dependency resolvers (conda). Conda recipes build packages that are published to chanels.
 For Galacy, Conda manages multiple versions maybe better than brew, apt. YAML and shell recipes. Annotated source packages provides better reproducibility.
 Why not just use docker?
- Singularity has been a solution for those that don&amp;rsquo;t want to just run docker.   Best Practice Channels
- iuc, bioconda, conda-forge, defaults   To use conda outside Planemo:</description>
+ Singularity has been a solution for those that don’t want to just run docker.  Best Practice Channels
+ iuc, bioconda, conda-forge, defaults  To use conda outside Planemo:</description>
     </item>
     
   </channel>

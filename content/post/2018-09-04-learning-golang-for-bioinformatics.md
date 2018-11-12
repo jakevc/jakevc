@@ -12,7 +12,7 @@ tags: [golang, bioinformatics]
 
 Hello World in go looks like this: 
 
-```golang
+```python
 package main
 
 import "fmt"
@@ -71,7 +71,7 @@ I have a some basic command line tools written in Python, specifically for inves
 
 Here is the finished command line tool `fasta2line` that "unwraps" multi-line fasta entries so that there are only two lins per entry: header, and sequence.
 
-```
+```python
 package main
 
 /*

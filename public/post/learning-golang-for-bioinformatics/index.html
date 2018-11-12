@@ -8,16 +8,13 @@
 
 
 <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
-<link rel="stylesheet" href="/css/style.css">
-<link rel="stylesheet" href="/css/syntax.css"><link rel='stylesheet' href='/css/custom.css'><link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+<link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='/css/custom.css'><link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
 <link rel="manifest" href="/favicon/site.webmanifest">
 <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#5bbad5">
 <meta name="msapplication-TileColor" content="#da532c">
-<meta name="theme-color" content="#fffff">
-<script src="/js/highlight.pack.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
+<meta name="theme-color" content="#ffffff">
 </head>
 <body>
 
@@ -106,13 +103,16 @@
 <p><a href="https://golang.org/" target="_blank">Go</a>, or &ldquo;golang&rdquo; is a compiled language that was developped at Google in 2009. Golang is an open source language designed for simplicity, and portability within modern computational infrastructures. Golang is statically typed. In practice this means defining the types of variables, and explicitly keeping track of how those types are passed into and out of functions.</p>
 
 <p>Hello World in go looks like this:</p>
-<div class="highlight"><pre class="chroma"><code class="language-golang" data-lang="golang"><span class="kn">package</span> <span class="nx">main</span>
 
-<span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+<pre><code class="language-python">package main
 
-<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&#34;Hello, World!&#34;</span><span class="p">)</span>
-<span class="p">}</span></code></pre></div>
+import &quot;fmt&quot;
+
+func main() {
+  fmt.Println(&quot;Hello, World!&quot;)
+}
+</code></pre>
+
 <p>I decided to learn golang because it looks beautiful, and I wanted to learn a lower level language than Python or R. I started learning golang with some online tutorials, and then realized I needed more relevant applications to my work. I am currently re-writing command-line tools for processing next-generation sequencing data that I had written in Python.</p>
 
 <h1 id="development-environment">Development Environment</h1>
@@ -122,16 +122,22 @@
 <p><code>export PATH=$PATH/usr/local/go/bin</code></p>
 
 <p>your go code workspace can be a directory with any name and the following structure:</p>
-<div class="highlight"><pre class="chroma">→tree -L 1 golang
+
+<pre><code>→tree -L 1 golang
 .
 ├── bin
 ├── pkg
 └── src
 
-3 directories, 0 files</pre></div>
+3 directories, 0 files
+</code></pre>
+
 <p>My workspace is called golang, and contains a bin, pkg, and src directories. To configure this as your workspace, tell go this is where you want to work by adding the GOPATH and GOBIN environment variables in <code>~/.bash_profile</code> or <code>~/.bashrc</code>.</p>
-<div class="highlight"><pre class="chroma">export GOPATH=~/Documents/golang/
-export GOBIN=$(go env GOPATH)bin</pre></div>
+
+<pre><code>export GOPATH=~/Documents/golang/
+export GOBIN=$(go env GOPATH)bin
+</code></pre>
+
 <p>If you execute <code>go env</code> on the command-line you will see the value of all go environment variables and see what else can be configured.</p>
 
 <p>To create a new program, make a directory inside <code>/src</code> with the name of the program you want to write. Use simple, descriptive names with only letters.</p>
@@ -155,69 +161,72 @@ export GOBIN=$(go env GOPATH)bin</pre></div>
 <p>I have a some basic command line tools written in Python, specifically for investigating next-generation sequencing data: <a href="https://github.com/jakevc/nxgn-tools" target="_blank">nxgn-tools</a>. The golang version of these are being updated <a href="https://github.com/jakevc/nxgnTools" target="_blank">here</a> as I finish them. I will talk about my experience writing the first one: <code>fasta2line</code>.</p>
 
 <p>Here is the finished command line tool <code>fasta2line</code> that &ldquo;unwraps&rdquo; multi-line fasta entries so that there are only two lins per entry: header, and sequence.</p>
-<div class="highlight"><pre class="chroma"><span class="kn">package</span> <span class="nx">main</span>
 
-<span class="cm">/*
-</span><span class="cm">This program converts all multiline fasta entries in a file to
-</span><span class="cm">single line fasta entries.
-</span><span class="cm">*/</span>
+<pre><code class="language-python">package main
 
-<span class="kn">import</span> <span class="p">(</span>
-	<span class="s">&#34;bufio&#34;</span>
-	<span class="s">&#34;bytes&#34;</span>
-	<span class="s">&#34;fmt&#34;</span>
-	<span class="s">&#34;os&#34;</span>
-	<span class="s">&#34;strings&#34;</span>
-<span class="p">)</span>
+/*
+This program converts all multiline fasta entries in a file to
+single line fasta entries.
+*/
 
-<span class="kd">func</span> <span class="nx">check</span><span class="p">(</span><span class="nx">e</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
-	<span class="c1">// check if err and panic
-</span><span class="c1"></span>	<span class="k">if</span> <span class="nx">e</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="nb">panic</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
-	<span class="p">}</span>
-<span class="p">}</span>
+import (
+	&quot;bufio&quot;
+	&quot;bytes&quot;
+	&quot;fmt&quot;
+	&quot;os&quot;
+	&quot;strings&quot;
+)
 
-<span class="kd">func</span> <span class="nx">combineSeqLine</span><span class="p">(</span><span class="nx">path</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
-	<span class="c1">// read file by line
-</span><span class="c1"></span>	<span class="nx">inFile</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">os</span><span class="p">.</span><span class="nx">Open</span><span class="p">(</span><span class="nx">path</span><span class="p">)</span>
-	<span class="nx">check</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
-	<span class="k">defer</span> <span class="nx">inFile</span><span class="p">.</span><span class="nx">Close</span><span class="p">()</span>
-	<span class="nx">scanner</span> <span class="o">:=</span> <span class="nx">bufio</span><span class="p">.</span><span class="nx">NewScanner</span><span class="p">(</span><span class="nx">inFile</span><span class="p">)</span>
-	<span class="nx">scanner</span><span class="p">.</span><span class="nx">Split</span><span class="p">(</span><span class="nx">bufio</span><span class="p">.</span><span class="nx">ScanLines</span><span class="p">)</span>
+func check(e error) {
+	// check if err and panic
+	if e != nil {
+		panic(e)
+	}
+}
 
-	<span class="kd">var</span> <span class="nx">entry</span> <span class="nx">bytes</span><span class="p">.</span><span class="nx">Buffer</span>
-	<span class="kd">var</span> <span class="nx">first</span> <span class="kt">bool</span> <span class="p">=</span> <span class="kc">true</span>
+func combineSeqLine(path string) {
+	// read file by line
+	inFile, err := os.Open(path)
+	check(err)
+	defer inFile.Close()
+	scanner := bufio.NewScanner(inFile)
+	scanner.Split(bufio.ScanLines)
 
-	<span class="c1">// scan and parse lines
-</span><span class="c1"></span>	<span class="k">for</span> <span class="nx">scanner</span><span class="p">.</span><span class="nx">Scan</span><span class="p">()</span> <span class="p">{</span>
-		<span class="nx">line</span> <span class="o">:=</span> <span class="nx">scanner</span><span class="p">.</span><span class="nx">Text</span><span class="p">()</span>
+	var entry bytes.Buffer
+	var first bool = true
 
-		<span class="c1">// firstline case
-</span><span class="c1"></span>		<span class="k">if</span> <span class="nx">first</span> <span class="p">{</span>
-			<span class="nx">entry</span><span class="p">.</span><span class="nx">WriteString</span><span class="p">(</span><span class="nx">line</span> <span class="o">+</span> <span class="s">&#34;\n&#34;</span><span class="p">)</span>
-			<span class="nx">first</span> <span class="p">=</span> <span class="kc">false</span>
-		<span class="p">}</span>
-		<span class="c1">// write header
-</span><span class="c1"></span>		<span class="k">if</span> <span class="nx">strings</span><span class="p">.</span><span class="nx">HasPrefix</span><span class="p">(</span><span class="nx">line</span><span class="p">,</span> <span class="s">&#34;&gt;&#34;</span><span class="p">)</span> <span class="p">{</span>
-			<span class="nx">header</span> <span class="o">:=</span> <span class="nx">line</span>
-			<span class="nx">entry</span><span class="p">.</span><span class="nx">WriteString</span><span class="p">(</span><span class="s">&#34;\n&#34;</span> <span class="o">+</span> <span class="nx">header</span> <span class="o">+</span> <span class="s">&#34;\n&#34;</span><span class="p">)</span>
-		<span class="p">}</span>
-		<span class="c1">// write seq
-</span><span class="c1"></span>		<span class="k">if</span> <span class="p">!</span><span class="nx">strings</span><span class="p">.</span><span class="nx">HasPrefix</span><span class="p">(</span><span class="nx">line</span><span class="p">,</span> <span class="s">&#34;&gt;&#34;</span><span class="p">)</span> <span class="p">{</span>
-			<span class="nx">entry</span><span class="p">.</span><span class="nx">WriteString</span><span class="p">(</span><span class="nx">line</span><span class="p">)</span>
-		<span class="p">}</span>
-	<span class="p">}</span>
-	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">entry</span><span class="p">.</span><span class="nx">String</span><span class="p">())</span>
-<span class="p">}</span>
+	// scan and parse lines
+	for scanner.Scan() {
+		line := scanner.Text()
 
-<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
-	<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Args</span><span class="p">)</span> <span class="p">&lt;</span> <span class="mi">2</span> <span class="p">{</span>
-		<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&#34;Provide path to multiline fasta file as command line argument&#34;</span><span class="p">)</span>
-		<span class="k">return</span>
-	<span class="p">}</span>
-	<span class="c1">// read in the file
-</span><span class="c1"></span>	<span class="nx">combineSeqLine</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Args</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-<span class="p">}</span></pre></div>
+		// firstline case
+		if first {
+			entry.WriteString(line + &quot;\n&quot;)
+			first = false
+		}
+		// write header
+		if strings.HasPrefix(line, &quot;&gt;&quot;) {
+			header := line
+			entry.WriteString(&quot;\n&quot; + header + &quot;\n&quot;)
+		}
+		// write seq
+		if !strings.HasPrefix(line, &quot;&gt;&quot;) {
+			entry.WriteString(line)
+		}
+	}
+	fmt.Println(entry.String())
+}
+
+func main() {
+	if len(os.Args) &lt; 2 {
+		fmt.Println(&quot;Provide path to multiline fasta file as command line argument&quot;)
+		return
+	}
+	// read in the file
+	combineSeqLine(os.Args[1])
+}
+</code></pre>
+
 <p>There are a few things about this code that were new to me:</p>
 
 <ul>
@@ -231,10 +240,13 @@ export GOBIN=$(go env GOPATH)bin</pre></div>
 <p>The buffio package allows you to scan the bytes of a file by line, then using the byes.buffer package we can write the processed information to the buffer and call the String method on it. If this program were writing to a file, we could gain efficiency by writing each entry at a time from the buffer to the file, instead of printing the whole buffer.</p>
 
 <p>Error handling in go is gorgeous because of the built-in error type. There are numerous ways to <a href="https://blog.golang.org/error-handling-and-go" target="_blank">handle errors in go</a>, but the basic structure of checking the error is very common because many functions, <code>os.Open</code> in this case return a value, and an error.</p>
-<div class="highlight"><pre class="chroma">inFile, err := os.Open(path)
+
+<pre><code>inFile, err := os.Open(path)
 if err != nil {
   panic(err)
-}</pre></div>
+}
+</code></pre>
+
 <p>Defer simply &ldquo;defers the execution of a function until the surrounding function returns&rdquo;, this is useful for cleanup tasks like a file.Close(), and can be placed before the processing of the file so that the cleanup is more explicit.</p>
 
 <h1 id="file-close">file.Close()</h1>
@@ -272,12 +284,16 @@ if err != nil {
     
   </div>
 </section>
-
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/languages/r.min.js"></script>
 <script src="//yihui.name/js/math-code.js"></script>
 <script async
 src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
 </script>
-
+<script>
+hljs.configure({languages: []});
+hljs.initHighlightingOnLoad();
+</script>
 
 </body>
 </html>

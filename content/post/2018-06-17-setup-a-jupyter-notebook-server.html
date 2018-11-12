@@ -1,0 +1,56 @@
+---
+title: Setup a jupyter notebook server
+author: Jake VanCampen
+date: '2018-06-17'
+slug: setup-a-jupyter-notebook-server
+tags:
+  - jupyter
+  - server
+  - ssh
+---
+
+
+
+<div id="setup-a-jupyter-notebook-server" class="section level1">
+<h1>Setup a jupyter notebook server</h1>
+<p>This document is a quick how to on running Jupyter notebook/lab a remote server.</p>
+<div id="setup" class="section level2">
+<h2>Setup</h2>
+<p>Make sure you have an up to date install of anaconda or miniconda. If you need to, install miniconda3 in your home directory:</p>
+<pre><code>cd ~
+wget https://repo.continuum.io/miniconda/Miniconda3-4.5.4-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh</code></pre>
+<p>Follow the commands to install using defaults, then restart your terminal session. When you update or install programs using this version of conda, their executable is stored in: /home/<user>/miniconda3/bin. To allow these programs to be executable from the command line, you need to prepend this location to your PATH environment variable. Add the following line to your ~/.bashrc file to see minconda3 in your PATH:</p>
+<pre><code># add miniconda3 bin to PATH
+export PATH=&quot;$HOME/miniconda3/bin:$PATH&quot;</code></pre>
+<p>Then install Jupyter using conda:</p>
+<pre><code>conda install jupyter</code></pre>
+<p>This will prompt you to install jupyter and it’s dependancies in your current environment.</p>
+</div>
+<div id="setup-port-forward" class="section level2">
+<h2>Setup Port Forward</h2>
+<p>To run “jupyter notebook” on a computational server and edit jupyter notebooks that live in your local file system/ workspace, you can setup a port forward by ssh tunnel. To do this, you assign a port from your personal computer to listen on a remote port (whatever computational server you run ‘jupyter notebook’ from). This can be accomplished with the following setup.</p>
+<p>Open a terminal session on your personal computer and assign the port forward (remote port 8889 to local port 8888), using your login credentials, for example: <a href="mailto:john777@remote_host">john777@remote_host</a>. Any two valid ports could be used in this setup.</p>
+<p>ssh -N -f -L localhost:8888:localhost:8889 <a href="mailto:remote_user@remote_host">remote_user@remote_host</a> Then, ssh into <remote_host> using your linux account credentials, and run:</p>
+<p>jupyter notebook –no-browser –port-8889 This sends a jupyter notebook session to port 8889 on the server, and does not attempt to automatically open a browser.</p>
+</div>
+<div id="go-listen" class="section level2">
+<h2>Go listen</h2>
+<p>You can now access the running remote jupyter notebook by typing “localhost:8888” in the address bar of your web browser. It will ask you for a token, which you can copy and paste from the web-address that appears when you run the “jupyter notebook” command for example:</p>
+<p>jupyter notebook –no-browser –port=8889 [I 13:25:56.032 NotebookApp] Serving notebooks from local directory: /n/path/to/cool/notebook [I 13:25:56.032 NotebookApp] 0 active kernels [I 13:25:56.032 NotebookApp] The Jupyter Notebook is running at: [I 13:25:56.033 NotebookApp] <a href="http://localhost:8889/?token=4ff75275e4cf53b235bade5a675756e0a913d98876eedcb8" class="uri">http://localhost:8889/?token=4ff75275e4cf53b235bade5a675756e0a913d98876eedcb8</a> [I 13:25:56.033 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation). [C 13:25:56.034 NotebookApp] Copy/paste this URL into your browser when you connect for the first time, to login with a token: <a href="http://localhost:8889/?token=4ff75275e4cf53b235bade5a675756e0a913d98876eedcb8&amp;token=4ff75275e4cf53b235bade5a675756e0a913d98876eedcb8" class="uri">http://localhost:8889/?token=4ff75275e4cf53b235bade5a675756e0a913d98876eedcb8&amp;token=4ff75275e4cf53b235bade5a675756e0a913d98876eedcb8</a> You would copy and paste the hash that appears after the “token=” into the box that the browser provides.</p>
+</div>
+<div id="jupyter-lab" class="section level2">
+<h2>Jupyter Lab</h2>
+<p>The same steps above can be used to access the new JupyterLab on a remote server. With the same port forward running, spin up a JupyterLab using the following command:</p>
+<p><code>jupyter lab --no-browser --port=8889</code></p>
+<p>If you need to disable the port-forward this at some point, you can kill the process ID, which you can look for using the following command:</p>
+<p><code>ps aux | grep localhost:8889</code></p>
+</div>
+<div id="jupyter-config" class="section level2">
+<h2>Jupyter Config</h2>
+<p>Once this is setup you can configure a password for easier access. Exit the browser and the quit the jupyter notebook on the remote server, then from the home directory of your linux account execute:</p>
+<pre><code>jupyter notebook password</code></pre>
+<p>This will prompt you to enter and verify a password that you can use instead of copy and pasting the token into your browser each time. This is done in the back end by storing a hash of your password in the file: ~/.jupyter/jupyter_notebook_config.json.</p>
+<p>For more information on the topic consult: <a href="http://jupyter-notebook.readthedocs.io/en/stable/public_server.html">Securing a notebook server</a></p>
+</div>
+</div>

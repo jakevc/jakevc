@@ -8,16 +8,13 @@
 
 
 <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
-<link rel="stylesheet" href="/css/style.css">
-<link rel="stylesheet" href="/css/syntax.css"><link rel='stylesheet' href='/css/custom.css'><link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+<link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='/css/custom.css'><link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
 <link rel="manifest" href="/favicon/site.webmanifest">
 <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#5bbad5">
 <meta name="msapplication-TileColor" content="#da532c">
-<meta name="theme-color" content="#fffff">
-<script src="/js/highlight.pack.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
+<meta name="theme-color" content="#ffffff">
 </head>
 <body>
 
@@ -101,47 +98,29 @@
     <h2 class="subtitle is-6">June 26, 2018</h2>
     
     <div class="content">
-      
-
-<h1 id="conda-and-containers">Conda and Containers</h1>
-
-<p>Planemo <a href="https://planemo.readthedocs.io/en/latest/appliance.html" target="_blank">documentation</a></p>
-
+      <div id="conda-and-containers" class="section level1">
+<h1>Conda and Containers</h1>
+<p>Planemo <a href="https://planemo.readthedocs.io/en/latest/appliance.html">documentation</a></p>
 <p>Galaxy dependencies are resolved by dependency resolvers (conda). Conda <strong>recipes</strong> build <strong>packages</strong> that are published to <strong>chanels</strong>.</p>
-
 <p>For Galacy, Conda manages multiple versions maybe better than brew, apt. YAML and shell recipes. Annotated source packages provides better reproducibility.</p>
-
 <p>Why not just use docker?</p>
-
 <ul>
-<li>Singularity has been a solution for those that don&rsquo;t want to just run docker.
-<br /></li>
+<li>Singularity has been a solution for those that don’t want to just run docker.</li>
 </ul>
-
 <p>Best Practice Channels</p>
-
 <ul>
-<li>iuc, bioconda, conda-forge, defaults
-<br /></li>
+<li>iuc, bioconda, conda-forge, defaults</li>
 </ul>
-
 <p>To use conda outside Planemo:</p>
-
 <ul>
-<li><code>conda install pyyaml</code>
-<br /></li>
+<li><code>conda install pyyaml</code></li>
 </ul>
-
 <p>In an isolated env:</p>
-
 <ul>
-<li><code>conda create -n yaml pyyaml &amp;&amp; source activate yaml</code>
-<br />
-<br /></li>
+<li><code>conda create -n yaml pyyaml &amp;&amp; source activate yaml</code></li>
 </ul>
-
-<p>Planemo provides tool-centric use of conda dependencies, i.e. for galaxy tool dev.</p>
-<div class="highlight"><pre class="chroma">planemo project_init --template=seqtk_complete seqtk example
+<p>Planemo provides tool-centric use of conda dependencies, i.e. for galaxy tool dev.</p>
+<pre><code>planemo project_init --template=seqtk_complete seqtk example
 
 cd seqtk_example
 
@@ -149,43 +128,31 @@ planemo conda_install seqtk_seq.xml
 
 . &lt;(planemo conda_env seqtk seqtk_seq.xml)
 
-planemo test seqtk_seq.xml </pre></div>
-<p>Look for the requirements using:
-  - <code>planemo conda_search seqt</code>
-  - conda search</p>
-
+planemo test seqtk_seq.xml </code></pre>
+<p>Look for the requirements using: - <code>planemo conda_search seqt</code> - conda search</p>
 <p>Add the requirement to the {tool}.xml with the <requirements></requirements> tag.</p>
-
 <p>test the tool using <code>planemo --lint</code></p>
-
-<h2 id="writing-conda-recipes">Writing conda recipes</h2>
-
-<p>Two components:
-  - meta.yml (metadata for the recipe)
-  - build.sh (unix script that installs the files)</p>
-
+<div id="writing-conda-recipes" class="section level2">
+<h2>Writing conda recipes</h2>
+<p>Two components: - meta.yml (metadata for the recipe) - build.sh (unix script that installs the files)</p>
 <p>Metadata should contain tests that return 0 upon success.</p>
-
 <p>example (verify that the installation worked)</p>
-<div class="highlight"><pre class="chroma">test:
+<pre><code>test:
   commands:
-    - bwa 2&gt;&amp;1 | grep &#39;index sequences in the&#39;</pre></div>
+    - bwa 2&gt;&amp;1 | grep &#39;index sequences in the&#39;</code></pre>
 <p>build.sh</p>
-<div class="highlight"><pre class="chroma"><span class="cp">#!/bin/bash
-</span><span class="cp"></span>./configure --prefix<span class="o">=</span><span class="nv">$PREFIX</span>
+<pre><code>#!/bin/bash
+./configure --prefix=$PREFIX
 make
-make install</pre></div>
+make install</code></pre>
 <p>Conda recipe skeletons provide guidelines for writing conda packages</p>
-
 <p><code>conda skeleton {pypi, cran}</code></p>
-
-<h1 id="common-workflow-language">Common Workflow Language</h1>
-
-<p>Common Workflow Language is a way to wrap tools and workflows in a very user-friendly way.
-  - Abstracted and high level.
-  - Rabix composer GUI
-  - Support for containers, nested workflows.
-  - I would rather use snakemake</p>
+</div>
+</div>
+<div id="common-workflow-language" class="section level1">
+<h1>Common Workflow Language</h1>
+<p>Common Workflow Language is a way to wrap tools and workflows in a very user-friendly way. - Abstracted and high level. - Rabix composer GUI - Support for containers, nested workflows. - I would rather use snakemake</p>
+</div>
 
       
       <div class="related">
@@ -218,12 +185,16 @@ make install</pre></div>
     
   </div>
 </section>
-
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/languages/r.min.js"></script>
 <script src="//yihui.name/js/math-code.js"></script>
 <script async
 src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
 </script>
-
+<script>
+hljs.configure({languages: []});
+hljs.initHighlightingOnLoad();
+</script>
 
 </body>
 </html>

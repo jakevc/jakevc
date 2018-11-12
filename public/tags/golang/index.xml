@@ -6,20 +6,10 @@
     <description>Recent content in Golang on Jake VanCampen</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 03 Oct 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 04 Sep 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/golang/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>How to make goslides</title>
-      <link>/post/how-to-goslides/</link>
-      <pubDate>Wed, 03 Oct 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/post/how-to-goslides/</guid>
-      <description>Creating Slides in Golang I am about to give a journal club presentation on a recent epigenetics paper. I have also been learning golang. Many learning materials, and golang presentations I run into are very clean html presentations with absolutely no bells and whistles, that appear to run in the browser.
-I soon found out these presentations are generated from the &amp;lsquo;present&amp;rsquo; package, which is a builtin golang tool at golang.</description>
-    </item>
     
     <item>
       <title>Learning golang for bioinformatics</title>
@@ -29,7 +19,7 @@ I soon found out these presentations are generated from the &amp;lsquo;present&a
       <guid>/post/learning-golang-for-bioinformatics/</guid>
       <description>What is Go? Go, or &amp;ldquo;golang&amp;rdquo; is a compiled language that was developped at Google in 2009. Golang is an open source language designed for simplicity, and portability within modern computational infrastructures. Golang is statically typed. In practice this means defining the types of variables, and explicitly keeping track of how those types are passed into and out of functions.
 Hello World in go looks like this:
-package main import &amp;#34;fmt&amp;#34; func main() { fmt.</description>
+package main import &amp;quot;fmt&amp;quot; func main() { fmt.</description>
     </item>
     
   </channel>

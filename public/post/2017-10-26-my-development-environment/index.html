@@ -8,16 +8,13 @@
 
 
 <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
-<link rel="stylesheet" href="/css/style.css">
-<link rel="stylesheet" href="/css/syntax.css"><link rel='stylesheet' href='/css/custom.css'><link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+<link rel="stylesheet" href="/css/style.css"/><link rel='stylesheet' href='/css/custom.css'><link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
 <link rel="manifest" href="/favicon/site.webmanifest">
 <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#5bbad5">
 <meta name="msapplication-TileColor" content="#da532c">
-<meta name="theme-color" content="#fffff">
-<script src="/js/highlight.pack.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
+<meta name="theme-color" content="#ffffff">
 </head>
 <body>
 
@@ -102,52 +99,79 @@
 <h2 id="setting-up-bash-preferences">Setting up Bash preferences</h2>
 
 <p>One of the first settings I changed when I started working on the command line is to customize the prompt it&rsquo;s self. The settings that determine this are found in the hidden file: <code>.bash_profile</code> in your directory. If you are not familiar with these hidden files, to find them on an OSX terminal or UNIX environment you can type <code>ls -a</code> on the command line to list all files. These hidden files can be edited using your favorite text editor. After some experimenting this is the prompt I like the most:</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">JVC <span class="o">[</span><span class="m">08</span>:44:28<span class="o">]</span> <span class="o">(</span>Users<span class="o">)</span>
-→</code></pre></div>
+
+<pre><code class="language-bash">JVC [08:44:28] (Users)
+→
+</code></pre>
+
 <p>This kind of customization can be done by editing the <code>PS1</code> environment variable in your <code>.bash_profile</code> so that every time you open a new shell, you customized prompt will appear instead of the canonical <code>$</code>. My prompt for example was written by adding the following line to my <code>.bash_profile</code> file.</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">export</span> <span class="nv">PS1</span><span class="o">=</span><span class="s2">&#34;\e[38;5;45mJVC \e[38;5;208m[\T] \e[38;5;13m(\W)\e[m \n→&#34;</span></code></pre></div>
+
+<pre><code class="language-bash">export PS1=&quot;\e[38;5;45mJVC \e[38;5;208m[\T] \e[38;5;13m(\W)\e[m \n→&quot;
+</code></pre>
+
 <p>Another sweet hack that can be customized via editing <code>.bash_profile</code> are aliases. Aliasing allows you to essentially create your own typed shortcuts for common tasks that you would type on the command line.</p>
 
 <p>The two I find very helpful are:</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># jupyter notebook shortcut
-</span><span class="c1"></span><span class="nb">alias</span> <span class="nv">jn</span><span class="o">=</span><span class="s2">&#34;jupyter notebook&#34;</span>
-<span class="c1">#always show filetype
-</span><span class="c1"></span><span class="nb">alias</span> <span class="nv">ls</span><span class="o">=</span><span class="s2">&#34;ls -F&#34;</span></code></pre></div>
+
+<pre><code class="language-bash"># jupyter notebook shortcut
+alias jn=&quot;jupyter notebook&quot;
+#always show filetype
+alias ls=&quot;ls -F&quot;
+</code></pre>
+
 <p>The <code>ls -F</code> alias is very useful to quickly discern directories, symbolic links, and executables while navigating my computer from the command line.</p>
 
 <h2 id="inputrc">.inputrc</h2>
 
 <p>Another incredible hack that I learned from a bioinformatics mentor is a set of tools for streamlining command line input. Essentially they are a list of settings that can be added to a <code>.inputrc</code> file, if it doesn&rsquo;t exist you can just create one:</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">touch ~/.inputrc</code></pre></div>
+
+<pre><code class="language-bash">touch ~/.inputrc
+</code></pre>
+
 <p>These setting originally came from this talk on <a href="http://www.ukuug.org/events/linux2003/papers/bash_tips/" target="_blank">Power Shell Usage: bash tips and tricks</a>. There are a number of tricks found on that page, I only have some. Here is a summary:</p>
 
 <p><strong>Partial Command Completion</strong>
 Type partial command, then hit arrow-UP or arrow-DOWN multiple times.
 This limits the searching of your history to just history items
 prefixed with your partial commands. This one is listed first for a reason!</p>
-<div class="highlight"><pre class="chroma">&#34;\e[A&#34;: history-search-backward
-&#34;\e[B&#34;: history-search-forward</pre></div>
+
+<pre><code>&quot;\e[A&quot;: history-search-backward
+&quot;\e[B&quot;: history-search-forward
+</code></pre>
+
 <p><strong>Case Insensitive Completion</strong>
 Ignore case during tab completion.
 If you&rsquo;re trying to tab complete on, say, DOWNLOADS, then you can
 type &lsquo;dow&rsquo; and then TAB, and it will tab complete to DOWNLOADS.</p>
-<div class="highlight"><pre class="chroma">set completion-ignore-case on</pre></div>
+
+<pre><code>set completion-ignore-case on
+</code></pre>
+
 <p><strong>Magic Space</strong>
 This allows you to quickly check that your shortcut will not make your wolrd implode. A shortcut to access the last command in bash/UNIX is <code>!$</code>. With magic-space you can type <code>!$</code> then type space, and it will auto-fill your last command.</p>
-<div class="highlight"><pre class="chroma">$if Bash
+
+<pre><code>$if Bash
   Space: magic-space
-$endif</pre></div>
+$endif
+</code></pre>
+
 <p><strong>Tab=Possible Completions</strong>
 This allows for tab completion to show all possible completions if there are more than one possibility. This can be useful for navigating file systems very quickly if you sort-of know what is there.</p>
-<div class="highlight"><pre class="chroma">set show-all-if-ambiguous on</pre></div>
+
+<pre><code>set show-all-if-ambiguous on
+</code></pre>
+
 <h2 id="git-settings">Git Settings</h2>
 
 <p>Github necessitates many commands that need to be typed repetitively. I got lazy very early and added the following aliases to my .gitconfig file.</p>
-<div class="highlight"><pre class="chroma">[alias]
+
+<pre><code>[alias]
 	co = checkout
 	br = branch
 	st = status
-	cm = commit -m</pre></div>
+	cm = commit -m
+</code></pre>
+
 <p>These aliases definitely increased my productivity when working in Git, and made it easier to lean more complex features of Git, because I could complete simple tasks faster. Theses can also by added by</p>
 
 <h2 id="text-editors">Text editors</h2>
@@ -205,12 +229,16 @@ This allows for tab completion to show all possible completions if there are mor
     
   </div>
 </section>
-
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/languages/r.min.js"></script>
 <script src="//yihui.name/js/math-code.js"></script>
 <script async
 src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
 </script>
-
+<script>
+hljs.configure({languages: []});
+hljs.initHighlightingOnLoad();
+</script>
 
 </body>
 </html>
