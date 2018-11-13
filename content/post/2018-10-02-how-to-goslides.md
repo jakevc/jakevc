@@ -10,7 +10,7 @@ tags: [golang, present]
 
 I am about to give a journal club presentation on a recent epigenetics paper. I have also been learning [golang](https://golang.org/). Many learning materials, and golang presentations I run into are very clean html presentations with absolutely no bells and whistles, that appear to run in the browser. 
 
-I soon found out these presentations are generated from the 'present' package, which is a builtin golang tool at golang.org/x/tools. I appreciate the simplicity of these presentations because it allows me to focus on my public speaking skills, and communicating ideas in a simple, effect manner. I don't want to think about how to get presenter notes, or decide if my presentation is going to be cross-platform, or even think the thought of bringing a thumb drive to a talk...
+I soon found out these presentations are generated from the 'present' package, which is a built in golang tool at golang.org/x/tools. I appreciate the simplicity of these presentations because it allows me to focus on my public speaking skills simply and effieciently. I don't want to think about how to get presenter notes, or decide if my presentation is going to be cross-platform, or even think the thought of bringing a thumb drive to a talk...
 
 It took a second for me to find out how to generate this type of presentation with the features I wanted, namely: 
 
