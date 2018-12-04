@@ -15,31 +15,32 @@ BS Biochemistry, ACS Certified | University of Portland | May 2017
 
 ## Skills
 
-Languages: `Python` `R` `bash` `go` `git` `Stan`
+Languages: `Python` `R` `bash` `go` `git` `Stan` `aws` 
 
 
 ## Work Experience 
 
-**Graduate Researcher (Genomics) - Stowers Institute for Medical Research - (04/2018-current)**
+**Graduate Researcher (Genomics) - Stowers Institute for Medical Research - (04/2018-01/2019)**
 
-  - Perform Bioinformatic analyses in the Computational Biology/Genomics department.
+  - Performed Bioinformatic analyses in the Computational Biology/Genomics department.
   - Utilize workflow management (snakemake) and version control (git) for maximal reproducibility, and reusability of computational pipelines. 
+  - Actively participated in discussions about Stowers technology infrastructure.
   
   
-**Chemistry Workshop Leader - University of Portland - (01/2015 - 04/2017)**
+**Chemistry Workshop Leader - University of Portland | 01/2015 - 04/2017**
 
   - Taught a weekly chemistry workshop to help general chemistry students learn core concepts.
   - Graded homework, and held weekly office hours for one-on-one tutoring.
   
 
-**Chemistry Research Assistant - Univeristy of Portland - (05/2017 - 12/2016)**
+**Chemistry Research Assistant - Univeristy of Portland | 05/2017 - 12/2016**
 
   - Optimized a gel-electrophoresis assay to determine hyaluronidase inhibition of plant extract polyphenols. 
   - Determined novel plant-extract inhibitors with implications for neurodegenerative repair.
   - Presented work at professional conferences.
   
   
-**Bicycle Mechanic - University of Portland - (10/2013 - 04/2017)**
+**Bicycle Mechanic - University of Portland | 10/2013 - 04/2017**
 
   - Performed new bike builds, routine repairs, and complex overhauls.
   - Managed shop inventory for weekly parts orders.
