@@ -1,43 +1,51 @@
 baseurl = "/"
-languageCode = "en"
-title = "Jake VanCampen"
-# copyright = "&copy; <a href=\"https://github.com/ribice\"></a> 2017"
-disqusShortname = "jakevc"
-theme = "kiss"
-relaltiveurls=true
-connonifyurls=false
+theme = "cocoa-eh"
+builddrafts = true
+canonifyurls = true
+contentdir = "content"
+languageCode = "en-US"
+layoutdir = "layouts"
+publishdir = "public"
+author = "Jake VanCampen"
+title = "jakevc"
+disqusshortname = "jakevc"
+pluralizelisttitles = false
 
-# Number of posts per page
-Paginate = 5
-enableRobotsTXT = true
-ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown", "_files$", "_cache$"]
+[permalinks]
+blog = "blog/:slug/"
 
-
-[params.assets]
-customCSS = ["css/custom.css"]
-
-[params.info]
-adsense = "" # Adsense ID (ID only, without ca-pub-)
-enableSocial = false # Adds OpenGraph and Twitter cards
-homeTitle = "" # Title for home page
-poweredby = false # Adds powered by Hugo dd Kiss below Copyright section
-related = true # Includes related articles
-
-# social features
-[params.social]
-twitter = "jake_vancampen"
+[params]
+dateform = "Jan 2, 2006"
+dateformfull = "Mon Jan 2 2006 15:04:05 MST"
+description = "Jake's blog"
+logofile = "img/logo.png"
+faviconfile = "img/logo.png"
+highlightjs = true
+progressively = true
+share = false
+# Share to googleplus, twitter, fb, linkedin by default
+# disable by setting share_on_<social network> = false
+share_on_googleplus = false
+latestpostcount = 5
 github = "jakevc"
 email = "jake.vancampen7@gmail.com"
-linkedin = "jakevancampen"
+linkedin = "jvancampen"
+twitter = "jakevc"
+instagram = "vancampman"
+usesmallsummarycard = true 
+posts_navigation = true
+githubRepo = "jakevc/jakevc/tree/master"
+small_banner_logo = true 
 
-# about
-[params.sections_left]
-"/bio" = "Bio"
-"/cv" = "CV"
-
-[taxonomies]
-tag ="tags"
-
-[blackfriday]
-hrefTargetBlank = true
-
+[params.colors]
+identifier = "#527fc1f"
+identifier_dark = "#1a3152"
+trivial = "#6a7a8b"
+foreground = "#181d2a"
+background = "#f9f9f9"
+background_dark = "#282a36"
+code = "#87a5d2"
+type = "#97d28b"
+special = "#ffcb8d"
+value = "#96c2d7"
+statement = "#ff8e91"

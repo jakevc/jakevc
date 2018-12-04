@@ -4,7 +4,7 @@ title: About
 permalink: /about/
 ---
 
-![headshot!](/img/headshot.jpg#r)
+<img src="/img/headshot.png" align="left" style="margin-right:1em;"> 
 
 I work as a bioinformatics researcher in the Genomics core at the Stowers Institute for Medical Research. I am passionate about applying computational tools to biological questions. I am interested in providing reproducible solutions to biological data analysis, for example: I like to use well-maintained workflow management systems such as [Snakemake](https://snakemake.readthedocs.io/en/stable/), and git for version control.
 
