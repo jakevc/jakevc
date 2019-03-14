@@ -3,7 +3,7 @@ title   = "Jake VanCampen"
 
 DefaultContentLanguage = "en"
 
-theme = "hello-friend-ng"
+theme = "hugo-theme-hello-friend-ng"
 
 pygmentsCodefences = true
 pygmentsUseClasses = true
