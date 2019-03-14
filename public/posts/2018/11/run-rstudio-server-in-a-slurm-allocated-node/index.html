@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author"
+    content="Jake VanCampen">
+<meta name="description"
+    content="Rstudio server slurm I have been spoiled at my current workplace. We have Rstudio server running on our shared servers with access to lots of CPUs and enough memory to say the least, but I may not always find myself in this situation. When I was first learning R I was running Rstudio locally, but I wasn&amp;rsquo;t working with massive genomic datasets then, and required fewer CPUs and much less memory." />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="https://jakevc.com/posts/2018/11/run-rstudio-server-in-a-slurm-allocated-node/" />
+
+
+<title>
+    
+    Run Rstudio server in a SLURM allocated node :: Jake VanCampen  — Hello Friend NG Theme
+    
+</title>
+
+
+
+<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700|Source+Code+Pro" rel="stylesheet"
+    type="text/css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+<link rel="stylesheet" href="https://jakevc.com/scss/main.min.099699ab246bf26f50616f7c9f00c79d46110459d1bd727b2d07d6fc09ece082.css">
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="https://jakevc.com/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://jakevc.com/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://jakevc.com/favicon-16x16.png">
+<link rel="manifest" href="https://jakevc.com/site.webmanifest">
+<link rel="mask-icon" href="https://jakevc.com/safari-pinned-tab.svg" color="#252627">
+<link rel="shortcut icon" href="https://jakevc.com/favicon.ico">
+<meta name="theme-color" content="#252627">
+<meta itemprop="name" content="Run Rstudio server in a SLURM allocated node">
+<meta itemprop="description" content="Rstudio server slurm I have been spoiled at my current workplace. We have Rstudio server running on our shared servers with access to lots of CPUs and enough memory to say the least, but I may not always find myself in this situation. When I was first learning R I was running Rstudio locally, but I wasn&rsquo;t working with massive genomic datasets then, and required fewer CPUs and much less memory.">
+
+
+<meta itemprop="datePublished" content="2018-11-11T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2018-11-11T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="834">
+
+
+
+<meta itemprop="keywords" content="r,rstudio,hpc," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://jakevc.com"/>
+
+<meta name="twitter:title" content="Run Rstudio server in a SLURM allocated node"/>
+<meta name="twitter:description" content="Rstudio server slurm I have been spoiled at my current workplace. We have Rstudio server running on our shared servers with access to lots of CPUs and enough memory to say the least, but I may not always find myself in this situation. When I was first learning R I was running Rstudio locally, but I wasn&rsquo;t working with massive genomic datasets then, and required fewer CPUs and much less memory."/>
+
+
+
+
+<meta property="article:published_time" content="2018-11-11 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="https://jakevc.com/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">🏠</span>
+            <span class="logo__cursor"></span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="https://jakevc.com/about/">About</a></li><li><a href="https://jakevc.com/cv">CV</a></li><li><a href="https://jakevc.com/posts/">Posts</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>4 minutes
+
+            
+
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="https://jakevc.com/posts/2018/11/run-rstudio-server-in-a-slurm-allocated-node/">Run Rstudio server in a SLURM allocated node</a></h2>
+
+            
+
+            <div class="post-content">
+                
+
+<h1 id="rstudio-server-slurm">Rstudio server slurm</h1>
+
+<p>I have been spoiled at my current workplace. We have Rstudio server running on our shared servers with access to lots of CPUs and enough memory to say the least, but I may not always find myself in this situation. When I was first learning R I was running Rstudio locally, but I wasn&rsquo;t working with massive genomic datasets then, and required fewer CPUs and much less memory.</p>
+
+<p>This weekend my housemate and I wrote a script to run rstudio server inside a singularity image, on a node allocated via slurm. This is far more complex than we thought, and involved some serious hacking. This was mainly inspired by the <a href="https://github.com/nickjer/singularity-rstudio" target="_blank">Rstudio Singularity</a> image that we found, which made everything else possible. Here it is:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="cp">#!/bin/bash
+</span><span class="cp"></span><span class="c1">##</span>
+<span class="c1">## Run Rstudio server through SOCKS5 tunnel on a SLURM allocated node.</span>
+<span class="c1">## Jake VanCampen, Kohl Kinning, November 2018</span>
+<span class="c1">##</span>
+<span class="nb">set</span> -euo pipefail
+
+usage <span class="o">()</span>
+<span class="o">{</span>
+	 <span class="nb">echo</span> <span class="s2">&#34;Usage: </span><span class="k">$(</span>basename <span class="nv">$0</span><span class="k">)</span><span class="s2"> [-h] [-n node] [-u remote_user] [-r remote_host] [-p port]&#34;</span> &gt;<span class="p">&amp;</span><span class="m">2</span>
+	 <span class="nb">exit</span> <span class="m">1</span>
+<span class="o">}</span>
+
+<span class="c1"># exit if no arguments supplied</span>
+<span class="k">if</span> <span class="o">[</span> <span class="nv">$#</span> -eq <span class="m">0</span> <span class="o">]</span>
+<span class="k">then</span>
+   usage
+   <span class="nb">exit</span> <span class="m">1</span>
+<span class="k">fi</span>
+
+<span class="c1"># define default local variable</span>  
+<span class="nv">NODE</span><span class="o">=</span>n013
+<span class="nv">PORT</span><span class="o">=</span><span class="m">8123</span>
+
+<span class="c1"># Process command line arguments</span>
+<span class="k">while</span> <span class="nb">getopts</span> <span class="s2">&#34;:h:n::u::r::p:&#34;</span> opt<span class="p">;</span> <span class="k">do</span>
+  <span class="k">case</span> <span class="si">${</span><span class="nv">opt</span><span class="si">}</span> in
+    n <span class="o">)</span> <span class="nv">NODE</span><span class="o">=</span><span class="nv">$OPTARG</span> <span class="p">;;</span>
+    u <span class="o">)</span> <span class="nv">USER</span><span class="o">=</span><span class="nv">$OPTARG</span> <span class="p">;;</span>
+    r <span class="o">)</span> <span class="nv">REMOTE</span><span class="o">=</span><span class="nv">$OPTARG</span><span class="p">;;</span> 
+    p <span class="o">)</span> <span class="nv">PORT</span><span class="o">=</span><span class="nv">$OPTARG</span><span class="p">;;</span>
+    h <span class="o">)</span> usage<span class="p">;;</span>
+    ? <span class="o">)</span> usage<span class="p">;;</span>
+  <span class="k">esac</span>
+<span class="k">done</span>
+<span class="nb">shift</span> <span class="k">$((</span>OPTIND <span class="o">-</span><span class="m">1</span><span class="k">))</span>
+
+<span class="nb">echo</span> <span class="s2">&#34;Writing server command.&#34;</span> 
+<span class="c1"># get commands to run Rstudio server on talapas</span> 
+<span class="nb">echo</span> <span class="s2">&#34;#!/bin/bash
+</span><span class="s2">/usr/sbin/fuser -k 8787/tcp
+</span><span class="s2">module load singularity
+</span><span class="s2">singularity pull --name singularity-rstudio.simg shub://nickjer/singularity-rstudio
+</span><span class="s2">singularity run --app rserver ~/singularity-rstudio.simg&#34;</span> &gt; rserver.sh
+
+<span class="c1"># make sure it&#39;s executable</span> 
+chmod <span class="m">755</span> rserver.sh
+
+<span class="nb">echo</span> <span class="s2">&#34;Copying runscript to HPC.&#34;</span>
+<span class="nb">echo</span> <span class="s2">&#34;rsync -av rserver.sh </span><span class="nv">$USER</span><span class="s2">@</span><span class="nv">$REMOTE</span><span class="s2">:~/&#34;</span>
+rsync -av rserver.sh <span class="nv">$USER</span>@<span class="nv">$REMOTE</span>:~/
+
+<span class="c1"># remove rserver.sh from your machine</span>
+rm rserver.sh
+
+<span class="nb">echo</span> <span class="s2">&#34;Starting Rstudio server on </span><span class="nv">$NODE</span><span class="s2">.&#34;</span>
+<span class="c1"># Start the Rserver</span>
+ssh <span class="nv">$USER</span>@<span class="nv">$REMOTE</span> -o <span class="nv">RemoteCommand</span><span class="o">=</span><span class="s2">&#34;srun -w </span><span class="nv">$NODE</span><span class="s2"> rserver.sh&#34;</span> <span class="p">&amp;</span> 
+
+
+<span class="nb">echo</span> <span class="s2">&#34;Create SOCKS5 proxy tunnel from </span><span class="nv">$NODE</span><span class="s2">, through </span><span class="nv">$REMOTE</span><span class="s2">, to localhost:</span><span class="nv">$PORT</span><span class="s2">.&#34;</span>
+<span class="c1"># forward the port using a proxy command</span>
+ssh -D <span class="nv">$PORT</span> -N -f -C -q -o <span class="nv">ProxyCommand</span><span class="o">=</span><span class="s2">&#34;ssh </span><span class="nv">$USER</span><span class="s2">@</span><span class="nv">$REMOTE</span><span class="s2"> exec nc %h %p&#34;</span> <span class="nv">$USER</span>@<span class="nv">$NODE</span></code></pre></div>
+<p>The script is available on github <a href="https://github.com/jakevc/rstudio_singularity_slurm" target="_blank">rstudio_singularity_slurm</a>, and can be forked or downloaded with wget:</p>
+
+<pre><code>wget https://github.com/jakevc/rstudio_singularity_slurm/blob/master/rstudio_slurm.sh
+</code></pre>
+
+<h1 id="flow">Flow</h1>
+
+<p>The scirpt usage is shown below, with all flag arguments required:</p>
+
+<pre><code>./rstudio_slurm.sh -h
+Usage: rstudio_slurm.sh [-h] [-n node] [-u remote_user] [-r remote_host] [-p port]
+</code></pre>
+
+<p>The script starts by creating an executable bash script to load singularity, then pull the &ldquo;singularity-rstudio&rdquo; image, and start the rserver. This script is then copied to the home directory of <code>remote_user@remote_host</code>. Then an SSH command to <code>remote_user@remote_host</code> calls the run script that was just generated. This will tell SLURM to allocate you a specific <code>node</code> and run Rstudio server on that <code>node</code>. The final step creates a SOCKS5 proxy tunnel from <code>node</code>, through <code>remote_host</code>, to localhost:<code>port</code>. This allows you to configure your browser to listen on the SOCKS <code>port</code>, and have access to Rstudio server on the SLURM allocated node.</p>
+
+<h1 id="setup">Setup</h1>
+
+<p>This script assumes the availability of singularity on the remote machine, and loads it using the <code>module load singularity</code> command.</p>
+
+<p>It is necessary to have password-less SSH access to the remote server before running this script. This can be done with ssh-keygen to create an rsa key-pair, then copy the public key to the list of authorized keys on the server. For more information on SSH key-pair authentication see this <a href="https://www.digitalocean.com/community/tutorials/how-to-configure-ssh-key-based-authentication-on-a-freebsd-server" target="_blank">post</a>.</p>
+
+<p>Make sure to kill the process on <code>remote_host</code> after you are done:</p>
+
+<pre><code>$ scancel JOB_ID
+</code></pre>
+
+<p>Also its a good idea to go kill processes associated with this script on your computer after you&rsquo;re done using them. This can be done with something similar to:</p>
+
+<pre><code>ps aux | grep &quot;$NODE&quot; | awk '{print $2}' | xargs kill 
+</code></pre>
+
+<p>Where $NODE is replaced with the node you requested from slurm, for example: <code>grep &quot;n013&quot;</code>.</p>
+
+<h1 id="accessing-rstudio-server-from-firefox">Accessing Rstudio server from Firefox</h1>
+
+<p>To Access Rstudio server through the SOCKS5 tunnel, download firefox if you do not alrady have it and edit the network settings.</p>
+
+<p>In Firefox, go to Preferences &gt; Advanced &gt; Network and find the Connection settings.</p>
+
+<p>Click &ldquo;Manual Proxy Configuration&rdquo; and type &ldquo;localhost&rdquo; in the SOCKS Host box. Type the port you intend to use when calling <code>./rstudio_slurm.sh</code> in the Port box.</p>
+
+<p>Check the box that says &ldquo;Proxy DNS when using SOCKS v5&rdquo;.</p>
+
+<p><img src="https://github.com/jakevc/rstudio_singularity_slurm/blob/master/firefox_setup.png" alt="" /></p>
+
+<p>Once this is setup, run the server script like so:</p>
+
+<pre><code>./rstudio_slurm.sh -n n013 -u bob -r remote.server -p 8123
+</code></pre>
+
+<p>This will request n013 from SLURM and begin running Rstudio server in a singularity container on that node. Then a SOCKS tunnel will be established from n013 to your localhost:8123. If you setup your firefox correctly, when you navigate to n013:8787 in the firefox address bar, you will be redirected to the Rstudio instance running on n013.</p>
+
+<h1 id="security-issues">Security issues</h1>
+
+<p>A known secutity issue with this script is that it allows you access to another users Rstudio session and account if you request a tunnel to the same port on the same node. We intend to include Rstudio server authentication soon which may solve this problem.</p>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+                <p>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://jakevc.com/tags/r">r</a></span><span class="tag"><a href="https://jakevc.com/tags/rstudio">rstudio</a></span><span class="tag"><a href="https://jakevc.com/tags/hpc">hpc</a></span>
+                </p>
+
+            <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>834 Words</p>
+
+            <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2018-11-10 16:00 -0800</p>
+        </div>
+
+        
+            <div class="pagination">
+                <div class="pagination__title">
+                    <span class="pagination__title-h"></span>
+                    <hr />
+                </div>
+
+                <div class="pagination__buttons">
+                    
+                        <span class="button previous">
+                            <a href="https://jakevc.com/posts/2018/11/slow-conda-environment-solving/">
+                                <span class="button__icon">←</span>
+                                <span class="button__text">Slow conda environment solving</span>
+                            </a>
+                        </span>
+                    
+
+                    
+                        <span class="button next">
+                            <a href="https://jakevc.com/posts/2018/10/how-to-make-goslides/">
+                                <span class="button__text">How to make goslides</span>
+                                <span class="button__icon">→</span>
+                            </a>
+                        </span>
+                    
+                </div>
+            </div>
+        
+
+        
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2019</span>
+            
+                <span><a href="https://jakevc.com">Jake VanCampen</a></span>
+            
+            <span> <a href="https://jakevc.com/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+        </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+
+<script type="text/javascript" src="https://jakevc.com/js/bundle.4b80fbbfab88198dcef181b034822e60a3e68b1c128d1dc05392a32943a18ec2f866fbcd9ce31dcf84134397161647ad605ea5c25ecf12e5fcf9d28b47e64bb5.js" integrity="sha512-S4D7v6uIGY3O8YGwNIIuYKPmixwSjR3AU5KjKUOhjsL4ZvvNnOMdz4QTQ5cWFketYF6lwl7PEuX8&#43;dKLR&#43;ZLtQ=="></script>
+
+
+
+    </body>
+</html>

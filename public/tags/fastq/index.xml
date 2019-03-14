@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Fastq on Jake VanCampen</title>
+    <link>https://jakevc.com/tags/fastq/</link>
+    <description>Recent content in Fastq on Jake VanCampen</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
+    <lastBuildDate>Thu, 07 Feb 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://jakevc.com/tags/fastq/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Download SRA data with fasterq-dump</title>
+      <link>https://jakevc.com/posts/2019/02/download-sra-data-with-fasterq-dump/</link>
+      <pubDate>Thu, 07 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://jakevc.com/posts/2019/02/download-sra-data-with-fasterq-dump/</guid>
+      <description>The command line tool historically used to download public bioinformatics data from the Sequencing Read Archive (SRA) is fastq-dump. Fastq-dump was awesome when it was developed, until bioinformatics workflows became more parallelized across much larger datasets. Today, the SRA holds just over 5 PB of open access data, and the growth is rapid.
+I was recently testing a pipeline on some public data. As I download fastq files from SRA using fastq-dump, it didn&amp;rsquo;t take long before I was getting impatient.</description>
+    </item>
+    
+  </channel>
+</rss>

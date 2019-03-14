@@ -1,0 +1,941 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Posts on Jake VanCampen</title>
+        <link>https://jakevc.com/posts/</link>
+        <description>Recent content in Posts on Jake VanCampen</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
+        <lastBuildDate>Thu, 07 Feb 2019 00:00:00 +0000</lastBuildDate>
+        <atom:link href="https://jakevc.com/posts/index.xml" rel="self" type="application/rss+xml" />
+        
+        <item>
+            <title>Download SRA data with fasterq-dump</title>
+            <link>https://jakevc.com/posts/2019/02/download-sra-data-with-fasterq-dump/</link>
+            <pubDate>Thu, 07 Feb 2019 00:00:00 +0000</pubDate>
+            
+            <guid>https://jakevc.com/posts/2019/02/download-sra-data-with-fasterq-dump/</guid>
+            <description>The command line tool historically used to download public bioinformatics data from the Sequencing Read Archive (SRA) is fastq-dump. Fastq-dump was awesome when it was developed, until bioinformatics workflows became more parallelized across much larger datasets. Today, the SRA holds just over 5 PB of open access data, and the growth is rapid.
+I was recently testing a pipeline on some public data. As I download fastq files from SRA using fastq-dump, it didn&amp;rsquo;t take long before I was getting impatient.</description>
+            <content type="html"><![CDATA[<p>The command line tool historically used to download public bioinformatics data from the Sequencing Read Archive (SRA) is fastq-dump. Fastq-dump was awesome when it was developed, until bioinformatics workflows became more parallelized across much larger datasets. Today, the SRA holds just over 5 PB of open access data, and the growth is rapid.</p>
+
+<p>I was recently testing a pipeline on some public data. As I download fastq files from SRA using fastq-dump, it didn&rsquo;t take long before I was getting impatient. I am a millenial. If downloading a terabyte of sequencing data takes too long I might just start a company over it. I immediately started googling a more efficient solution thinking: &ldquo;I have access to so many CPU&rsquo;s, hasn&rsquo;t someone made this more parallelizable?&rdquo; The answer was yes!</p>
+
+<p>June of 2018 saw the release of fasterq-dump out of the box with <a href="https://github.com/ncbi/sra-tools" target="_blank">sra-tools</a> from NCBI. It looks like there was also another implementation, <a href="https://github.com/rvalieris/parallel-fastq-dump" target="_blank">parallel-fastq-dump</a>, that had good speedup and just under seven thousand total downloads on bioconda&hellip;</p>
+
+<p>Anyhow, I plugged it in and BOOM, data. Not so fastq! When downloading fastq files directly from their SRA accession, fastq-dump and fasterq-dump first dump the data in an intermediate cache file before converting to the desired format, and the default location is <code>~/ncbi/</code>. Dumping large amounts of data quickly fills up the disk quota of 10GB that is the standard for linux home directories on a shared file system, resulting in a &ldquo;disk quota exceeded&rdquo; error.</p>
+
+<p>The solution NCBI provides is to configure the cacheing directory using the <code>vdb-config -i</code> interface. I was unable to get this to work, so I found <a href="http://databio.org/posts/downloading_sra_data.html" target="_blank">another solution</a> where you create the configuration files manually.</p>
+
+<pre><code>echo &quot;/repository/user/main/public/root = \&quot;$DATA\&quot;&quot; &gt;&gt; $HOME/.ncbi/user-settings.mkfg
+</code></pre>
+
+<p>Then I added another recommended line:</p>
+
+<pre><code>echo &quot;/repository/user/default-path = \&quot;$DATA\&quot;&quot; &gt;&gt; $HOME/.ncbi/user-settings.mkfg
+</code></pre>
+
+<p>As long as <code>$DATA</code> is a path where you have plenty of disk space, this should all go well. Just remember to delete your cached .sra files under <code>$DATA/ncbi/public/sra/</code>, because that does not happen automatically.</p>
+
+<p>In my search for all this I found a <a href="https://github.com/ncbi/sra-tools/issues/172" target="_blank">github thread</a> from an issue on sra-tools suggesting the following:</p>
+
+<p>1) It is inefficient to dump fastq files because 80% of their bulk is quality scores which are rarely used.</p>
+
+<p>2) You can programmatically access the SRA using Python, Java, and C++ API&rsquo;s to get the data directly.</p>
+
+<p>3) There are some aligners and programs that already do this (GATK, Hisat2)!</p>
+
+<p>All extremely interesting information, however there is little documentation at GATK about using sra files directly. I did find one <a href="https://gatkforums.broadinstitute.org/gatk/discussion/7524/how-to-run-gatk-directly-on-sra-files" target="_blank">thread</a> showing the use of and sra file as an input file to HalpotypeCaller, also Hisat2 just isn&rsquo;t good enough for the effort&hellip; It will be interesting to see if any tool devs decide to tap that market anytime soon. Now I&rsquo;ll be on the lookout.</p>
+]]></content>
+        </item>
+        
+        <item>
+            <title>Slow conda environment solving</title>
+            <link>https://jakevc.com/posts/2018/11/slow-conda-environment-solving/</link>
+            <pubDate>Fri, 16 Nov 2018 00:00:00 +0000</pubDate>
+            
+            <guid>https://jakevc.com/posts/2018/11/slow-conda-environment-solving/</guid>
+            <description>Conda is the package manager that comes with an anaconda, or miniconda3 distribution. In my experience, Conda does an excellent job managing dependencies and installing new packages, allowing you to install the packages you want and get back to work&amp;hellip; eventually. Conda also provides a virtual environment system that allows for generally reproducible execution environments. Snakemake makes use of this very efficiently.
+I have previously experienced slow environment solving when trying to update or install packages using the conda command.</description>
+            <content type="html"><![CDATA[<p>Conda is the package manager that comes with an anaconda, or miniconda3 distribution. In my experience, Conda does an excellent job managing dependencies and installing new packages, allowing you to install the packages you want and get back to work&hellip; eventually. Conda also provides a virtual environment system that allows for generally reproducible execution environments. Snakemake makes use of this very efficiently.</p>
+
+<p>I have previously experienced slow environment solving when trying to update or install packages using the conda command. It appears many people also experience this frustration:</p>
+
+<p><a href="https://github.com/conda/conda/issues/6865" target="_blank">https://github.com/conda/conda/issues/6865</a></p>
+
+<p><a href="https://github.com/conda/conda/issues/7938" target="_blank">https://github.com/conda/conda/issues/7938</a></p>
+
+<p><a href="https://github.com/conda/conda/issues/7921" target="_blank">https://github.com/conda/conda/issues/7921</a></p>
+
+<p><a href="https://github.com/conda/conda/issues/7883" target="_blank">https://github.com/conda/conda/issues/7883</a></p>
+
+<p>I have also seen some complaints on twitter.</p>
+
+<p>I typically try and use as small of a Conda environment as possible, but even that can take forever. I recently was configuring a new miniconda install, and wanted to install Snakemake using conda <a href="https://snakemake.readthedocs.io/en/stable/getting_started/installation.html#installation-via-conda" target="_blank">the recommended method</a>, so I followed the directions:</p>
+
+<p><code>conda install -c bioconda -c conda-forge snakemake</code></p>
+
+<p>This hangs with the output &ldquo;Solving environment: \&rdquo; and spins the forward slash until you go to the bathroom and come back&hellip; still going&hellip; go to lunch and come back&hellip; still going&hellip;</p>
+
+<p>I thought maybe if I could simplify the command it would take less time. Looking at the Conda documentation I found you can add channels for conda to look through, and even add them to be higher priority or lower priority. In the end I found that this configuration actually finished:</p>
+
+<pre><code>conda config --add channels bioconda
+conda config --add channels conda-forge
+conda install snakemake
+</code></pre>
+
+<p>This prepends the two channels to the list of channels conda searches (it actually adds them to a file, ~/.condarc) giving them higher priority while looking for packages to install. This seems to drastically reduce the time it take to solve the conda environment and install the package. I didn&rsquo;t allow solving to finish with the first try because it was taking too long. I am not sure if this solution scales to larger environments, and am not sure how this affects the &ldquo;core packages set&rdquo;. In the conda documentaiton they mention:</p>
+
+<blockquote>
+<p>Therefore, you can now safely put channels at the bottom of your channel list to provide additional packages that are not in the default channels, and still be confident that these channels will not override the core package set.</p>
+</blockquote>
+
+<p>So maybe this solution is not the most stable for large dynamic environments, but for a small, isolated environment, it seems to increase sanity.</p>
+]]></content>
+        </item>
+        
+        <item>
+            <title>Run Rstudio server in a SLURM allocated node</title>
+            <link>https://jakevc.com/posts/2018/11/run-rstudio-server-in-a-slurm-allocated-node/</link>
+            <pubDate>Sun, 11 Nov 2018 00:00:00 +0000</pubDate>
+            
+            <guid>https://jakevc.com/posts/2018/11/run-rstudio-server-in-a-slurm-allocated-node/</guid>
+            <description>Rstudio server slurm I have been spoiled at my current workplace. We have Rstudio server running on our shared servers with access to lots of CPUs and enough memory to say the least, but I may not always find myself in this situation. When I was first learning R I was running Rstudio locally, but I wasn&amp;rsquo;t working with massive genomic datasets then, and required fewer CPUs and much less memory.</description>
+            <content type="html"><![CDATA[
+
+<h1 id="rstudio-server-slurm">Rstudio server slurm</h1>
+
+<p>I have been spoiled at my current workplace. We have Rstudio server running on our shared servers with access to lots of CPUs and enough memory to say the least, but I may not always find myself in this situation. When I was first learning R I was running Rstudio locally, but I wasn&rsquo;t working with massive genomic datasets then, and required fewer CPUs and much less memory.</p>
+
+<p>This weekend my housemate and I wrote a script to run rstudio server inside a singularity image, on a node allocated via slurm. This is far more complex than we thought, and involved some serious hacking. This was mainly inspired by the <a href="https://github.com/nickjer/singularity-rstudio" target="_blank">Rstudio Singularity</a> image that we found, which made everything else possible. Here it is:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="cp">#!/bin/bash
+</span><span class="cp"></span><span class="c1">##</span>
+<span class="c1">## Run Rstudio server through SOCKS5 tunnel on a SLURM allocated node.</span>
+<span class="c1">## Jake VanCampen, Kohl Kinning, November 2018</span>
+<span class="c1">##</span>
+<span class="nb">set</span> -euo pipefail
+
+usage <span class="o">()</span>
+<span class="o">{</span>
+	 <span class="nb">echo</span> <span class="s2">&#34;Usage: </span><span class="k">$(</span>basename <span class="nv">$0</span><span class="k">)</span><span class="s2"> [-h] [-n node] [-u remote_user] [-r remote_host] [-p port]&#34;</span> &gt;<span class="p">&amp;</span><span class="m">2</span>
+	 <span class="nb">exit</span> <span class="m">1</span>
+<span class="o">}</span>
+
+<span class="c1"># exit if no arguments supplied</span>
+<span class="k">if</span> <span class="o">[</span> <span class="nv">$#</span> -eq <span class="m">0</span> <span class="o">]</span>
+<span class="k">then</span>
+   usage
+   <span class="nb">exit</span> <span class="m">1</span>
+<span class="k">fi</span>
+
+<span class="c1"># define default local variable</span>  
+<span class="nv">NODE</span><span class="o">=</span>n013
+<span class="nv">PORT</span><span class="o">=</span><span class="m">8123</span>
+
+<span class="c1"># Process command line arguments</span>
+<span class="k">while</span> <span class="nb">getopts</span> <span class="s2">&#34;:h:n::u::r::p:&#34;</span> opt<span class="p">;</span> <span class="k">do</span>
+  <span class="k">case</span> <span class="si">${</span><span class="nv">opt</span><span class="si">}</span> in
+    n <span class="o">)</span> <span class="nv">NODE</span><span class="o">=</span><span class="nv">$OPTARG</span> <span class="p">;;</span>
+    u <span class="o">)</span> <span class="nv">USER</span><span class="o">=</span><span class="nv">$OPTARG</span> <span class="p">;;</span>
+    r <span class="o">)</span> <span class="nv">REMOTE</span><span class="o">=</span><span class="nv">$OPTARG</span><span class="p">;;</span> 
+    p <span class="o">)</span> <span class="nv">PORT</span><span class="o">=</span><span class="nv">$OPTARG</span><span class="p">;;</span>
+    h <span class="o">)</span> usage<span class="p">;;</span>
+    ? <span class="o">)</span> usage<span class="p">;;</span>
+  <span class="k">esac</span>
+<span class="k">done</span>
+<span class="nb">shift</span> <span class="k">$((</span>OPTIND <span class="o">-</span><span class="m">1</span><span class="k">))</span>
+
+<span class="nb">echo</span> <span class="s2">&#34;Writing server command.&#34;</span> 
+<span class="c1"># get commands to run Rstudio server on talapas</span> 
+<span class="nb">echo</span> <span class="s2">&#34;#!/bin/bash
+</span><span class="s2">/usr/sbin/fuser -k 8787/tcp
+</span><span class="s2">module load singularity
+</span><span class="s2">singularity pull --name singularity-rstudio.simg shub://nickjer/singularity-rstudio
+</span><span class="s2">singularity run --app rserver ~/singularity-rstudio.simg&#34;</span> &gt; rserver.sh
+
+<span class="c1"># make sure it&#39;s executable</span> 
+chmod <span class="m">755</span> rserver.sh
+
+<span class="nb">echo</span> <span class="s2">&#34;Copying runscript to HPC.&#34;</span>
+<span class="nb">echo</span> <span class="s2">&#34;rsync -av rserver.sh </span><span class="nv">$USER</span><span class="s2">@</span><span class="nv">$REMOTE</span><span class="s2">:~/&#34;</span>
+rsync -av rserver.sh <span class="nv">$USER</span>@<span class="nv">$REMOTE</span>:~/
+
+<span class="c1"># remove rserver.sh from your machine</span>
+rm rserver.sh
+
+<span class="nb">echo</span> <span class="s2">&#34;Starting Rstudio server on </span><span class="nv">$NODE</span><span class="s2">.&#34;</span>
+<span class="c1"># Start the Rserver</span>
+ssh <span class="nv">$USER</span>@<span class="nv">$REMOTE</span> -o <span class="nv">RemoteCommand</span><span class="o">=</span><span class="s2">&#34;srun -w </span><span class="nv">$NODE</span><span class="s2"> rserver.sh&#34;</span> <span class="p">&amp;</span> 
+
+
+<span class="nb">echo</span> <span class="s2">&#34;Create SOCKS5 proxy tunnel from </span><span class="nv">$NODE</span><span class="s2">, through </span><span class="nv">$REMOTE</span><span class="s2">, to localhost:</span><span class="nv">$PORT</span><span class="s2">.&#34;</span>
+<span class="c1"># forward the port using a proxy command</span>
+ssh -D <span class="nv">$PORT</span> -N -f -C -q -o <span class="nv">ProxyCommand</span><span class="o">=</span><span class="s2">&#34;ssh </span><span class="nv">$USER</span><span class="s2">@</span><span class="nv">$REMOTE</span><span class="s2"> exec nc %h %p&#34;</span> <span class="nv">$USER</span>@<span class="nv">$NODE</span></code></pre></div>
+<p>The script is available on github <a href="https://github.com/jakevc/rstudio_singularity_slurm" target="_blank">rstudio_singularity_slurm</a>, and can be forked or downloaded with wget:</p>
+
+<pre><code>wget https://github.com/jakevc/rstudio_singularity_slurm/blob/master/rstudio_slurm.sh
+</code></pre>
+
+<h1 id="flow">Flow</h1>
+
+<p>The scirpt usage is shown below, with all flag arguments required:</p>
+
+<pre><code>./rstudio_slurm.sh -h
+Usage: rstudio_slurm.sh [-h] [-n node] [-u remote_user] [-r remote_host] [-p port]
+</code></pre>
+
+<p>The script starts by creating an executable bash script to load singularity, then pull the &ldquo;singularity-rstudio&rdquo; image, and start the rserver. This script is then copied to the home directory of <code>remote_user@remote_host</code>. Then an SSH command to <code>remote_user@remote_host</code> calls the run script that was just generated. This will tell SLURM to allocate you a specific <code>node</code> and run Rstudio server on that <code>node</code>. The final step creates a SOCKS5 proxy tunnel from <code>node</code>, through <code>remote_host</code>, to localhost:<code>port</code>. This allows you to configure your browser to listen on the SOCKS <code>port</code>, and have access to Rstudio server on the SLURM allocated node.</p>
+
+<h1 id="setup">Setup</h1>
+
+<p>This script assumes the availability of singularity on the remote machine, and loads it using the <code>module load singularity</code> command.</p>
+
+<p>It is necessary to have password-less SSH access to the remote server before running this script. This can be done with ssh-keygen to create an rsa key-pair, then copy the public key to the list of authorized keys on the server. For more information on SSH key-pair authentication see this <a href="https://www.digitalocean.com/community/tutorials/how-to-configure-ssh-key-based-authentication-on-a-freebsd-server" target="_blank">post</a>.</p>
+
+<p>Make sure to kill the process on <code>remote_host</code> after you are done:</p>
+
+<pre><code>$ scancel JOB_ID
+</code></pre>
+
+<p>Also its a good idea to go kill processes associated with this script on your computer after you&rsquo;re done using them. This can be done with something similar to:</p>
+
+<pre><code>ps aux | grep &quot;$NODE&quot; | awk '{print $2}' | xargs kill 
+</code></pre>
+
+<p>Where $NODE is replaced with the node you requested from slurm, for example: <code>grep &quot;n013&quot;</code>.</p>
+
+<h1 id="accessing-rstudio-server-from-firefox">Accessing Rstudio server from Firefox</h1>
+
+<p>To Access Rstudio server through the SOCKS5 tunnel, download firefox if you do not alrady have it and edit the network settings.</p>
+
+<p>In Firefox, go to Preferences &gt; Advanced &gt; Network and find the Connection settings.</p>
+
+<p>Click &ldquo;Manual Proxy Configuration&rdquo; and type &ldquo;localhost&rdquo; in the SOCKS Host box. Type the port you intend to use when calling <code>./rstudio_slurm.sh</code> in the Port box.</p>
+
+<p>Check the box that says &ldquo;Proxy DNS when using SOCKS v5&rdquo;.</p>
+
+<p><img src="https://github.com/jakevc/rstudio_singularity_slurm/blob/master/firefox_setup.png" alt="" /></p>
+
+<p>Once this is setup, run the server script like so:</p>
+
+<pre><code>./rstudio_slurm.sh -n n013 -u bob -r remote.server -p 8123
+</code></pre>
+
+<p>This will request n013 from SLURM and begin running Rstudio server in a singularity container on that node. Then a SOCKS tunnel will be established from n013 to your localhost:8123. If you setup your firefox correctly, when you navigate to n013:8787 in the firefox address bar, you will be redirected to the Rstudio instance running on n013.</p>
+
+<h1 id="security-issues">Security issues</h1>
+
+<p>A known secutity issue with this script is that it allows you access to another users Rstudio session and account if you request a tunnel to the same port on the same node. We intend to include Rstudio server authentication soon which may solve this problem.</p>
+]]></content>
+        </item>
+        
+        <item>
+            <title>How to make goslides</title>
+            <link>https://jakevc.com/posts/2018/10/how-to-make-goslides/</link>
+            <pubDate>Wed, 03 Oct 2018 00:00:00 +0000</pubDate>
+            
+            <guid>https://jakevc.com/posts/2018/10/how-to-make-goslides/</guid>
+            <description>Creating Slides in Golang I am about to give a journal club presentation on a recent epigenetics paper. I have also been learning golang. Many learning materials, and golang presentations I run into are very clean html presentations with absolutely no bells and whistles, that appear to run in the browser.
+I soon found out these presentations are generated from the &amp;lsquo;present&amp;rsquo; package, which is a built in golang tool at golang.</description>
+            <content type="html"><![CDATA[
+
+<h1 id="creating-slides-in-golang">Creating Slides in Golang</h1>
+
+<p>I am about to give a journal club presentation on a recent epigenetics paper. I have also been learning <a href="https://golang.org/" target="_blank">golang</a>. Many learning materials, and golang presentations I run into are very clean html presentations with absolutely no bells and whistles, that appear to run in the browser.</p>
+
+<p>I soon found out these presentations are generated from the &lsquo;present&rsquo; package, which is a built in golang tool at golang.org/x/tools. I appreciate the simplicity of these presentations because it allows me to focus on my public speaking skills simply and effieciently. I don&rsquo;t want to think about how to get presenter notes, or decide if my presentation is going to be cross-platform, or even think the thought of bringing a thumb drive to a talk&hellip;</p>
+
+<p>It took a second for me to find out how to generate this type of presentation with the features I wanted, namely:</p>
+
+<ul>
+<li>Few bells and whistles</li>
+<li>Host on github</li>
+<li>Create whole presentation in vim</li>
+</ul>
+
+<h1 id="setup">Setup</h1>
+
+<p>Because this is a go package, you will need to install go, if you do not already have go installed you will need to do that. On MacOS you can simply <a href="https://golang.org/dl/" target="_blank">Downlaod</a> and install the package by clicking on the download file.</p>
+
+<p>You then need to setup your environment for developing go code.</p>
+
+<p>Briefly,</p>
+
+<pre><code># setup workspace directory
+$ mkdir -p $HOME
+
+# hello world
+$ mkdir -p $HOME/go/src/hello 
+$ cd $HOME/go/src/hello
+
+$ vim hello.go
+package main
+
+import &quot;fmt&quot;
+
+func main() {
+	fmt.Printf(&quot;hello, world\n&quot;)
+}
+# :wq 
+
+# build hello world
+$ go build
+
+$ ./hello
+hello, world
+</code></pre>
+
+<p>To learn more about setting up your go development workspace: <a href="https://golang.org/doc/code.html" target="_blank">How to Write Go Code</a>.</p>
+
+<h1 id="tell-path-about-go">Tell PATH about go</h1>
+
+<pre><code># edit your bash profile
+$ vim ~/.bash_profile
+...
+..
+.
+# go setup
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
+</code></pre>
+
+<pre><code>go get golang.org/x/tools/
+go install golang.org/x/tools/cmd/present
+</code></pre>
+
+<h1 id="get-present">Get present</h1>
+
+<pre><code>go get golang.org/x/tools/
+go install golang.org/x/tools/cmd/present
+</code></pre>
+
+<p>Now the present binary should be in your <code>$GOPATH/bin</code>, and because of the above step should also be available in your <code>$PATH</code>.</p>
+
+<h1 id="make-some-slides">Make some slides</h1>
+
+<p>To make slides in go, create a file with the extention &ldquo;.slide&rdquo; in any directory.</p>
+
+<p>Take a look at the <a href="https://godoc.org/golang.org/x/tools/present" target="_blank">present package</a> for the syntax details, there are some fun things you can do that I won&rsquo;t get into in this post.</p>
+
+<pre><code>$ cat sample.slide
+
+Title of document
+Subtitle of document
+15:04 2 Jan 2006
+Tags: foo, bar, baz
+
+Author Name
+Job title, Company
+joe@example.com
+http://url/
+@twitter_name
+Some Text
+
+* Title of slide or section (must have asterisk)
+
+Some Text
+</code></pre>
+
+<p>Run present in the same directory:</p>
+
+<pre><code>$ present
+2018/10/03 00:55:33 Open your web browser and visit http://127.0.0.1:3999
+</code></pre>
+
+<p>This will then send you to port 3999, on your localhost, so you ca view your slides in a browser.</p>
+
+<h1 id="host-on-github">Host on github</h1>
+
+<p>Okay, so far what I have shown you still requires you to have your computer with your for a presentation. If you want to host your slides on github, you could work out your own server or something, but the solution is less complicated.</p>
+
+<p>It turns out that any file with the extension &ldquo;.slides&rdquo; (and the correct syntax) is built with <code>present</code> and hosted on (<a href="https://talks.godoc.org/" target="_blank">https://talks.godoc.org/</a>).</p>
+
+<pre><code>$ mkdir sample
+$ mv sample.slide sample/sample.slide
+
+# initialize new git repo
+$ git init
+
+# add and commit slides
+$ git add sample.slide
+$ git commit -m &quot;added first slide&quot; 
+
+# create your github repo on github.com, then:
+$ git remote add origin remote repository URL
+
+# Sets the new remote
+$ git push -u origin master
+</code></pre>
+
+<p>Now, if you navigate to:</p>
+
+<p><a href="https://talks.godoc.org/github.com/owner/project/sub/directory/sample.slide" target="_blank">https://talks.godoc.org/github.com/owner/project/sub/directory/sample.slide</a></p>
+
+<p>You will find your slides rendered, ready for you to access from any browser. That means if you accidentally drop your computer in the bathtub the morning before you presentation, you will still be able to access your slides (as long as your pushed your changes upstream.)</p>
+
+<p>This workflow is great if you don&rsquo;t want to leave the command line to make a quick presentation, or a long one.</p>
+
+<p>Present also has dynamic support for presenter notes in the browser by pressing &lsquo;N&rsquo; when you are viewing the presentation. The colon &lsquo;:&rsquo; sets off presenter notes annotation in your slides file. Read more about that at <a href="https://godoc.org/golang.org/x/tools/present" target="_blank">package present</a>.</p>
+]]></content>
+        </item>
+        
+        <item>
+            <title>Learning golang for bioinformatics</title>
+            <link>https://jakevc.com/posts/2018/09/learning-golang-for-bioinformatics/</link>
+            <pubDate>Tue, 04 Sep 2018 00:00:00 +0000</pubDate>
+            
+            <guid>https://jakevc.com/posts/2018/09/learning-golang-for-bioinformatics/</guid>
+            <description>What is Go? Go, or &amp;ldquo;golang&amp;rdquo; is a compiled language that was developped at Google in 2009. Golang is an open source language designed for simplicity, and portability within modern computational infrastructures. Golang is statically typed. In practice this means defining the types of variables, and explicitly keeping track of how those types are passed into and out of functions.
+Hello World in go looks like this:
+package main import &amp;#34;fmt&amp;#34; func main() { fmt.</description>
+            <content type="html"><![CDATA[
+
+<h1 id="what-is-go">What is Go?</h1>
+
+<p><a href="https://golang.org/" target="_blank">Go</a>, or &ldquo;golang&rdquo; is a compiled language that was developped at Google in 2009. Golang is an open source language designed for simplicity, and portability within modern computational infrastructures. Golang is statically typed. In practice this means defining the types of variables, and explicitly keeping track of how those types are passed into and out of functions.</p>
+
+<p>Hello World in go looks like this:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">package</span> <span class="n">main</span>
+
+<span class="kn">import</span> <span class="s2">&#34;fmt&#34;</span>
+
+<span class="n">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s2">&#34;Hello, World!&#34;</span><span class="p">)</span>
+<span class="p">}</span></code></pre></div>
+<p>I decided to learn golang because it looks beautiful, and I wanted to learn a lower level language than Python or R. I started learning golang with some online tutorials, and then realized I needed more relevant applications to my work. I am currently re-writing command-line tools for processing next-generation sequencing data that I had written in Python.</p>
+
+<h1 id="development-environment">Development Environment</h1>
+
+<p>When writing go, all code and binaries are stored in a structured location to provide a standard development workflow. When you download go, it is <a href="https://golang.org/doc/install" target="_blank">recommended</a> that you download the base packages into <code>/usr/local</code>. You will then have a <code>/usr/local/go</code> directory that is your go workspace. After adding go to your path:</p>
+
+<p><code>export PATH=$PATH/usr/local/go/bin</code></p>
+
+<p>your go code workspace can be a directory with any name and the following structure:</p>
+
+<pre><code>→tree -L 1 golang
+.
+├── bin
+├── pkg
+└── src
+
+3 directories, 0 files
+</code></pre>
+
+<p>My workspace is called golang, and contains a bin, pkg, and src directories. To configure this as your workspace, tell go this is where you want to work by adding the GOPATH and GOBIN environment variables in <code>~/.bash_profile</code> or <code>~/.bashrc</code>.</p>
+
+<pre><code>export GOPATH=~/Documents/golang/
+export GOBIN=$(go env GOPATH)bin
+</code></pre>
+
+<p>If you execute <code>go env</code> on the command-line you will see the value of all go environment variables and see what else can be configured.</p>
+
+<p>To create a new program, make a directory inside <code>/src</code> with the name of the program you want to write. Use simple, descriptive names with only letters.</p>
+
+<p>There are multiple ways to run go code:</p>
+
+<p>If hello.go is here:</p>
+
+<p><code>$GOPATH/src/hello/hello.go</code></p>
+
+<ul>
+<li><code>go run $GOPATH/src/hello/hello.go</code> runs th program</li>
+<li><code>go build $GOPATH/src/hello/hello.go</code> will build the binary <code>$GOPATH/src/hello/hello</code></li>
+<li><code>go install $GOPATH/src/hello/hello.go</code> compiles the binary into <code>$GOPATH/bin/hello</code></li>
+</ul>
+
+<p>For more infomation: <a href="https://golang.org/doc/code.html" target="_blank">&ldquo;How to write go code&rdquo;</a></p>
+
+<h1 id="bioinformatics-tools">Bioinformatics Tools</h1>
+
+<p>I have a some basic command line tools written in Python, specifically for investigating next-generation sequencing data: <a href="https://github.com/jakevc/nxgn-tools" target="_blank">nxgn-tools</a>. The golang version of these are being updated <a href="https://github.com/jakevc/nxgnTools" target="_blank">here</a> as I finish them. I will talk about my experience writing the first one: <code>fasta2line</code>.</p>
+
+<p>Here is the finished command line tool <code>fasta2line</code> that &ldquo;unwraps&rdquo; multi-line fasta entries so that there are only two lins per entry: header, and sequence.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">package</span> <span class="n">main</span>
+
+<span class="o">/*</span>
+<span class="n">This</span> <span class="n">program</span> <span class="n">converts</span> <span class="nb">all</span> <span class="n">multiline</span> <span class="n">fasta</span> <span class="n">entries</span> <span class="ow">in</span> <span class="n">a</span> <span class="nb">file</span> <span class="n">to</span>
+<span class="n">single</span> <span class="n">line</span> <span class="n">fasta</span> <span class="n">entries</span><span class="o">.</span>
+<span class="o">*/</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s2">&#34;bufio&#34;</span>
+	<span class="s2">&#34;bytes&#34;</span>
+	<span class="s2">&#34;fmt&#34;</span>
+	<span class="s2">&#34;os&#34;</span>
+	<span class="s2">&#34;strings&#34;</span>
+<span class="p">)</span>
+
+<span class="n">func</span> <span class="n">check</span><span class="p">(</span><span class="n">e</span> <span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="o">//</span> <span class="n">check</span> <span class="k">if</span> <span class="n">err</span> <span class="ow">and</span> <span class="n">panic</span>
+	<span class="k">if</span> <span class="n">e</span> <span class="o">!=</span> <span class="n">nil</span> <span class="p">{</span>
+		<span class="n">panic</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">func</span> <span class="n">combineSeqLine</span><span class="p">(</span><span class="n">path</span> <span class="n">string</span><span class="p">)</span> <span class="p">{</span>
+	<span class="o">//</span> <span class="n">read</span> <span class="nb">file</span> <span class="n">by</span> <span class="n">line</span>
+	<span class="n">inFile</span><span class="p">,</span> <span class="n">err</span> <span class="p">:</span><span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+	<span class="n">check</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+	<span class="n">defer</span> <span class="n">inFile</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+	<span class="n">scanner</span> <span class="p">:</span><span class="o">=</span> <span class="n">bufio</span><span class="o">.</span><span class="n">NewScanner</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span>
+	<span class="n">scanner</span><span class="o">.</span><span class="n">Split</span><span class="p">(</span><span class="n">bufio</span><span class="o">.</span><span class="n">ScanLines</span><span class="p">)</span>
+
+	<span class="n">var</span> <span class="n">entry</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">Buffer</span>
+	<span class="n">var</span> <span class="n">first</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">true</span>
+
+	<span class="o">//</span> <span class="n">scan</span> <span class="ow">and</span> <span class="n">parse</span> <span class="n">lines</span>
+	<span class="k">for</span> <span class="n">scanner</span><span class="o">.</span><span class="n">Scan</span><span class="p">()</span> <span class="p">{</span>
+		<span class="n">line</span> <span class="p">:</span><span class="o">=</span> <span class="n">scanner</span><span class="o">.</span><span class="n">Text</span><span class="p">()</span>
+
+		<span class="o">//</span> <span class="n">firstline</span> <span class="n">case</span>
+		<span class="k">if</span> <span class="n">first</span> <span class="p">{</span>
+			<span class="n">entry</span><span class="o">.</span><span class="n">WriteString</span><span class="p">(</span><span class="n">line</span> <span class="o">+</span> <span class="s2">&#34;</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">)</span>
+			<span class="n">first</span> <span class="o">=</span> <span class="n">false</span>
+		<span class="p">}</span>
+		<span class="o">//</span> <span class="n">write</span> <span class="n">header</span>
+		<span class="k">if</span> <span class="n">strings</span><span class="o">.</span><span class="n">HasPrefix</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="s2">&#34;&gt;&#34;</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">header</span> <span class="p">:</span><span class="o">=</span> <span class="n">line</span>
+			<span class="n">entry</span><span class="o">.</span><span class="n">WriteString</span><span class="p">(</span><span class="s2">&#34;</span><span class="se">\n</span><span class="s2">&#34;</span> <span class="o">+</span> <span class="n">header</span> <span class="o">+</span> <span class="s2">&#34;</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">)</span>
+		<span class="p">}</span>
+		<span class="o">//</span> <span class="n">write</span> <span class="n">seq</span>
+		<span class="k">if</span> <span class="err">!</span><span class="n">strings</span><span class="o">.</span><span class="n">HasPrefix</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="s2">&#34;&gt;&#34;</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">entry</span><span class="o">.</span><span class="n">WriteString</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">String</span><span class="p">())</span>
+<span class="p">}</span>
+
+<span class="n">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">Args</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="p">{</span>
+		<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s2">&#34;Provide path to multiline fasta file as command line argument&#34;</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+	<span class="o">//</span> <span class="n">read</span> <span class="ow">in</span> <span class="n">the</span> <span class="nb">file</span>
+	<span class="n">combineSeqLine</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">Args</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="p">}</span></code></pre></div>
+<p>There are a few things about this code that were new to me:</p>
+
+<ul>
+<li>lines written to a buffer</li>
+<li>error handling</li>
+<li>defer statement
+<br />
+<br /></li>
+</ul>
+
+<p>The buffio package allows you to scan the bytes of a file by line, then using the byes.buffer package we can write the processed information to the buffer and call the String method on it. If this program were writing to a file, we could gain efficiency by writing each entry at a time from the buffer to the file, instead of printing the whole buffer.</p>
+
+<p>Error handling in go is gorgeous because of the built-in error type. There are numerous ways to <a href="https://blog.golang.org/error-handling-and-go" target="_blank">handle errors in go</a>, but the basic structure of checking the error is very common because many functions, <code>os.Open</code> in this case return a value, and an error.</p>
+
+<pre><code>inFile, err := os.Open(path)
+if err != nil {
+  panic(err)
+}
+</code></pre>
+
+<p>Defer simply &ldquo;defers the execution of a function until the surrounding function returns&rdquo;, this is useful for cleanup tasks like a file.Close(), and can be placed before the processing of the file so that the cleanup is more explicit.</p>
+
+<h1 id="file-close">file.Close()</h1>
+
+<p>I have been enjoying learning about golang, and will be likely writing more about it as I learn how to harness go&rsquo;s concurrency to make programs more powerful. I think golang could be very useful for bioinformatics programming, and I am excited to try out some applications.</p>
+]]></content>
+        </item>
+        
+        <item>
+            <title>Align and count RNA-seq reads with STAR</title>
+            <link>https://jakevc.com/posts/2017/11/align-and-count-rna-seq-reads-with-star/</link>
+            <pubDate>Tue, 14 Nov 2017 00:00:00 +0000</pubDate>
+            
+            <guid>https://jakevc.com/posts/2017/11/align-and-count-rna-seq-reads-with-star/</guid>
+            <description>DNA makes RNA makes Protein, as goes the central dogma of molecular biology. RNA sequencing (RNA-seq) allows researchers to quantify which genes of the DNA are being expressed at any given time, in a given sample of DNA. This tool is very powerful because it allows us to ask questions about the difference in gene expression between different individuals, or between time points in the same individual.
+RNA-seq produces a text file with millions of sequences we call &amp;lsquo;reads&amp;rsquo; that represent the genes they came from in the genome.</description>
+            <content type="html"><![CDATA[
+
+<p>DNA makes RNA makes Protein, as goes the central dogma of molecular biology. RNA sequencing (RNA-seq) allows researchers to quantify which genes of the DNA are being expressed at any given time, in a given sample of DNA. This tool is very powerful because it allows us to ask questions about the difference in gene expression between different individuals, or between time points in the same individual.</p>
+
+<p>RNA-seq produces a text file with millions of sequences we call &lsquo;reads&rsquo; that represent the genes they came from in the genome. These reads are then aligned to the genome, so that the genes they represent can be detected. To look at the differential expression of these genes, the number of RNA-seq reads that align to genes in the known genome are counted.</p>
+
+<p>This post shows my process for aligning RNA-seq reads to a mouse genome, and counting the number of reads that map to specific genes using a program called STAR, and a Python program I wrote to organize the output.</p>
+
+<p>There are a number of programs used to align RNA-seq reads to the genome, but here I will discuss my experience using STAR, which stands for &ldquo;Spliced Transcripts Alignment to a Reference.&rdquo; STAR is a fully open-source software implemented in C++ code, that is known for being greater than 50 times faster than other aligners, while also improving alignment sensitivity and precision. STAR is also capable of detecting known and novel spice junctions in aligned reads.<sup><a href="https://academic.oup.com/bioinformatics/article/29/1/15/272537" target="_blank">1</a></sup></p>
+
+<h2 id="genome-index">Genome Index</h2>
+
+<p>The first step in alignment with STAR is to generate a genome index for the reads to be aligned to. The two components needed to do this are the reference genome you are using, and the GTF file associated with this genome. It can be a bit confusing which genome version, or GTF file version to use because there are a number of databases with quality genomes for common organisms; for example, <a href="https://www.gencodegenes.org/" target="_blank">GENCODE</a>, <a href="https://genome.ucsc.edu/encode/" target="_blank">ENCODE</a>, or <a href="https://www.ncbi.nlm.nih.gov/" target="_blank">NCBI</a> all have multiple assemblies for mouse and human. STAR recommends in their documentation to use the GENCODE primary assemblies, when available. In this case, I did because I was working with the widely available mouse genome.</p>
+
+<p>I first downloaded both the genome FASTA file and it&rsquo;s associatedd GTF file from GENCDE using the following commands:</p>
+
+<pre><code>$ wget ftp://ftp.sanger.ac.uk/pub/gencode/Gencode_mouse/release_M15/GRCm38.primary_assembly.genome.fa.gz
+
+$ wget ftp://ftp.sanger.ac.uk/pub/gencode/Gencode_mouse/release_M15/gencode.vM15.primary_assembly.annotation.gtf.gz
+</code></pre>
+
+<p>I next created a new directory called <code>star_index</code> to place both files in. To generate a genome index, I ran the following command as a script on the high-performance computing cluster:</p>
+
+<pre><code># load star
+ml STAR
+
+# generate genome index
+STAR --runMode genomeGenerate --genomeDir ./star_index \
+--readFilesCommand zcat \
+--genomeFastaFiles ./star_index/GRCm38.primary_assembly.genome.fa \
+--runThreadN 28 \
+--outFileNamePrefix ./star_index/ \
+--sjdbGTFfile ./star_index/gencode.vM15.primary_assembly.annotation.gtf
+</code></pre>
+
+<p>This took about 35 minutes, after which my <code>star_index</code> directory contained the following files:</p>
+
+<pre><code>└── star_index
+    ├── chrLength.txt
+    ├── chrNameLength.txt
+    ├── chrName.txt
+    ├── chrStart.txt
+    ├── exonGeTrInfo.tab
+    ├── exonInfo.tab
+    ├── gencode.vM15.primary_assembly.annotation.gtf
+    ├── geneInfo.tab
+    ├── Genome
+    ├── genomeParameters.txt
+    ├── GRCm38.primary_assembly.genome.fa
+    ├── Log.out
+    ├── SA
+    ├── SAindex
+    ├── sjdbInfo.txt
+    ├── sjdbList.fromGTF.out.tab
+    ├── sjdbList.out.tab
+    └── transcriptInfo.tab
+</code></pre>
+
+<p>These are all necessary for subsequents steps, so make sure they were generated, specifically the <code>geneInfo.tab</code> and <code>exonInfo.tab</code> files, which are used to determine reads mapping to specific genes.</p>
+
+<h2 id="align-reads">Align Reads</h2>
+
+<p>To organize my output, I created a new directory called <code>aligned_reads</code> that will contain the output from STAR. Making sure that all files were in a directory called <code>reads</code>, I then aligned 24 files of reads to the genome using the following script:</p>
+
+<pre><code># load star
+ml STAR
+
+cd reads
+
+for i in *_R1_001.1.fq.gz;
+do STAR --genomeDir ../star_index \
+	--readFilesIn $i ${i%_R1_001.1.fq.gz}_R2_001.2.fq.gz \
+	--outFileNamePrefix ../aligned_reads/${i%_R1_001.1.fq.gz} \
+	--quantMode GeneCounts \
+	--runThreadN 28 \
+	--readFilesCommand zcat;
+done
+</code></pre>
+
+<p>The <code>--quantMode GeneCounts</code> option creates a file <code>ReadsPerGene.out.tab</code> that counts the number of reads uniquely mapping to each gene, for each file of aligned reads. This will be very helpful for organizing the data to use in a differential expression analysis. I aligned just under 300 million reads using this script in around 1.5 hours.</p>
+
+<p>For each file of reads, the program outputs a number of summary files. For differential expression analysis, <code>ReadsPerGene.out.tab</code> is the most important, another useful file is the <code>log.final.out</code> file which is the final alignment statistics report.</p>
+
+<p>To summarize all output in a total of two files I wrote a Python script to make a file for use in differential expression analysis, and a file that represents summary statistics for each set of paired-end reads. The two files have the following format:</p>
+
+<p><strong>counts_per_gene.tsv</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>gene</th>
+<th>library_1</th>
+<th>library_2</th>
+<th>&hellip;</th>
+<th>library_n</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>gene_1</td>
+<td>counts</td>
+<td>counts</td>
+<td>counts</td>
+<td>counts</td>
+</tr>
+
+<tr>
+<td>gene_2</td>
+<td>counts</td>
+<td>counts</td>
+<td>counts</td>
+<td>counts</td>
+</tr>
+
+<tr>
+<td>&hellip;</td>
+<td>counts</td>
+<td>counts</td>
+<td>counts</td>
+<td>counts</td>
+</tr>
+
+<tr>
+<td>gene_n</td>
+<td>counts</td>
+<td>counts</td>
+<td>counts</td>
+<td>counts</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>count_stats.tsv</strong></p>
+
+<p>File contains the following columns:</p>
+
+<p>| <strong>file</strong> | <strong>total_reads</strong> | <strong>uniq_reads</strong> | <strong>reads_on_genes</strong> |</p>
+
+<p>The python script use to organize these data is shown here, and the full script can be downloaded from my <a href="https://github.com/jakevc/nxgn-tools/blob/master/alignment_tools/count_stats.py" target="_blank">github</a>.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="c1"># Generate a table of counts for each gene, for each file.</span>
+
+<span class="c1"># firstline case</span>
+<span class="n">firstone</span> <span class="o">=</span> <span class="bp">True</span>
+
+<span class="c1"># loop over all files in working directory</span>
+<span class="k">for</span> <span class="nb">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">():</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="nb">file</span>
+    <span class="k">if</span> <span class="n">firstone</span> <span class="o">&amp;</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;ReadsPerGene.out.tab&#39;</span><span class="p">):</span>
+        <span class="c1"># grab the filename</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_L&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span>
+                           <span class="n">header</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                           <span class="n">usecols</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gene&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">])</span>
+        <span class="c1"># exit firstline case</span>
+        <span class="n">firstone</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="k">elif</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;ReadsPerGene.out.tab&#39;</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_L&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># joine each files counts on the gene column</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+                         <span class="nb">file</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                         <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+                         <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gene&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">]))</span>
+
+<span class="c1"># write file to output</span>
+<span class="n">data</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;counts_per_gene.tsv&#39;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+
+
+<span class="c1"># Generate mapping statistics for each file</span>
+
+<span class="c1"># open file for writing</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;count_stats.tsv&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+    <span class="c1"># write header</span>
+    <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;file</span><span class="se">\t</span><span class="s1">total_reads</span><span class="se">\t</span><span class="s1">uniq_reads</span><span class="se">\t</span><span class="s1">reads_on_genes</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="c1"># loop over directory</span>
+    <span class="k">for</span> <span class="nb">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">():</span>
+
+        <span class="c1"># if it&#39;s the log file</span>
+        <span class="k">if</span> <span class="nb">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;Log.final.out&#39;</span><span class="p">):</span>
+
+            <span class="c1"># grab the file name</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="nb">file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_L&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="c1"># retain file</span>
+            <span class="n">fi</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+                    <span class="nb">file</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">]</span>
+                    <span class="p">)</span>
+            <span class="c1"># retain stats of interest</span>
+            <span class="n">fi</span> <span class="o">=</span> <span class="n">fi</span><span class="p">[</span>
+                    <span class="n">fi</span><span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="p">]</span><span class="o">.</span><span class="nb">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;Number of input reads&#39;</span><span class="p">)</span> <span class="o">|</span>
+                    <span class="n">fi</span><span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="p">]</span><span class="o">.</span><span class="nb">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;Uniquely mapped reads number&#39;</span><span class="p">)</span>
+                    <span class="p">]</span>
+            <span class="c1"># set index to first column</span>
+            <span class="n">fi</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;key&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+            <span class="c1"># cache stats from data frame</span>
+            <span class="n">total_reads</span> <span class="o">=</span> <span class="n">fi</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">uniq_reads</span> <span class="o">=</span> <span class="n">fi</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="c1"># loop over dir to count reads/gene-model</span>
+            <span class="k">for</span> <span class="n">counts</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">counts</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;ReadsPerGene.out.tab&#39;</span><span class="p">):</span>
+
+                    <span class="c1"># to reference current filename</span>
+                    <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">counts</span><span class="p">:</span>
+                        <span class="n">current</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+                                    <span class="n">counts</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+                        <span class="n">num_reads_on_gene</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">current</span><span class="p">[</span><span class="mi">4</span><span class="p">:][</span><span class="mi">2</span><span class="p">])</span>
+
+                        <span class="c1"># write to output file</span>
+                        <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;{name}</span><span class="se">\t</span><span class="s1">{total_reads}</span><span class="se">\t\
+</span><span class="se"></span><span class="s1">                                    {uniq_reads}</span><span class="se">\t</span><span class="s1">{num_reads_on_gene}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></code></pre></div>
+<p>The great thing about this script is it could be used again, given a similar directory structure, and that I still wanted to split the filename on &ldquo;_L&rdquo;, on another set of reads from any RNA-seq experiment to generate the necessary counts file for differentail expression analysis!</p>
+]]></content>
+        </item>
+        
+        <item>
+            <title>Reply Times</title>
+            <link>https://jakevc.com/posts/2017/11/reply-times/</link>
+            <pubDate>Thu, 09 Nov 2017 00:00:00 +0000</pubDate>
+            
+            <guid>https://jakevc.com/posts/2017/11/reply-times/</guid>
+            <description>I wrote up an analysis of imessage data in jupyter notebook and found out that I may actually reply faster to my girlfriend over text during the daytime.</description>
+            <content type="html"><![CDATA[<p>I wrote up an analysis of imessage data in jupyter notebook and found out that I may actually reply faster to my girlfriend over text during the daytime.</p>
+]]></content>
+        </item>
+        
+        <item>
+            <title>SMRT Sequencing for smart genomics</title>
+            <link>https://jakevc.com/posts/2017/11/smrt-sequencing-for-smart-genomics/</link>
+            <pubDate>Fri, 03 Nov 2017 00:00:00 +0000</pubDate>
+            
+            <guid>https://jakevc.com/posts/2017/11/smrt-sequencing-for-smart-genomics/</guid>
+            <description>The University of Oregon Genomics and Cell Characterization Core Facility (GCCCF) hosted a seminar this past Friday, November 3rd in celebration of the new Pacific Biosciences sequencer, the Sequel, that is now accepting submissions for long-read sequencing.
+Advances in SMRT sequencing The seminar kicked off with Steve Turner, Chief Technology Officer at PacBio. Turner&amp;rsquo;s excitement was contagious as he described the advantages of long-read sequencing technologies on the new Sequel system.</description>
+            <content type="html"><![CDATA[
+
+<p>The University of Oregon Genomics and Cell Characterization Core Facility (GCCCF) hosted a seminar this past Friday, November 3rd in celebration of the new Pacific Biosciences sequencer, the Sequel, that is now accepting <a href="https://gc3f.uoregon.edu/pacbio-sequencing-2" target="_blank">submissions</a> for long-read sequencing.</p>
+
+<h3 id="advances-in-smrt-sequencing">Advances in SMRT sequencing</h3>
+
+<p>The seminar kicked off with Steve Turner, Chief Technology Officer at PacBio. Turner&rsquo;s excitement was contagious as he described the advantages of long-read sequencing technologies on the new Sequel system. Of the main points Turner stressed, the most important seemed to be use of long-read sequencing for characterizing genomic structural variation, a phenomena whose importance in genomics is quickly regaining ground, Turner Pointed out.</p>
+
+<p>PacBio&rsquo;s Single Molecule Real Time (SMRT) technology has been criticized for higher per-base-call error rates when compared to Illumina&rsquo;s short read sequencing platforms; however, Turner pointed out the importance that this error is truly random with SMRT sequencing, as opposed to systematic on Illumina platforms. This is evident in the characteristic low quality of base calls at the beginning and end of Illumina&rsquo;s short reads. The randomness of the error on SMRT sequencing platforms results in a a higher <strong>consensus accuracy</strong> over the assembled genomic pieces than for Illumina platforms.</p>
+
+<p>The higher consensus accuracy coupled with read lengths &gt;10 kbps is allowing for an increase in the quality and completeness of reference genomes. Turner pointed this out as a major advantage and strongly encouraged researchers to consider SMRT sequencing when designing whole genome sequencing studies, noting that the use of SMRT sequencing may have a lower &ldquo;cost per publication&rdquo; than short read technologies.</p>
+
+<p>The nature of SMRT sequencing allows for another interesting advantage, the bonus detection of DNA-methylation markers during sequencing that can be accessed for free as and addition software with SMRT sequencing, for those interested in epigenetic regulation. This can occur due to the instruments ability to analyze the real-time kinetics of the DNA synthesis as each base is added.</p>
+
+<p>Turner&rsquo;s talk also included advances in isoSeq, PacBio&rsquo;s improving technology that can detect whole transcript &ldquo;spliceoforms&rdquo; in the same read &ldquo;from the poly-A tail to the 5&rsquo; end.&rdquo; Among the other exciting advances are the expected roll-out of a new SRMT-cell (where the DNA is loaded on the Sequel machine) that will increase the throughput potential 8X, and an improved single-tube library preparation protocol that will decrease the time of library prep from 3 days, to 3 hours. These changes are expected to come sometime in 2019.</p>
+
+<h3 id="program-specific-assembly-strategies-at-the-joint-genome-institute">Program specific assembly strategies at the Joint Genome Institute.</h3>
+
+<p>The next speaker, Alicia Clum, came representing the Joint Genome Institute (JGI), a US Department of Energy funded sequencing resource located in Walnut Creek, CA, and operated by the University of California Berkeley.</p>
+
+<p>Alicia presented on the projects, and challenges they face as a multi-user resource for sequencing. The lab receives projects from many different researchers in the area, and carries out sequencing projects ranging from microbial genome assembly to plant metagenomics. Alicia presented multiple data figures representing their experience using PacBio sequencing and their excitement for advancements in the technology.</p>
+
+<h3 id="a-genomics-roadmap-to-wine-flavor">A genomics roadmap to wine flavor</h3>
+
+<p>Dario Cantu Ph.D, assistant professor of Viticulture and Enology at UC Davis, presented on his labs efforts to characterize a genomic roadmap to wine flavor. Cantu researches plant pathogenicity and fungicide resistance, as well as the regulation of fruit development and pathogen susceptibility. Wine grapes are among the plants of interest to Cantu, and he gave a fascinating background in the history of wine-grape genetics.</p>
+
+<p>Cantu came to this seminar to explain the usefulness of PacBio sequencing to produce a genome reference for <em>Vitis vinifera</em>, Cabernet Sauvignon. His lab was interested in determining alleles that may be responsible for the different grape phenotypes. These grapes have been selected over thousands of years to be highly heterozygous for desired traits, and the association of allelic variation with phenotype has not been feasible with short read sequencing because of difficulties with phased assembly of short reads.</p>
+
+<p>Cantu presented his results using SRMT sequencing and the open source software FALCON-unzip, to produce a high quality, phased assembly of the <em>Vitis vinifera</em> genome. This allowed for &lsquo;haplotig&rsquo; resolution of the genome, which will allow his lab to further uncover the history of wine genetics.</p>
+
+<h3 id="pacbio-at-uo">PacBio at UO</h3>
+
+<p>Finally, Doug Turnbull, director of the UO GCCCF, presented on the first successful run with the core&rsquo;s new Sequel system. Turnbull presented results from a bacterial genome, showing a 7GB, high quality run with read lengths &gt;10 kbps.</p>
+
+<p>The Core is now accepting sequencing submissions for around $1200 per SMRT-cell (external), and $800 (internal). Library prep services are also available using state of the art tools for size selection and quality analysis of libraries prior to sequencing.</p>
+]]></content>
+        </item>
+        
+        <item>
+            <title>My Development Environment</title>
+            <link>https://jakevc.com/posts/2017/10/my-development-environment/</link>
+            <pubDate>Thu, 26 Oct 2017 00:00:00 +0000</pubDate>
+            
+            <guid>https://jakevc.com/posts/2017/10/my-development-environment/</guid>
+            <description>When I began working on the computer full time earlier this year, I was still using the GUIs of my computer and had little intuition for how to organize my work in a coding Environment. Now I use exclusively the command line to navigate my MacBook Pro; collaborate and track my work using Github; and I write most assignments, and now blog posts in markdown.
+The largest behavioral change for me was working primarily in text editors, Github, and the command line.</description>
+            <content type="html"><![CDATA[
+
+<p>When I began working on the computer full time earlier this year, I was still using the GUIs of my computer and had little intuition for how to organize my work in a coding Environment. Now I use exclusively the command line to navigate my MacBook Pro; collaborate and track my work using Github; and I write most assignments, and now blog posts in markdown.</p>
+
+<p>The largest behavioral change for me was working primarily in text editors, Github, and the command line. After lots of practice I prefer these environments. It has taken a good deal of time and research to find the tools, and personal settings necessary to keep my workflow going efficiently on the computer. Here I will discuss the tools and tricks I use, basically a list of personal settings that is likely to change in the next week, but will provide a snapshot for others and myself of where I am at currently.</p>
+
+<h2 id="iterm">iTerm</h2>
+
+<p>I use a terminal emulator called <a href="https://www.iterm2.com/documentation-one-page.html" target="_blank">iTerm</a> that is highly functional and customizable. I have used it for a while, and it&rsquo;s unlikely I will use anything else anytime soon. It features text selection, split panes, and a hotkey window (love this). There are also options for profiles and nice tab-switching functionality.</p>
+
+<h2 id="setting-up-bash-preferences">Setting up Bash preferences</h2>
+
+<p>One of the first settings I changed when I started working on the command line is to customize the prompt it&rsquo;s self. The settings that determine this are found in the hidden file: <code>.bash_profile</code> in your directory. If you are not familiar with these hidden files, to find them on an OSX terminal or UNIX environment you can type <code>ls -a</code> on the command line to list all files. These hidden files can be edited using your favorite text editor. After some experimenting this is the prompt I like the most:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">JVC <span class="o">[</span><span class="m">08</span>:44:28<span class="o">]</span> <span class="o">(</span>Users<span class="o">)</span>
+→</code></pre></div>
+<p>This kind of customization can be done by editing the <code>PS1</code> environment variable in your <code>.bash_profile</code> so that every time you open a new shell, you customized prompt will appear instead of the canonical <code>$</code>. My prompt for example was written by adding the following line to my <code>.bash_profile</code> file.</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">export</span> <span class="nv">PS1</span><span class="o">=</span><span class="s2">&#34;\e[38;5;45mJVC \e[38;5;208m[\T] \e[38;5;13m(\W)\e[m \n→&#34;</span></code></pre></div>
+<p>Another sweet hack that can be customized via editing <code>.bash_profile</code> are aliases. Aliasing allows you to essentially create your own typed shortcuts for common tasks that you would type on the command line.</p>
+
+<p>The two I find very helpful are:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># jupyter notebook shortcut</span>
+<span class="nb">alias</span> <span class="nv">jn</span><span class="o">=</span><span class="s2">&#34;jupyter notebook&#34;</span>
+<span class="c1">#always show filetype</span>
+<span class="nb">alias</span> <span class="nv">ls</span><span class="o">=</span><span class="s2">&#34;ls -F&#34;</span></code></pre></div>
+<p>The <code>ls -F</code> alias is very useful to quickly discern directories, symbolic links, and executables while navigating my computer from the command line.</p>
+
+<h2 id="inputrc">.inputrc</h2>
+
+<p>Another incredible hack that I learned from a bioinformatics mentor is a set of tools for streamlining command line input. Essentially they are a list of settings that can be added to a <code>.inputrc</code> file, if it doesn&rsquo;t exist you can just create one:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">touch ~/.inputrc</code></pre></div>
+<p>These setting originally came from this talk on <a href="http://www.ukuug.org/events/linux2003/papers/bash_tips/" target="_blank">Power Shell Usage: bash tips and tricks</a>. There are a number of tricks found on that page, I only have some. Here is a summary:</p>
+
+<p><strong>Partial Command Completion</strong>
+Type partial command, then hit arrow-UP or arrow-DOWN multiple times.
+This limits the searching of your history to just history items
+prefixed with your partial commands. This one is listed first for a reason!</p>
+
+<pre><code>&quot;\e[A&quot;: history-search-backward
+&quot;\e[B&quot;: history-search-forward
+</code></pre>
+
+<p><strong>Case Insensitive Completion</strong>
+Ignore case during tab completion.
+If you&rsquo;re trying to tab complete on, say, DOWNLOADS, then you can
+type &lsquo;dow&rsquo; and then TAB, and it will tab complete to DOWNLOADS.</p>
+
+<pre><code>set completion-ignore-case on
+</code></pre>
+
+<p><strong>Magic Space</strong>
+This allows you to quickly check that your shortcut will not make your wolrd implode. A shortcut to access the last command in bash/UNIX is <code>!$</code>. With magic-space you can type <code>!$</code> then type space, and it will auto-fill your last command.</p>
+
+<pre><code>$if Bash
+  Space: magic-space
+$endif
+</code></pre>
+
+<p><strong>Tab=Possible Completions</strong>
+This allows for tab completion to show all possible completions if there are more than one possibility. This can be useful for navigating file systems very quickly if you sort-of know what is there.</p>
+
+<pre><code>set show-all-if-ambiguous on
+</code></pre>
+
+<h2 id="git-settings">Git Settings</h2>
+
+<p>Github necessitates many commands that need to be typed repetitively. I got lazy very early and added the following aliases to my .gitconfig file.</p>
+
+<pre><code>[alias]
+	co = checkout
+	br = branch
+	st = status
+	cm = commit -m
+</code></pre>
+
+<p>These aliases definitely increased my productivity when working in Git, and made it easier to lean more complex features of Git, because I could complete simple tasks faster. Theses can also by added by</p>
+
+<h2 id="text-editors">Text editors</h2>
+
+<p><strong>SublimeText3</strong></p>
+
+<p>I used SublimeText3 for about six months. I was able to quickly edit and write code because of the very clear syntax highlighting that the editor provides. SublimeText3 also support the use of a code linter for Python called flake8, which is really helpful for writing cleaner Python code. I started using this code linter because of a Pythonista I follow by the name of Dan Bader. I certainly recommend looking at his <a href="https://dbader.org/" target="_blank">blog</a> and very excellent <a href="https://www.youtube.com/channel/UCI0vQvr9aFn27yR6Ej6n5UA/videos" target="_blank">youtube videos</a>.</p>
+
+<p><strong>Atom</strong></p>
+
+<p>Atom is another excellent text editor that is feature-packed and fully hackable. Atom features seamless git integration, markdown preview, text and code completion, syntax highlighting, and supports the Python code linter style I used in SublimeText3. I recently discovered Atom from another developer and reproducible data scientist, <a href="https://github.com/Zsailer" target="_blank">Zach Sailer</a>, and have fully migrated.</p>
+
+<h2 id="interpreters">Interpreters</h2>
+
+<p><strong>Jupyter Notebook</strong></p>
+
+<p>The Jupyter notebook is a server-hosted interpreter that supports many languages, but was designed with Python specifically in mind. The Jupyter project aims to improve the future of reproducible data science, and has done an excellent job thus far; many publications now have data on Jupyter notebooks that can be run by anyone. Jupyter, or ipython notebooks are very useful for developing in Python providing an inline interpreting and graphing. I use jupyter notebooks when writing code for Data Visualization in Python.</p>
+
+<p><strong>Rstudio</strong></p>
+
+<p>Rstudio has been essential for me to learn R. There are many tools built into Rstudio, and getting to know each one has overall helped me learn the ins and outs of R very well. Rstudio allows you to have &lsquo;projects&rsquo; that are kind of a copy of your working environment for a specific project in a directory. Then there are the Rmarkdown documents that render chunks of R code into a markdown file with your writing inline using a tool called <code>knitr</code>. They can be knit into html, or pdf format and provide a method for making very clean looking data analysis reports.</p>
+
+<h2 id="the-end">The End</h2>
+
+<p>These tools have increased my productivity and ability to learn new concepts in bioinformatics and data science more efficiently. Because technology changes rapidly, I am excited to look back on this snapshot a year from now to see how my preference for these tricks has changed and certainly add some new ones!</p>
+]]></content>
+        </item>
+        
+    </channel>
+</rss>

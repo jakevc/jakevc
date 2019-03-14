@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author"
+    content="Jake VanCampen">
+<meta name="description"
+    content="Conda is the package manager that comes with an anaconda, or miniconda3 distribution. In my experience, Conda does an excellent job managing dependencies and installing new packages, allowing you to install the packages you want and get back to work&amp;hellip; eventually. Conda also provides a virtual environment system that allows for generally reproducible execution environments. Snakemake makes use of this very efficiently.
+I have previously experienced slow environment solving when trying to update or install packages using the conda command." />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="https://jakevc.com/posts/2018/11/slow-conda-environment-solving/" />
+
+
+<title>
+    
+    Slow conda environment solving :: Jake VanCampen  — Hello Friend NG Theme
+    
+</title>
+
+
+
+<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700|Source+Code+Pro" rel="stylesheet"
+    type="text/css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+<link rel="stylesheet" href="https://jakevc.com/scss/main.min.099699ab246bf26f50616f7c9f00c79d46110459d1bd727b2d07d6fc09ece082.css">
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="https://jakevc.com/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://jakevc.com/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://jakevc.com/favicon-16x16.png">
+<link rel="manifest" href="https://jakevc.com/site.webmanifest">
+<link rel="mask-icon" href="https://jakevc.com/safari-pinned-tab.svg" color="#252627">
+<link rel="shortcut icon" href="https://jakevc.com/favicon.ico">
+<meta name="theme-color" content="#252627">
+<meta itemprop="name" content="Slow conda environment solving">
+<meta itemprop="description" content="Conda is the package manager that comes with an anaconda, or miniconda3 distribution. In my experience, Conda does an excellent job managing dependencies and installing new packages, allowing you to install the packages you want and get back to work&hellip; eventually. Conda also provides a virtual environment system that allows for generally reproducible execution environments. Snakemake makes use of this very efficiently.
+I have previously experienced slow environment solving when trying to update or install packages using the conda command.">
+
+
+<meta itemprop="datePublished" content="2018-11-16T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2018-11-16T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="400">
+
+
+
+<meta itemprop="keywords" content="conda,anaconda,dependencies," />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://jakevc.com"/>
+
+<meta name="twitter:title" content="Slow conda environment solving"/>
+<meta name="twitter:description" content="Conda is the package manager that comes with an anaconda, or miniconda3 distribution. In my experience, Conda does an excellent job managing dependencies and installing new packages, allowing you to install the packages you want and get back to work&hellip; eventually. Conda also provides a virtual environment system that allows for generally reproducible execution environments. Snakemake makes use of this very efficiently.
+I have previously experienced slow environment solving when trying to update or install packages using the conda command."/>
+
+
+
+
+<meta property="article:published_time" content="2018-11-16 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="https://jakevc.com/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">🏠</span>
+            <span class="logo__cursor"></span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="https://jakevc.com/about/">About</a></li><li><a href="https://jakevc.com/cv">CV</a></li><li><a href="https://jakevc.com/posts/">Posts</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>2 minutes
+
+            
+
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="https://jakevc.com/posts/2018/11/slow-conda-environment-solving/">Slow conda environment solving</a></h2>
+
+            
+
+            <div class="post-content">
+                <p>Conda is the package manager that comes with an anaconda, or miniconda3 distribution. In my experience, Conda does an excellent job managing dependencies and installing new packages, allowing you to install the packages you want and get back to work&hellip; eventually. Conda also provides a virtual environment system that allows for generally reproducible execution environments. Snakemake makes use of this very efficiently.</p>
+
+<p>I have previously experienced slow environment solving when trying to update or install packages using the conda command. It appears many people also experience this frustration:</p>
+
+<p><a href="https://github.com/conda/conda/issues/6865" target="_blank">https://github.com/conda/conda/issues/6865</a></p>
+
+<p><a href="https://github.com/conda/conda/issues/7938" target="_blank">https://github.com/conda/conda/issues/7938</a></p>
+
+<p><a href="https://github.com/conda/conda/issues/7921" target="_blank">https://github.com/conda/conda/issues/7921</a></p>
+
+<p><a href="https://github.com/conda/conda/issues/7883" target="_blank">https://github.com/conda/conda/issues/7883</a></p>
+
+<p>I have also seen some complaints on twitter.</p>
+
+<p>I typically try and use as small of a Conda environment as possible, but even that can take forever. I recently was configuring a new miniconda install, and wanted to install Snakemake using conda <a href="https://snakemake.readthedocs.io/en/stable/getting_started/installation.html#installation-via-conda" target="_blank">the recommended method</a>, so I followed the directions:</p>
+
+<p><code>conda install -c bioconda -c conda-forge snakemake</code></p>
+
+<p>This hangs with the output &ldquo;Solving environment: \&rdquo; and spins the forward slash until you go to the bathroom and come back&hellip; still going&hellip; go to lunch and come back&hellip; still going&hellip;</p>
+
+<p>I thought maybe if I could simplify the command it would take less time. Looking at the Conda documentation I found you can add channels for conda to look through, and even add them to be higher priority or lower priority. In the end I found that this configuration actually finished:</p>
+
+<pre><code>conda config --add channels bioconda
+conda config --add channels conda-forge
+conda install snakemake
+</code></pre>
+
+<p>This prepends the two channels to the list of channels conda searches (it actually adds them to a file, ~/.condarc) giving them higher priority while looking for packages to install. This seems to drastically reduce the time it take to solve the conda environment and install the package. I didn&rsquo;t allow solving to finish with the first try because it was taking too long. I am not sure if this solution scales to larger environments, and am not sure how this affects the &ldquo;core packages set&rdquo;. In the conda documentaiton they mention:</p>
+
+<blockquote>
+<p>Therefore, you can now safely put channels at the bottom of your channel list to provide additional packages that are not in the default channels, and still be confident that these channels will not override the core package set.</p>
+</blockquote>
+
+<p>So maybe this solution is not the most stable for large dynamic environments, but for a small, isolated environment, it seems to increase sanity.</p>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+                <p>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://jakevc.com/tags/conda">conda</a></span><span class="tag"><a href="https://jakevc.com/tags/anaconda">anaconda</a></span><span class="tag"><a href="https://jakevc.com/tags/dependencies">dependencies</a></span>
+                </p>
+
+            <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>400 Words</p>
+
+            <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2018-11-15 16:00 -0800</p>
+        </div>
+
+        
+            <div class="pagination">
+                <div class="pagination__title">
+                    <span class="pagination__title-h"></span>
+                    <hr />
+                </div>
+
+                <div class="pagination__buttons">
+                    
+                        <span class="button previous">
+                            <a href="https://jakevc.com/posts/2019/02/download-sra-data-with-fasterq-dump/">
+                                <span class="button__icon">←</span>
+                                <span class="button__text">Download SRA data with fasterq-dump</span>
+                            </a>
+                        </span>
+                    
+
+                    
+                        <span class="button next">
+                            <a href="https://jakevc.com/posts/2018/11/run-rstudio-server-in-a-slurm-allocated-node/">
+                                <span class="button__text">Run Rstudio server in a SLURM allocated node</span>
+                                <span class="button__icon">→</span>
+                            </a>
+                        </span>
+                    
+                </div>
+            </div>
+        
+
+        
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2019</span>
+            
+                <span><a href="https://jakevc.com">Jake VanCampen</a></span>
+            
+            <span> <a href="https://jakevc.com/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+        </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+
+<script type="text/javascript" src="https://jakevc.com/js/bundle.4b80fbbfab88198dcef181b034822e60a3e68b1c128d1dc05392a32943a18ec2f866fbcd9ce31dcf84134397161647ad605ea5c25ecf12e5fcf9d28b47e64bb5.js" integrity="sha512-S4D7v6uIGY3O8YGwNIIuYKPmixwSjR3AU5KjKUOhjsL4ZvvNnOMdz4QTQ5cWFketYF6lwl7PEuX8&#43;dKLR&#43;ZLtQ=="></script>
+
+
+
+    </body>
+</html>

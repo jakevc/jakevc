@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author"
+    content="Jake VanCampen">
+<meta name="description"
+    content="DNA makes RNA makes Protein, as goes the central dogma of molecular biology. RNA sequencing (RNA-seq) allows researchers to quantify which genes of the DNA are being expressed at any given time, in a given sample of DNA. This tool is very powerful because it allows us to ask questions about the difference in gene expression between different individuals, or between time points in the same individual.
+RNA-seq produces a text file with millions of sequences we call &amp;lsquo;reads&amp;rsquo; that represent the genes they came from in the genome." />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="https://jakevc.com/posts/2017/11/align-and-count-rna-seq-reads-with-star/" />
+
+
+<title>
+    
+    Align and count RNA-seq reads with STAR :: Jake VanCampen  — Hello Friend NG Theme
+    
+</title>
+
+
+
+<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700|Source+Code+Pro" rel="stylesheet"
+    type="text/css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css" rel="stylesheet"
+    type="text/css">
+
+
+<link rel="stylesheet" href="https://jakevc.com/scss/main.min.099699ab246bf26f50616f7c9f00c79d46110459d1bd727b2d07d6fc09ece082.css">
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="https://jakevc.com/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://jakevc.com/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://jakevc.com/favicon-16x16.png">
+<link rel="manifest" href="https://jakevc.com/site.webmanifest">
+<link rel="mask-icon" href="https://jakevc.com/safari-pinned-tab.svg" color="#252627">
+<link rel="shortcut icon" href="https://jakevc.com/favicon.ico">
+<meta name="theme-color" content="#252627">
+<meta itemprop="name" content="Align and count RNA-seq reads with STAR">
+<meta itemprop="description" content="DNA makes RNA makes Protein, as goes the central dogma of molecular biology. RNA sequencing (RNA-seq) allows researchers to quantify which genes of the DNA are being expressed at any given time, in a given sample of DNA. This tool is very powerful because it allows us to ask questions about the difference in gene expression between different individuals, or between time points in the same individual.
+RNA-seq produces a text file with millions of sequences we call &lsquo;reads&rsquo; that represent the genes they came from in the genome.">
+
+
+<meta itemprop="datePublished" content="2017-11-14T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2017-11-14T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1079">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://jakevc.com"/>
+
+<meta name="twitter:title" content="Align and count RNA-seq reads with STAR"/>
+<meta name="twitter:description" content="DNA makes RNA makes Protein, as goes the central dogma of molecular biology. RNA sequencing (RNA-seq) allows researchers to quantify which genes of the DNA are being expressed at any given time, in a given sample of DNA. This tool is very powerful because it allows us to ask questions about the difference in gene expression between different individuals, or between time points in the same individual.
+RNA-seq produces a text file with millions of sequences we call &lsquo;reads&rsquo; that represent the genes they came from in the genome."/>
+
+
+
+
+<meta property="article:published_time" content="2017-11-14 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+    </head>
+
+    <body class="dark-theme">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="https://jakevc.com/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text">🏠</span>
+            <span class="logo__cursor"></span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="https://jakevc.com/about/">About</a></li><li><a href="https://jakevc.com/cv">CV</a></li><li><a href="https://jakevc.com/posts/">Posts</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+
+            <span class="theme-toggle"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+</span>
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>6 minutes
+
+            
+
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="https://jakevc.com/posts/2017/11/align-and-count-rna-seq-reads-with-star/">Align and count RNA-seq reads with STAR</a></h2>
+
+            
+
+            <div class="post-content">
+                
+
+<p>DNA makes RNA makes Protein, as goes the central dogma of molecular biology. RNA sequencing (RNA-seq) allows researchers to quantify which genes of the DNA are being expressed at any given time, in a given sample of DNA. This tool is very powerful because it allows us to ask questions about the difference in gene expression between different individuals, or between time points in the same individual.</p>
+
+<p>RNA-seq produces a text file with millions of sequences we call &lsquo;reads&rsquo; that represent the genes they came from in the genome. These reads are then aligned to the genome, so that the genes they represent can be detected. To look at the differential expression of these genes, the number of RNA-seq reads that align to genes in the known genome are counted.</p>
+
+<p>This post shows my process for aligning RNA-seq reads to a mouse genome, and counting the number of reads that map to specific genes using a program called STAR, and a Python program I wrote to organize the output.</p>
+
+<p>There are a number of programs used to align RNA-seq reads to the genome, but here I will discuss my experience using STAR, which stands for &ldquo;Spliced Transcripts Alignment to a Reference.&rdquo; STAR is a fully open-source software implemented in C++ code, that is known for being greater than 50 times faster than other aligners, while also improving alignment sensitivity and precision. STAR is also capable of detecting known and novel spice junctions in aligned reads.<sup><a href="https://academic.oup.com/bioinformatics/article/29/1/15/272537" target="_blank">1</a></sup></p>
+
+<h2 id="genome-index">Genome Index</h2>
+
+<p>The first step in alignment with STAR is to generate a genome index for the reads to be aligned to. The two components needed to do this are the reference genome you are using, and the GTF file associated with this genome. It can be a bit confusing which genome version, or GTF file version to use because there are a number of databases with quality genomes for common organisms; for example, <a href="https://www.gencodegenes.org/" target="_blank">GENCODE</a>, <a href="https://genome.ucsc.edu/encode/" target="_blank">ENCODE</a>, or <a href="https://www.ncbi.nlm.nih.gov/" target="_blank">NCBI</a> all have multiple assemblies for mouse and human. STAR recommends in their documentation to use the GENCODE primary assemblies, when available. In this case, I did because I was working with the widely available mouse genome.</p>
+
+<p>I first downloaded both the genome FASTA file and it&rsquo;s associatedd GTF file from GENCDE using the following commands:</p>
+
+<pre><code>$ wget ftp://ftp.sanger.ac.uk/pub/gencode/Gencode_mouse/release_M15/GRCm38.primary_assembly.genome.fa.gz
+
+$ wget ftp://ftp.sanger.ac.uk/pub/gencode/Gencode_mouse/release_M15/gencode.vM15.primary_assembly.annotation.gtf.gz
+</code></pre>
+
+<p>I next created a new directory called <code>star_index</code> to place both files in. To generate a genome index, I ran the following command as a script on the high-performance computing cluster:</p>
+
+<pre><code># load star
+ml STAR
+
+# generate genome index
+STAR --runMode genomeGenerate --genomeDir ./star_index \
+--readFilesCommand zcat \
+--genomeFastaFiles ./star_index/GRCm38.primary_assembly.genome.fa \
+--runThreadN 28 \
+--outFileNamePrefix ./star_index/ \
+--sjdbGTFfile ./star_index/gencode.vM15.primary_assembly.annotation.gtf
+</code></pre>
+
+<p>This took about 35 minutes, after which my <code>star_index</code> directory contained the following files:</p>
+
+<pre><code>└── star_index
+    ├── chrLength.txt
+    ├── chrNameLength.txt
+    ├── chrName.txt
+    ├── chrStart.txt
+    ├── exonGeTrInfo.tab
+    ├── exonInfo.tab
+    ├── gencode.vM15.primary_assembly.annotation.gtf
+    ├── geneInfo.tab
+    ├── Genome
+    ├── genomeParameters.txt
+    ├── GRCm38.primary_assembly.genome.fa
+    ├── Log.out
+    ├── SA
+    ├── SAindex
+    ├── sjdbInfo.txt
+    ├── sjdbList.fromGTF.out.tab
+    ├── sjdbList.out.tab
+    └── transcriptInfo.tab
+</code></pre>
+
+<p>These are all necessary for subsequents steps, so make sure they were generated, specifically the <code>geneInfo.tab</code> and <code>exonInfo.tab</code> files, which are used to determine reads mapping to specific genes.</p>
+
+<h2 id="align-reads">Align Reads</h2>
+
+<p>To organize my output, I created a new directory called <code>aligned_reads</code> that will contain the output from STAR. Making sure that all files were in a directory called <code>reads</code>, I then aligned 24 files of reads to the genome using the following script:</p>
+
+<pre><code># load star
+ml STAR
+
+cd reads
+
+for i in *_R1_001.1.fq.gz;
+do STAR --genomeDir ../star_index \
+	--readFilesIn $i ${i%_R1_001.1.fq.gz}_R2_001.2.fq.gz \
+	--outFileNamePrefix ../aligned_reads/${i%_R1_001.1.fq.gz} \
+	--quantMode GeneCounts \
+	--runThreadN 28 \
+	--readFilesCommand zcat;
+done
+</code></pre>
+
+<p>The <code>--quantMode GeneCounts</code> option creates a file <code>ReadsPerGene.out.tab</code> that counts the number of reads uniquely mapping to each gene, for each file of aligned reads. This will be very helpful for organizing the data to use in a differential expression analysis. I aligned just under 300 million reads using this script in around 1.5 hours.</p>
+
+<p>For each file of reads, the program outputs a number of summary files. For differential expression analysis, <code>ReadsPerGene.out.tab</code> is the most important, another useful file is the <code>log.final.out</code> file which is the final alignment statistics report.</p>
+
+<p>To summarize all output in a total of two files I wrote a Python script to make a file for use in differential expression analysis, and a file that represents summary statistics for each set of paired-end reads. The two files have the following format:</p>
+
+<p><strong>counts_per_gene.tsv</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>gene</th>
+<th>library_1</th>
+<th>library_2</th>
+<th>&hellip;</th>
+<th>library_n</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>gene_1</td>
+<td>counts</td>
+<td>counts</td>
+<td>counts</td>
+<td>counts</td>
+</tr>
+
+<tr>
+<td>gene_2</td>
+<td>counts</td>
+<td>counts</td>
+<td>counts</td>
+<td>counts</td>
+</tr>
+
+<tr>
+<td>&hellip;</td>
+<td>counts</td>
+<td>counts</td>
+<td>counts</td>
+<td>counts</td>
+</tr>
+
+<tr>
+<td>gene_n</td>
+<td>counts</td>
+<td>counts</td>
+<td>counts</td>
+<td>counts</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>count_stats.tsv</strong></p>
+
+<p>File contains the following columns:</p>
+
+<p>| <strong>file</strong> | <strong>total_reads</strong> | <strong>uniq_reads</strong> | <strong>reads_on_genes</strong> |</p>
+
+<p>The python script use to organize these data is shown here, and the full script can be downloaded from my <a href="https://github.com/jakevc/nxgn-tools/blob/master/alignment_tools/count_stats.py" target="_blank">github</a>.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="c1"># Generate a table of counts for each gene, for each file.</span>
+
+<span class="c1"># firstline case</span>
+<span class="n">firstone</span> <span class="o">=</span> <span class="bp">True</span>
+
+<span class="c1"># loop over all files in working directory</span>
+<span class="k">for</span> <span class="nb">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">():</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="nb">file</span>
+    <span class="k">if</span> <span class="n">firstone</span> <span class="o">&amp;</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;ReadsPerGene.out.tab&#39;</span><span class="p">):</span>
+        <span class="c1"># grab the filename</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_L&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span>
+                           <span class="n">header</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                           <span class="n">usecols</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gene&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">])</span>
+        <span class="c1"># exit firstline case</span>
+        <span class="n">firstone</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="k">elif</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;ReadsPerGene.out.tab&#39;</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_L&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># joine each files counts on the gene column</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+                         <span class="nb">file</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                         <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+                         <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gene&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">]))</span>
+
+<span class="c1"># write file to output</span>
+<span class="n">data</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;counts_per_gene.tsv&#39;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+
+
+<span class="c1"># Generate mapping statistics for each file</span>
+
+<span class="c1"># open file for writing</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;count_stats.tsv&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+    <span class="c1"># write header</span>
+    <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;file</span><span class="se">\t</span><span class="s1">total_reads</span><span class="se">\t</span><span class="s1">uniq_reads</span><span class="se">\t</span><span class="s1">reads_on_genes</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="c1"># loop over directory</span>
+    <span class="k">for</span> <span class="nb">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">():</span>
+
+        <span class="c1"># if it&#39;s the log file</span>
+        <span class="k">if</span> <span class="nb">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;Log.final.out&#39;</span><span class="p">):</span>
+
+            <span class="c1"># grab the file name</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="nb">file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_L&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="c1"># retain file</span>
+            <span class="n">fi</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+                    <span class="nb">file</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">]</span>
+                    <span class="p">)</span>
+            <span class="c1"># retain stats of interest</span>
+            <span class="n">fi</span> <span class="o">=</span> <span class="n">fi</span><span class="p">[</span>
+                    <span class="n">fi</span><span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="p">]</span><span class="o">.</span><span class="nb">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;Number of input reads&#39;</span><span class="p">)</span> <span class="o">|</span>
+                    <span class="n">fi</span><span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="p">]</span><span class="o">.</span><span class="nb">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;Uniquely mapped reads number&#39;</span><span class="p">)</span>
+                    <span class="p">]</span>
+            <span class="c1"># set index to first column</span>
+            <span class="n">fi</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;key&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+            <span class="c1"># cache stats from data frame</span>
+            <span class="n">total_reads</span> <span class="o">=</span> <span class="n">fi</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">uniq_reads</span> <span class="o">=</span> <span class="n">fi</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="c1"># loop over dir to count reads/gene-model</span>
+            <span class="k">for</span> <span class="n">counts</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">counts</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;ReadsPerGene.out.tab&#39;</span><span class="p">):</span>
+
+                    <span class="c1"># to reference current filename</span>
+                    <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">counts</span><span class="p">:</span>
+                        <span class="n">current</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+                                    <span class="n">counts</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+                        <span class="n">num_reads_on_gene</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">current</span><span class="p">[</span><span class="mi">4</span><span class="p">:][</span><span class="mi">2</span><span class="p">])</span>
+
+                        <span class="c1"># write to output file</span>
+                        <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;{name}</span><span class="se">\t</span><span class="s1">{total_reads}</span><span class="se">\t\
+</span><span class="se"></span><span class="s1">                                    {uniq_reads}</span><span class="se">\t</span><span class="s1">{num_reads_on_gene}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></code></pre></div>
+<p>The great thing about this script is it could be used again, given a similar directory structure, and that I still wanted to split the filename on &ldquo;_L&rdquo;, on another set of reads from any RNA-seq experiment to generate the necessary counts file for differentail expression analysis!</p>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+
+            <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>1079 Words</p>
+
+            <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2017-11-13 16:00 -0800</p>
+        </div>
+
+        
+            <div class="pagination">
+                <div class="pagination__title">
+                    <span class="pagination__title-h"></span>
+                    <hr />
+                </div>
+
+                <div class="pagination__buttons">
+                    
+                        <span class="button previous">
+                            <a href="https://jakevc.com/posts/2018/09/learning-golang-for-bioinformatics/">
+                                <span class="button__icon">←</span>
+                                <span class="button__text">Learning golang for bioinformatics</span>
+                            </a>
+                        </span>
+                    
+
+                    
+                        <span class="button next">
+                            <a href="https://jakevc.com/posts/2017/11/reply-times/">
+                                <span class="button__text">Reply Times</span>
+                                <span class="button__icon">→</span>
+                            </a>
+                        </span>
+                    
+                </div>
+            </div>
+        
+
+        
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>&copy; 2019</span>
+            
+                <span><a href="https://jakevc.com">Jake VanCampen</a></span>
+            
+            <span> <a href="https://jakevc.com/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></span>
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+
+        </div>
+    </div>
+    <div class="footer__inner">
+        <div class="footer__content">
+            <span>Powered by <a href="http://gohugo.io">Hugo</a></span>
+        </div>
+    </div>
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+
+
+<script type="text/javascript" src="https://jakevc.com/js/bundle.4b80fbbfab88198dcef181b034822e60a3e68b1c128d1dc05392a32943a18ec2f866fbcd9ce31dcf84134397161647ad605ea5c25ecf12e5fcf9d28b47e64bb5.js" integrity="sha512-S4D7v6uIGY3O8YGwNIIuYKPmixwSjR3AU5KjKUOhjsL4ZvvNnOMdz4QTQ5cWFketYF6lwl7PEuX8&#43;dKLR&#43;ZLtQ=="></script>
+
+
+
+    </body>
+</html>
