@@ -1,4 +1,4 @@
-baseURL = "jakevc.com"
+baseURL = "https://jakevc.com"
 title   = "Jake VanCampen"
 
 DefaultContentLanguage = "en"
