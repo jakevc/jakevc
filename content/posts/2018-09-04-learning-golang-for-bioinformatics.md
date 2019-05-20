@@ -4,6 +4,7 @@ author: Jake VanCampen
 date: '2018-09-04'
 slug: learning-golang-for-bioinformatics
 tags: [golang, bioinformatics]
+comments: true
 ---
 
 # What is Go? 

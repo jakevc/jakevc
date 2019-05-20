@@ -2,6 +2,7 @@
 title:  "Align and count RNA-seq reads with STAR"
 date: 2017-11-14
 author: "Jake VanCampen"
+comments: true
 ---
 
 

@@ -4,7 +4,9 @@ author: Jake VanCampen
 date: '2018-10-03'
 slug: how-to-goslides
 tags: [golang, present]
+comments: true
 ---
+
 
 # Creating Slides in Golang
 

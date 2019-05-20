@@ -2,6 +2,7 @@
 title: "SMRT Sequencing for smart genomics"
 author: "Jake VanCampen"
 date: 2017-11-03
+comments: true
 ---
 
 The University of Oregon Genomics and Cell Characterization Core Facility (GCCCF) hosted a seminar this past Friday, November 3rd in celebration of the new Pacific Biosciences sequencer, the Sequel, that is now accepting [submissions](https://gc3f.uoregon.edu/pacbio-sequencing-2) for long-read sequencing.

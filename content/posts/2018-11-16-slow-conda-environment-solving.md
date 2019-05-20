@@ -4,6 +4,7 @@ author: Jake VanCampen
 date: '2018-11-16'
 slug: slow-conda-environment-solving
 tags: [conda, anaconda, dependencies]
+comments: true
 ---
 
 Conda is the package manager that comes with an anaconda, or miniconda3 distribution. In my experience, Conda does an excellent job managing dependencies and installing new packages, allowing you to install the packages you want and get back to work... eventually. Conda also provides a virtual environment system that allows for generally reproducible execution environments. Snakemake makes use of this very efficiently. 

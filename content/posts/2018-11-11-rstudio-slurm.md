@@ -4,6 +4,7 @@ author: Jake VanCampen
 date: '2018-11-11'
 slug: rstudio-singularity-slurm
 tags: [r, rstudio, hpc]
+comments: true
 ---
 
 # Rstudio server slurm

@@ -2,6 +2,7 @@
 title: "My Development Environment"
 date: 2017-10-26
 author: "Jake VanCampen"
+comments: true
 ---
 When I began working on the computer full time earlier this year, I was still using the GUIs of my computer and had little intuition for how to organize my work in a coding Environment. Now I use exclusively the command line to navigate my MacBook Pro; collaborate and track my work using Github; and I write most assignments, and now blog posts in markdown.
 
