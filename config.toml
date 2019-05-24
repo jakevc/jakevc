@@ -32,6 +32,7 @@ disableRSS     = false
 disableSitemap = false
 disable404     = false
 disableHugoGeneratorInject = false
+enableInlineShortcodes = true
 
 [permalinks]
   posts = "/posts/:year/:month/:title/"
@@ -57,7 +58,7 @@ disableHugoGeneratorInject = false
   keywords = ""
   images = [""]
 
-  homeSubtitle = "Personal journey in genomic data science."
+  homeSubtitle = "Genomics and Data Science."
 
   # Prefix of link to the git commit detail page. GitInfo must be enabled.
   # gitUrl = ""
