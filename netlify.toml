@@ -4,4 +4,4 @@
 [[headers]]
   for = "/*"
   [headers.values]
-  Access-Control-Allow-Origin = "https://www.jakevc.com"
+  Access-Control-Allow-Origin = "*"
