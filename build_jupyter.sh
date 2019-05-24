@@ -4,4 +4,3 @@ for f in $FILES
 do
     nb2hugo $f --site-dir . --section posts
 done
-hugo 
