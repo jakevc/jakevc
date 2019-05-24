@@ -42,9 +42,9 @@ disableHugoGeneratorInject = false
 [blackfriday]
   hrefTargetBlank = true
 
-#[taxonomies]
-#  tag      = "tags"
-#  category = ""
+[taxonomies]
+  tag      = "tags"
+  category = ""
 
 [params]
   dateform        = "Jan 2, 2006"
@@ -57,7 +57,7 @@ disableHugoGeneratorInject = false
   keywords = ""
   images = [""]
 
-  homeSubtitle = "Computing about biology"
+  homeSubtitle = "Personal journey in genomic data science."
 
   # Prefix of link to the git commit detail page. GitInfo must be enabled.
   # gitUrl = ""
