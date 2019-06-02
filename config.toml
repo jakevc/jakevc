@@ -58,7 +58,7 @@ enableInlineShortcodes = true
   keywords = ""
   images = [""]
 
-  homeSubtitle = "Genomics and Data Science."
+  homeSubtitle = "Data tinkering blog"
 
   # Prefix of link to the git commit detail page. GitInfo must be enabled.
   # gitUrl = ""
