@@ -1,5 +1,5 @@
 ---
-title: Snakemake examples
+title: My first Python package 
 author: Jake VanCampen
 date: '2019-07-10'
 tags: [python, bioinformatics, karyopype, testing]
