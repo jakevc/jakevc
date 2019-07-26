@@ -1,7 +1,7 @@
 ---
 title: My first Python package 
 author: Jake VanCampen
-date: '2019-07-10'
+date: '2019-07-26'
 tags: [python, bioinformatics, karyopype, testing]
 comments: true
 ---

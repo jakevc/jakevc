@@ -1,7 +1,7 @@
 ---
 title: Raw data backup 
 author: Jake VanCampen
-date: '2019-05-23'
+date: '2019-06-14'
 tags: [linux,ubuntu,backups,rsync]
 comments: true
 ---
