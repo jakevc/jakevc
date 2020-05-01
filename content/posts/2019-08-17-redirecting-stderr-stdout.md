@@ -4,6 +4,7 @@ author: Jake VanCampen
 date: '2019-08-07'
 tags: [bash, unix, bash script, logging, bioinformatics]
 comments: true
+image: "https://source.unsplash.com/AUfSloKnxUw"
 ---
 
 When writing commands in a Unix shell, or bash scripts, I often want to log a specific process to check progress during runtime. If I am running a longer job in a `screen` session, I would always rather check a log file than scroll back in the screen sesson...  (possible but annoying). There are a few options, but the most portable option that I always look for (and endup [here](https://askubuntu.com/questions/625224/how-to-redirect-stderr-to-a-file/625230)) is the following:

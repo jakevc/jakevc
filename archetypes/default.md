@@ -1,8 +1,9 @@
 ---
-title: "{{ replace .TranslationBaseName "-" " " | title }}"
+title: "{{ replace .Name "-" " " | title }}"
 date: {{ .Date }}
 author: "Jake VanCampen"
-tags: 
-  - tag1
-  - tag2
+comments: true
+image: ""
+draft: true
 ---
+

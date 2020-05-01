@@ -7,6 +7,8 @@ tags:
   - jupyter
   - server
   - ssh
+category: "jupyter"
+image: "https://source.unsplash.com/gM7LYJYrBSw"
 ---
 
 # Setup a jupyter notebook server

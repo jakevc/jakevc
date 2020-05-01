@@ -1,0 +1,121 @@
+.post {
+    width: 100%;
+    max-width: 800px;
+    text-align: left;
+    padding: 10px;
+    margin: 10px auto;
+  
+    @media #{$media-size-tablet} {
+      max-width: 600px;
+    }
+
+    a {
+        color: blue;
+    }
+  
+    &-date {
+      &:after {
+        content: '—';
+      }
+    }
+
+    &-author {
+        @include dimmed;
+    }
+  
+    &-title {
+      font-size: 2.625rem;
+      padding-top: 2rem;
+      margin: 0 0 20px;
+  
+      @media #{$media-size-phone} {
+        font-size: 2rem;
+      }
+  
+      a {
+        text-decoration: none;
+        color: black;
+      }
+    }
+  
+    &-tags {
+      display: block;
+      margin-bottom: 20px;
+      font-size: 1rem;
+      opacity: .5;
+  
+      a {
+        text-decoration: none;
+        color: black;
+      }
+    }
+  
+    &-content {
+      margin-top: 30px;
+      a {
+          @include dimmed;
+      }
+    }
+  
+    &-cover {
+      border-radius: 1px;
+      margin: 40px -50px;
+      width: 860px;
+      max-width: 860px;
+  
+      @media #{$media-size-tablet} {
+        margin: 20px 0;
+        width: 100%;
+      }
+    }
+
+    &-wordcount {
+        font-size: .9rem;
+        @include dimmed;
+    }
+  
+    &-info {
+      margin-top: 30px;
+      font-size: .8rem;
+      line-height: normal;
+      @include dimmed;
+  
+      p {
+        margin: .8em 0;
+      }
+  
+      a:hover {
+        border-bottom: 1px solid white;
+      }
+  
+      svg {
+        margin-right: .8em;
+      }
+  
+      .tag {
+        margin-right: .5em;
+  
+        &::before {
+          content: "#"
+        }
+      }
+  
+      .feather {
+        display: inline-block;
+        vertical-align: -.125em;
+        width: 1em;
+        height: 1em;
+      }
+    }
+  
+    .flag {
+      border-radius: 50%;
+      margin: 0 5px;
+    }
+  }
+
+.comments {
+    a {
+      color: black;  
+    }
+}

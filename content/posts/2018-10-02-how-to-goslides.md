@@ -5,6 +5,7 @@ date: '2018-10-03'
 slug: how-to-goslides
 tags: [golang, present]
 comments: true
+image: "https://source.unsplash.com/vlmb9C2Ah_s"
 ---
 
 

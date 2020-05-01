@@ -3,12 +3,14 @@ title: "SMRT Sequencing for smart genomics"
 author: "Jake VanCampen"
 date: 2017-11-03
 comments: true
+category: "sequence"
+image: "https://source.unsplash.com/FGRLnE2CGn8"
 ---
 
 The University of Oregon Genomics and Cell Characterization Core Facility (GCCCF) hosted a seminar this past Friday, November 3rd in celebration of the new Pacific Biosciences sequencer, the Sequel, that is now accepting [submissions](https://gc3f.uoregon.edu/pacbio-sequencing-2) for long-read sequencing.
 
 
-### Advances in SMRT sequencing
+# Advances in SMRT sequencing
 
 
 The seminar kicked off with Steve Turner, Chief Technology Officer at PacBio. Turner's excitement was contagious as he described the advantages of long-read sequencing technologies on the new Sequel system. Of the main points Turner stressed, the most important seemed to be use of long-read sequencing for characterizing genomic structural variation, a phenomena whose importance in genomics is quickly regaining ground, Turner Pointed out.
@@ -27,7 +29,7 @@ Turner's talk also included advances in isoSeq, PacBio's improving technology th
 
 
 
-### Program specific assembly strategies at the Joint Genome Institute.
+# Program specific assembly strategies at the Joint Genome Institute.
 
 
 The next speaker, Alicia Clum, came representing the Joint Genome Institute (JGI), a US Department of Energy funded sequencing resource located in Walnut Creek, CA, and operated by the University of California Berkeley.
@@ -36,7 +38,7 @@ The next speaker, Alicia Clum, came representing the Joint Genome Institute (JGI
 Alicia presented on the projects, and challenges they face as a multi-user resource for sequencing. The lab receives projects from many different researchers in the area, and carries out sequencing projects ranging from microbial genome assembly to plant metagenomics. Alicia presented multiple data figures representing their experience using PacBio sequencing and their excitement for advancements in the technology.
 
 
-### A genomics roadmap to wine flavor
+# A genomics roadmap to wine flavor
 
 
 Dario Cantu Ph.D, assistant professor of Viticulture and Enology at UC Davis, presented on his labs efforts to characterize a genomic roadmap to wine flavor. Cantu researches plant pathogenicity and fungicide resistance, as well as the regulation of fruit development and pathogen susceptibility. Wine grapes are among the plants of interest to Cantu, and he gave a fascinating background in the history of wine-grape genetics.
@@ -48,7 +50,7 @@ Cantu came to this seminar to explain the usefulness of PacBio sequencing to pro
 Cantu presented his results using SRMT sequencing and the open source software FALCON-unzip, to produce a high quality, phased assembly of the *Vitis vinifera* genome. This allowed for 'haplotig' resolution of the genome, which will allow his lab to further uncover the history of wine genetics.
 
 
-### PacBio at UO
+# PacBio at UO
 
 Finally, Doug Turnbull, director of the UO GCCCF, presented on the first successful run with the core's new Sequel system. Turnbull presented results from a bacterial genome, showing a 7GB, high quality run with read lengths >10 kbps.
 

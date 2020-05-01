@@ -4,6 +4,7 @@ author: Jake VanCampen
 date: '2019-07-10'
 tags: [snakemake, bioinformatics, pipelines, python]
 comments: true
+image: "https://source.unsplash.com/imP3y00kzFE"
 ---
 
 I have been using [Snakemake](https://snakemake.readthedocs.io/en/stable/) to pipeline bioinformatics workflows for about a year now. It's time I write a bit about the tool, some common learning hurdles, and how to think about the flow of variables through the workflow. 

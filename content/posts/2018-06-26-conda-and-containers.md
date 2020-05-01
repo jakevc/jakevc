@@ -7,6 +7,8 @@ tags:
   - conda
   - anaconda
   - containers
+category: "conda"
+image: "https://source.unsplash.com/uBe2mknURG4"
 ---
 
 

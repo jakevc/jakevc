@@ -5,6 +5,7 @@ date: '2018-11-11'
 slug: rstudio-singularity-slurm
 tags: [r, rstudio, hpc]
 comments: true
+image: "https://source.unsplash.com/KMrYZp6ismc"
 ---
 
 # Rstudio server slurm

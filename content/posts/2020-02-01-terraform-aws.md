@@ -4,6 +4,7 @@ author: Jake VanCampen
 date: '2020-02-01'
 tags: [terraform, aws, automation]
 comments: true
+image: "https://source.unsplash.com/ZY7X8S_CnWI" 
 ---
 
 I am testing the automation of setting up and tearing down AWS resources using [terraform](https://www.terraform.io/), a tool to create infrastructure as code. This example recipe will setup a small EC2 instance and output the command needed to login to it. 

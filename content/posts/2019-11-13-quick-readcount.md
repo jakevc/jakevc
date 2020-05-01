@@ -4,6 +4,7 @@ author: Jake VanCampen
 date: '2019-11-13'
 tags: [bash, unix, bash script, bioinformatics]
 comments: true
+image: "https://source.unsplash.com/mmWqrsjZ4Lw"
 ---
 
 You are in a directory of gzipped fastq files and want to count the number of reads in each file... but you want the output to look nice and not really leave the command line or have to download some tool. Do it quick. Use some awk and walk away. 

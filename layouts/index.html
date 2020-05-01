@@ -1,0 +1,33 @@
+{{ define "main" }}
+    <main aria-role="main">
+        <div class="index-container">
+
+            {{ $pag := .Paginate (where site.RegularPages "Type" "in" site.Params.mainSections) }}
+            {{ range $pag.Pages }} 
+            <div class="container post-list">
+                {{ if .Params.image }}
+                <a href="{{.Permalink}}">
+                <img class="image-box" src="{{.Params.image}}">
+                </a>
+                {{ end }}
+                <a href="{{.Permalink}}">
+                    <h2>{{.Title}}</h2>
+                </a>
+                {{ if not .Params.image }}<p style="max-width: 600px;">{{ .Summary}}</p>{{end}}
+                <span class="post-day">{{ if .Site.Params.dateformShort }}{{ .Date.Format .Site.Params.dateformShort }}{{ else }}{{ .Date.Format "Jan 2"}}{{ end }}</span>
+                <span class="post-wordcount">{{ .WordCount }} Words</span>
+                <hr/>
+            </div>
+            {{ end }}
+
+            {{ if gt $pag.TotalPages 1 }}
+            <span class="prev{{ if not $pag.HasPrev }} disabled {{ end }}">
+                <a {{ if $pag.HasPrev }}href="{{ $pag.Prev.URL }}"{{ end }} class="page-li prev" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
+            </span>
+            <span class="next {{ if not $pag.HasNext }} disabled {{ end }}">
+                <a {{ if $pag.HasNext }}href="{{ $pag.Next.URL }}"{{ end }} class="page-li next" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+            </span>
+            {{end}}
+        </div>
+    </main>
+{{ end }}

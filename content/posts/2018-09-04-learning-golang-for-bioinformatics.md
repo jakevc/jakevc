@@ -5,6 +5,7 @@ date: '2018-09-04'
 slug: learning-golang-for-bioinformatics
 tags: [golang, bioinformatics]
 comments: true
+image: "https://source.unsplash.com/BZgB1mxgJ6k"
 ---
 
 # What is Go? 

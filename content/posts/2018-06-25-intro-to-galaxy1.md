@@ -7,6 +7,8 @@ tags:
   - gccbosc
   - usegalaxy
   - ansible
+category: "galaxy"
+image: "https://source.unsplash.com/VHbiV77NnYs"
 ---
 
 

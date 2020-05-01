@@ -5,6 +5,7 @@ date: '2019-02-07'
 slug: fasterq-dump 
 tags: [SRA, public data, fastq]
 comments: true
+image: "https://source.unsplash.com/8DaZBwZz4vQ"
 ---
 
 The command line tool historically used to download public bioinformatics data from the Sequencing Read Archive (SRA) is fastq-dump. Fastq-dump was awesome when it was developed, until bioinformatics workflows became more parallelized across much larger datasets. Today, the SRA holds just over 5 PB of open access data, and the growth is rapid. 

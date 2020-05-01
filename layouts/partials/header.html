@@ -1,0 +1,33 @@
+<header>
+    <div class="container header">
+    <!-- A grey horizontal navbar that becomes vertical on small screens -->
+        <nav class="navbar navbar-expand-md">
+            <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2 navbar-start">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/"><h2>{{ .Site.Title }}</h2></a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Links -->
+            <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+                <ul class="navbar-nav ml-auto">
+                    {{- $currentPage := . -}}
+                    {{ range .Site.Menus.main -}}
+                    <li class="nav-item">
+                    <a class="nav-link" href="{{ .URL | absLangURL }}">{{ .Name }}</a>
+                    </li>
+                    {{- end }} 
+                </ul>
+            </div>
+        </nav>
+
+    </div>
+    <hr class="hr-header">
+    {{- with .Site.Params.homeSubtitle }}
+    <div class="subtitle">
+        <p>{{.}}</p>
+    </div>
+    {{- end }}
+</header>

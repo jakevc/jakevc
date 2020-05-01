@@ -4,6 +4,7 @@ author: Jake VanCampen
 date: '2019-06-14'
 tags: [linux,ubuntu,backups,rsync]
 comments: true
+image: "https://source.unsplash.com/W2OVh2w2Kpo" 
 ---
 
 ## I need to backup my raw data 

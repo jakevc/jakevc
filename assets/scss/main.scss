@@ -1,0 +1,31 @@
+@import "variables";
+@import "pagination";
+@import "mixins";
+@import "list";
+@import "main";
+@import "header";
+@import "social";
+@import "footer";
+@import "single";
+
+body {
+  color: $primary-color;
+  font-size: 1.05rem;
+}
+
+.index-container {
+    padding-top: 3rem;
+    margin: auto;
+    max-width: 800px;
+}
+
+.post-list {
+    align-items: center;
+}
+
+.image-box{
+    width: 50vh;
+    max-height: 40vh;
+    margin-bottom: 1rem;
+    display: block;
+}
