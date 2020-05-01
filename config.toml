@@ -1,8 +1,15 @@
-baseURL = "http://example.org/"
+baseURL = "https://jakevc.com"
 languageCode = "en-us"
 title = "JakeVC"
+googleAnalytics = "UA-143647162-1"
 disqusShortname = "jakevc"
 paginate = 3
+
+archetypeDir = "archetypes"
+contentDir   = "content"
+dataDir      = "data"
+layoutDir    = "layouts"
+publishDir   = "public"
 
 [permalinks]
   posts = "/posts/:year/:month/:title/"
@@ -23,6 +30,9 @@ paginate = 3
 [params]
     customCss = ["scss/main.scss"]
     dateformShort = "Jan 2, 2006"
+    dateform = "Jan 2"
+    dateformNum     = "2006-01-02"
+    dateformNumTime = "2006-01-02 15:04 -0700"
     homeSubtitle = "Writing about my current interests"
 
  # Social icons
