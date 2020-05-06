@@ -13,7 +13,7 @@ image: "https://source.unsplash.com/vlmb9C2Ah_s"
 
 I am about to give a journal club presentation on a recent epigenetics paper. I have also been learning [golang](https://golang.org/). Many learning materials, and golang presentations I run into are very clean html presentations with absolutely no bells and whistles, that appear to run in the browser. 
 
-I soon found out these presentations are generated from the 'present' package, which is a built in golang tool at golang.org/x/tools. I appreciate the simplicity of these presentations because it allows me to focus on my public speaking skills simply and effieciently. I don't want to think about how to get presenter notes, or decide if my presentation is going to be cross-platform, or even think the thought of bringing a thumb drive to a talk...
+I soon found out these presentations are generated from the 'present' package, which is a built in golang tool at golang.org/x/tools. I appreciate the simplicity of these presentations because it allows me to focus on my public speaking skills simply and efficiently. I don't want to think about how to get presenter notes, or decide if my presentation is going to be cross-platform, or even think the thought of bringing a thumb drive to a talk...
 
 It took a second for me to find out how to generate this type of presentation with the features I wanted, namely: 
 
@@ -85,7 +85,7 @@ Now the present binary should be in your `$GOPATH/bin`, and because of the above
 
 # Make some slides
 
-To make slides in go, create a file with the extention ".slide" in any directory. 
+To make slides in go, create a file with the extension ".slide" in any directory. 
 
 Take a look at the [present package](https://godoc.org/golang.org/x/tools/present) for the syntax details, there are some fun things you can do that I won't get into in this post. 
 

@@ -11,7 +11,7 @@ I have been using [Snakemake](https://snakemake.readthedocs.io/en/stable/) to pi
 
 # Motivation
 
-Ninty-five percent of my work is data wrangling, the rest is a mix of interpretation and synthesis of results. Bioinformatics data is notoriously messy, with loads of non-standardized data formats and loads more infrequently maintained computational tools for working with them. 
+Ninety-five percent of my work is data wrangling, the rest is a mix of interpretation and synthesis of results. Bioinformatics data is notoriously messy, with loads of non-standardized data formats and loads more infrequently maintained computational tools for working with them. 
 
 The open source tools that rise above in the bioinformatics ecosystem seem to be those that are written well, are well maintained, and end up being adopted by enough users. The community that surrounds an open source tool ends up perpetuating the maintenance and resulting stability of that tool in the ecosystem. Snakemake is one of these tools. 
 
@@ -21,7 +21,7 @@ There are a number of workflow management systems with various pros and cons tha
 
 It's common to run fastqc, then multiqc on your fastqc files to aggregate the samples and their QC metrics from multiple tools into one report. The following pipeline is available at my [snakemake-multiqc](https://github.com/jakevc/snakemake_multiqc) example repository, and can be run by following directions in the README. 
 
-The Snakefile below defines two samples "a.chr21", and "b.chr21" as a python list. For each sample, the progran fastqc if run, then multiqc is run when all those outputs are finished. 
+The Snakefile below defines two samples "a.chr21", and "b.chr21" as a python list. For each sample, the program fastqc if run, then multiqc is run when all those outputs are finished. 
 
 
 ```python 
@@ -60,9 +60,9 @@ rule multiqc:
 
 ```
 
-Let's disect that snakefile a bit. We have a forward and reverse read for each sample, that's why we expand the list across the sample variables in the fastqc input specification. The output is similar, but we have new named output files. There are a lot of outputs to fastqc, but specifying one of the final files generated will tell snakemake when the job is finished. 
+Let's dissect that snakefile a bit. We have a forward and reverse read for each sample, that's why we expand the list across the sample variables in the fastqc input specification. The output is similar, but we have new named output files. There are a lot of outputs to fastqc, but specifying one of the final files generated will tell snakemake when the job is finished. 
 
-The "conda" directive is one of my favorite features of snakemake that simplifes deployment across computational resources, and even keeps your local environment organized. This directive allows snakemake to be run with the `--use-conda` command line flag. This will create the conda environment specified in the [environment file](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file), and run that rule in the isolated conda environment. 
+The "conda" directive is one of my favorite features of snakemake that simplifies deployment across computational resources, and even keeps your local environment organized. This directive allows snakemake to be run with the `--use-conda` command line flag. This will create the conda environment specified in the [environment file](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file), and run that rule in the isolated conda environment. 
 
 The environment file "envs/qc.yml" looks like this:
 
@@ -81,9 +81,9 @@ The channels listed tell conda where to search for dependencies, and follows the
 
 # Input Functions
 
-Another small example I wrote deals with the use of input funcitons. This can be a very useful feature to understand. Consider the following example: 
+Another small example I wrote deals with the use of input functions. This can be a very useful feature to understand. Consider the following example: 
 
-> You have done [insert sequencing method] sequencing of two samples and have three technical replicates per sample, each sequencd on their own lane of the sequencer. The resulting samples are identified by a unique barcode sequence, you thus have six fastq files (barcode1_1.fq, barcode1_2.fq, barcode1_3.fq, barcode2_1.fq, barcode2_2.fq, and barcode2_3.fq). You would like to merge these files by sample and use the resulting files to propagate sample-wise through your pipeline.
+> You have done [insert sequencing method] sequencing of two samples and have three technical replicates per sample, each sequenced on their own lane of the sequencer. The resulting samples are identified by a unique barcode sequence, you thus have six fastq files (barcode1_1.fq, barcode1_2.fq, barcode1_3.fq, barcode2_1.fq, barcode2_2.fq, and barcode2_3.fq). You would like to merge these files by sample and use the resulting files to propagate sample-wise through your pipeline.
 
 The following pipeline is an example of how you can use [input functions](https://snakemake.readthedocs.io/en/stable/snakefiles/rules.html#input-functions-and-unpack) to specify the files you want to merge for each sample, allowing snakemake to use the sample as a wildcard most effectively. 
 
@@ -115,6 +115,6 @@ One of the largest hurdles for me when learning snakemake was thinking in terms 
 
 # Final thougts
 
-Snakemake has helped me think more effectively about bioinformatics worklow, and generate pipelines with reproducible computaional environments. With some projects, I will just write a bash script, then I often want to iterate over multiple parameter combinations, and tie together other tools realizing I can just put it all together in a Snakemake pipeline. Using Snakemake helps me think clearly about the flow of data throughout my project.
+Snakemake has helped me think more effectively about bioinformatics workflow, and generate pipelines with reproducible computational environments. With some projects, I will just write a bash script, then I often want to iterate over multiple parameter combinations, and tie together other tools realizing I can just put it all together in a Snakemake pipeline. Using Snakemake helps me think clearly about the flow of data throughout my project.
 
 Another useful feature is the [Snakemake Wrappers Repository](https://snakemake-wrappers.readthedocs.io/en/stable/) which exposes the use of test-driven development and continuous integration practices to maintain more reliable execution of commonly used bioinformatics tools. I will probably write more Snakemake examples, as they would have helped me when learning Snakemake, and hope others may find them useful in the learning process.

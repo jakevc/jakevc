@@ -36,7 +36,7 @@ conda config --add channels conda-forge
 conda install snakemake
 ``` 
 
-This prepends the two channels to the list of channels conda searches (it actually adds them to a file, ~/.condarc) giving them higher priority while looking for packages to install. This seems to drastically reduce the time it take to solve the conda environment and install the package. I didn't allow solving to finish with the first try because it was taking too long. I am not sure if this solution scales to larger environments, and am not sure how this affects the "core packages set". In the conda documentaiton they mention:
+This prepends the two channels to the list of channels conda searches (it actually adds them to a file, ~/.condarc) giving them higher priority while looking for packages to install. This seems to drastically reduce the time it take to solve the conda environment and install the package. I didn't allow solving to finish with the first try because it was taking too long. I am not sure if this solution scales to larger environments, and am not sure how this affects the "core packages set". In the conda documentation they mention:
 
 > Therefore, you can now safely put channels at the bottom of your channel list to provide additional packages that are not in the default channels, and still be confident that these channels will not override the core package set.
 

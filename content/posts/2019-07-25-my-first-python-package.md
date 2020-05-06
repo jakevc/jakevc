@@ -28,7 +28,7 @@ import karyopype.karyopype as kp
 kp.plot_karyopype("hg38", regions=["/path/to/regions.bed", "/path/to/regions2.bed"])
 ```
 
-To specify the reigons you would like to plot, a single file, pandas dataframe or a list of files/dataframes can be passed to the `regions` argument.
+To specify the regions you would like to plot, a single file, pandas dataframe or a list of files/dataframes can be passed to the `regions` argument.
 
 
 # Publishing to PyPi
@@ -78,7 +78,7 @@ setup(
 )
 ```
 
-Accessing that data from within the python script is another story, and the best way I could find that would work across platforms is by making use of the `pkg_resources` package to locate the data files once the package is installed on the users machine. This simplest illustrative example of this isfrom this [stack overflow thread](https://stackoverflow.com/questions/779495/python-access-data-in-package-subdirectory) which shows how to do resource extraction with pkg_resources.
+Accessing that data from within the python script is another story, and the best way I could find that would work across platforms is by making use of the `pkg_resources` package to locate the data files once the package is installed on the users machine. This simplest illustrative example of this is from this [stack overflow thread](https://stackoverflow.com/questions/779495/python-access-data-in-package-subdirectory) which shows how to do resource extraction with pkg_resources.
 
 ```python
 import pkg_resources
@@ -113,7 +113,7 @@ Continuous integration is the idea that each time you push changes to your code 
 
 There are a number of options when it comes to continuous integration with GitHub. I chose to use[circleci](https://circleci.com/) because it was [recommended](https://hackernoon.com/continuous-integration-circleci-vs-travis-ci-vs-jenkins-41a1c2bd95f5) for smaller projects.  
 
-After creating a free account, and allowing the app access to my GitHub repositories. I wrote some tests for use with [pytest](https://pytest.org/en/latest/), a ubiquitous python testing framework, then added the circleci config.yml file to my project repository. Circleci gives you a template config.yml that you have to edit to make compatable with your test suite, mine ended up looking like this:
+After creating a free account, and allowing the app access to my GitHub repositories. I wrote some tests for use with [pytest](https://pytest.org/en/latest/), a ubiquitous python testing framework, then added the circleci config.yml file to my project repository. Circleci gives you a template config.yml that you have to edit to make compatible with your test suite, mine ended up looking like this:
 
 ```yml
 # Python CircleCI 2.0 configuration file
@@ -169,4 +169,4 @@ Now each time I add additional functionality, I write tests to go along with tha
 
 In the future I would like to make the package available on [bioconda](https://bioconda.github.io/) to more easily integrate with the conda environment ecosystem.
 
-Building a python package is a great exercise to inspire an increased awareness about reproducability, accessability, and quality of code. I had a lot of fun. If you like karyopype, let me know if the comments or on github at github.com/jakevc/karyopype!
+Building a python package is a great exercise to inspire an increased awareness about reproducibility, accessability, and quality of code. I had a lot of fun. If you like karyopype, let me know if the comments or on github at github.com/jakevc/karyopype!

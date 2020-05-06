@@ -32,5 +32,5 @@ test2_2.fastq.gz 750
 test2_3.fastq.gz 750 
 ```
 
-Awk is powerfull and fun to use, this is just a small example of the convenience of using awk to quickly answer questions.
+Awk is powerful and fun to use, this is just a small example of the convenience of using awk to quickly answer questions.
 

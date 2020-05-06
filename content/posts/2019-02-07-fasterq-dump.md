@@ -10,13 +10,13 @@ image: "https://source.unsplash.com/8DaZBwZz4vQ"
 
 The command line tool historically used to download public bioinformatics data from the Sequencing Read Archive (SRA) is fastq-dump. Fastq-dump was awesome when it was developed, until bioinformatics workflows became more parallelized across much larger datasets. Today, the SRA holds just over 5 PB of open access data, and the growth is rapid. 
 
-I was recently testing a pipeline on some public data. As I download fastq files from SRA using fastq-dump, it didn't take long before I was getting impatient. I am a millenial. If downloading a terabyte of sequencing data takes too long I might just start a company over it. I immediately started googling a more efficient solution thinking: "I have access to so many CPU's, hasn't someone made this more parallelizable?" The answer was yes! 
+I was recently testing a pipeline on some public data. As I download fastq files from SRA using fastq-dump, it didn't take long before I was getting impatient. I am a millennial. If downloading a terabyte of sequencing data takes too long I might just start a company over it. I immediately started googling a more efficient solution thinking: "I have access to so many CPU's, hasn't someone made this more parallelizable?" The answer was yes! 
 
 June of 2018 saw the release of fasterq-dump out of the box with [sra-tools](https://github.com/ncbi/sra-tools) from NCBI. It looks like there was also another implementation, [parallel-fastq-dump](https://github.com/rvalieris/parallel-fastq-dump), that had good speedup and just under seven thousand total downloads on bioconda...
 
 Anyhow, I plugged it in and BOOM, data. Not so fastq! When downloading fastq files directly from their SRA accession, fastq-dump and fasterq-dump first dump the data in an intermediate cache file before converting to the desired format, and the default location is `~/ncbi/`. Dumping large amounts of data quickly fills up the disk quota of 10GB that is the standard for linux home directories on a shared file system, resulting in a "disk quota exceeded" error. 
 
-The solution NCBI provides is to configure the cacheing directory using the `vdb-config -i` interface. I was unable to get this to work, so I found [another solution](http://databio.org/posts/downloading_sra_data.html) where you create the configuration files manually. 
+The solution NCBI provides is to configure the caching directory using the `vdb-config -i` interface. I was unable to get this to work, so I found [another solution](http://databio.org/posts/downloading_sra_data.html) where you create the configuration files manually. 
 
 ```
 echo "/repository/user/main/public/root = \"$DATA\"" >> $HOME/.ncbi/user-settings.mkfg

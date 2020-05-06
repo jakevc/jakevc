@@ -21,7 +21,7 @@ provider "aws" {
 }
 ```
 
-Then I add a veriable that corresponds to a public ssh key. It can be a new one or one you already have, but permissions must be `chmod 400`, read-only. Setting this variable allows it to be accessed later in the script via `var.public_key` shown below.
+Then I add a variable that corresponds to a public ssh key. It can be a new one or one you already have, but permissions must be `chmod 400`, read-only. Setting this variable allows it to be accessed later in the script via `var.public_key` shown below.
 
 ```bash
 variable "public_key" {
@@ -75,7 +75,7 @@ resource "aws_security_group" "allow-ssh" {
 }
 ```
 
-Finally the command needed to login to the instace will be printed using the aws_instance public_dns variable.
+Finally the command needed to login to the instance will be printed using the aws_instance public_dns variable.
 
 ```bash
 output "command" {
@@ -118,7 +118,7 @@ Outputs:
 command = ssh -i ~/.ssh/id_rsa ubuntu@ec2-34-217-90-109.us-west-2.compute.amazonaws.com
 ```
 
-Just like that your infrastucture is live and you can login.
+Just like that your infrastructure is live and you can login.
 
 Checkout the example on github: https://github.com/jakevc/terraec2-
 

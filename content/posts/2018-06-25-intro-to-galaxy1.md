@@ -16,7 +16,7 @@ image: "https://source.unsplash.com/VHbiV77NnYs"
 
 ## Using Ansible to setup a Galaxy 
 
-Ansible is an automated computer management system that can be used to install and configure software infastructure. Ansible scripts are called playbooks, written as yaml files, can be structured in folder hierarchy with mnay available modules. 
+Ansible is an automated computer management system that can be used to install and configure software infrastructure. Ansible scripts are called playbooks, written as yaml files, can be structured in folder hierarchy with mnay available modules. 
 
 Why: 
   - avoid forgetting what you did to install and configure some software

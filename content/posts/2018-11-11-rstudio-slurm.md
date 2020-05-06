@@ -140,4 +140,4 @@ This will request n013 from SLURM and begin running Rstudio server in a singular
 
 # Security issues
 
-A known secutity issue with this script is that it allows you access to another users Rstudio session and account if you request a tunnel to the same port on the same node. We intend to include Rstudio server authentication soon which may solve this problem. 
+A known security issue with this script is that it allows you access to another users Rstudio session and account if you request a tunnel to the same port on the same node. We intend to include Rstudio server authentication soon which may solve this problem. 
