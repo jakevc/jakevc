@@ -12,7 +12,7 @@ tags:
 
 # TLDR
 
-I built an automated deployment for a sample golang webapplicaiton to a single-instance elastic beanstalk envrionment using custom cetficiate mangement.
+I built an automated deployment for a sample golang web applicaiton to a single-instance elastic beanstalk envrionment using custom cetficiate mangement.
 
 **Check it out on Github: https://github.com/jakevc/golang-eb**
 
@@ -30,7 +30,7 @@ By default it gives you a load balancer, but initially you don't need this featu
 
 # Single Instance 
 
-The tutorials on the elastic beanstalk website are good if you are going to go with the default configuration: https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/go-environment.html . The simplest way to get this done is using the AWS EB CLI..  https://github.com/aws/aws-elastic-beanstalk-cli-setup. With the CLI you can create a single instance environment using the command `eb create -s`. Easy enough. 
+The simplest way to get this done is using the AWS EB CLI..  https://github.com/aws/aws-elastic-beanstalk-cli-setup. With the CLI you can create a single instance environment using the command `eb create -s`. Easy enough. 
 
 # Custom SSL
 
@@ -38,9 +38,9 @@ This part is a bit more tricky.. if AWS cert manager is not an option, then a di
 
 To obtain certificates and install them on your system, Let's Encrypt recommends [Certbot](https://certbot.eff.org/). 
 
-Elastic beanstalk uses [nginx](https://nginx.org/) as a reverse-proxy webserver for your application. This means nginx is basically sitting in front of your golang webapplication, directing traffic per it's configuration. So that's were configuration of the certificates needs to go down. 
+Elastic beanstalk uses [nginx](https://nginx.org/) as a reverse-proxy webserver for your application. This means nginx is basically sitting in front of your golang webapplication, directing traffic per it's configuration. So that's where configuration of the certificates needs to go down. 
 
-This is technically overbuilt for deploying a simple golang webapplication, but we'll go with it, as the point is the ability to scale with increaseing traffic. 
+This is technically overbuilt for deploying a simple golang webapplication, but we'll go with it, as the point is the ability to scale with increasing traffic. 
 
 Elastic beanstalk configuration can be extended by adding configuration files in a directory called `.ebextensions/` at the root of your app, so that's where I place the custom configuration files for nginx, and for the additional ssl securtiy group that allows ingress on port 443 of the instance. A custom nginx configuration can be put in this directory, and EB uses that instead of the default, if it exists. So I put a custom nginx configuration at `.ebextensions/nginx/nginx.conf`.  It is similar to the default configuration, but adds an important `location` block allowing `certbot-auto` to perform it's magic. 
 
