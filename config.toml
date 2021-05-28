@@ -22,10 +22,10 @@ publishDir   = "public"
     identifier = "about"
     name       = "About"
     url        = "about/"
-  [[menu.main]]
-    identifier = "posts"
-    name       = "Posts"
-    url        = "posts/"
+#  [[menu.main]]
+#    identifier = "posts"
+#    name       = "Posts"
+#    url        = "posts/"
 
 [params]
     customCss = ["scss/main.scss"]
@@ -33,7 +33,7 @@ publishDir   = "public"
     dateform = "Jan 2"
     dateformNum     = "2006-01-02"
     dateformNumTime = "2006-01-02 15:04 -0700"
-    homeSubtitle = "Writing about my current interests"
+    homeSubtitle = ""
 
  # Social icons
   [[params.social]]
