@@ -1,30 +1,28 @@
-import { useState, ReactNode } from 'react'
-import { Comments } from 'pliny/comments'
-import { formatDate } from 'pliny/utils/formatDate'
-import { CoreContent } from 'pliny/utils/contentlayer'
-import type { Blog } from 'contentlayer/generated'
 import Link from '@/components/Link'
 import PageTitle from '@/components/PageTitle'
 import SectionContainer from '@/components/SectionContainer'
 import { BlogSEO } from '@/components/SEO'
 import siteMetadata from '@/data/siteMetadata'
+import formatDate from '@/lib/utils/formatDate'
+import Comments from '@/components/comments'
 import ScrollTopAndComment from '@/components/ScrollTopAndComment'
+import { CoreContent } from '@/lib/utils/contentlayer'
+import { ReactNode } from 'react'
+import type { Blog } from 'contentlayer/generated'
 
-interface LayoutProps {
+interface Props {
   content: CoreContent<Blog>
   children: ReactNode
-  next?: { path: string; title: string }
-  prev?: { path: string; title: string }
+  next?: { slug: string; title: string }
+  prev?: { slug: string; title: string }
 }
 
-export default function PostLayout({ content, next, prev, children }: LayoutProps) {
-  const [loadComments, setLoadComments] = useState(false)
-
-  const { path, slug, date, title } = content
+export default function PostLayout({ content, next, prev, children }: Props) {
+  const { slug, date, title } = content
 
   return (
     <SectionContainer>
-      <BlogSEO url={`${siteMetadata.siteUrl}/${path}`} {...content} />
+      <BlogSEO url={`${siteMetadata.siteUrl}/blog/${slug}`} {...content} />
       <ScrollTopAndComment />
       <article>
         <div>
@@ -34,7 +32,7 @@ export default function PostLayout({ content, next, prev, children }: LayoutProp
                 <div>
                   <dt className="sr-only">Published on</dt>
                   <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
-                    <time dateTime={date}>{formatDate(date, siteMetadata.locale)}</time>
+                    <time dateTime={date}>{formatDate(date)}</time>
                   </dd>
                 </div>
               </dl>
@@ -50,20 +48,13 @@ export default function PostLayout({ content, next, prev, children }: LayoutProp
             <div className="divide-y divide-gray-200 dark:divide-gray-700 xl:col-span-3 xl:row-span-2 xl:pb-0">
               <div className="prose max-w-none pt-10 pb-8 dark:prose-dark">{children}</div>
             </div>
-            {siteMetadata.comments && (
-              <div className="pt-6 pb-6 text-center text-gray-700 dark:text-gray-300" id="comment">
-                {!loadComments && (
-                  <button onClick={() => setLoadComments(true)}>Load Comments</button>
-                )}
-                {loadComments && <Comments commentsConfig={siteMetadata.comments} slug={slug} />}
-              </div>
-            )}
+            <Comments frontMatter={content} />
             <footer>
               <div className="flex flex-col text-sm font-medium sm:flex-row sm:justify-between sm:text-base">
                 {prev && (
                   <div className="pt-4 xl:pt-8">
                     <Link
-                      href={`/${prev.path}`}
+                      href={`/blog/${prev.slug}`}
                       className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
                     >
                       &larr; {prev.title}
@@ -73,7 +64,7 @@ export default function PostLayout({ content, next, prev, children }: LayoutProp
                 {next && (
                   <div className="pt-4 xl:pt-8">
                     <Link
-                      href={`/${next.path}`}
+                      href={`/blog/${next.slug}`}
                       className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
                     >
                       {next.title} &rarr;

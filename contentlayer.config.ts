@@ -5,12 +5,10 @@ import path from 'path'
 import remarkGfm from 'remark-gfm'
 import remarkFootnotes from 'remark-footnotes'
 import remarkMath from 'remark-math'
-import {
-  remarkExtractFrontmatter,
-  remarkCodeTitles,
-  remarkImgToJsx,
-  extractTocHeadings,
-} from 'pliny/mdx-plugins'
+import remarkExtractFrontmatter from './lib/remark-extract-frontmatter'
+import remarkCodeTitles from './lib/remark-code-title'
+import { extractTocHeadings } from './lib/remark-toc-headings'
+import remarkImgToJsx from './lib/remark-img-to-jsx'
 // Rehype packages
 import rehypeSlug from 'rehype-slug'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
@@ -26,14 +24,6 @@ const computedFields: ComputedFields = {
   slug: {
     type: 'string',
     resolve: (doc) => doc._raw.flattenedPath.replace(/^.+?(\/)/, ''),
-  },
-  path: {
-    type: 'string',
-    resolve: (doc) => doc._raw.flattenedPath,
-  },
-  filePath: {
-    type: 'string',
-    resolve: (doc) => doc._raw.sourceFilePath,
   },
   toc: { type: 'string', resolve: (doc) => extractTocHeadings(doc.body.raw) },
 }

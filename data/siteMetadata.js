@@ -1,11 +1,8 @@
-// @ts-check
-
-/** @type {import("pliny/config").PlinyConfig } */
 const siteMetadata = {
-  title: 'JAKEVC',
-  author: 'Jake VanCampen',
-  headerTitle: 'jakevc',
-  description: 'Technical blog of Jake VanCampen',
+  title: 'JakeVC',
+  author: 'Jake VanCampen ',
+  headerTitle: 'JakeVC',
+  description: 'Jake VanCampens personal blog',
   language: 'en-us',
   theme: 'system', // system, dark or light
   siteUrl: 'https://tailwind-nextjs-starter-blog.vercel.app',
@@ -13,12 +10,12 @@ const siteMetadata = {
   siteLogo: '/static/images/logo.png',
   image: '/static/images/avatar.png',
   socialBanner: '/static/images/twitter-card.png',
-  email: 'address@yoursite.com',
+  email: 'jake.vancampen7@gmail.com',
   github: 'https://github.com/jakevc',
   twitter: 'https://twitter.com/jake_vancampen',
-  // facebook: 'https://facebook.com',
+  facebook: 'https://facebook.com',
   // youtube: 'https://youtube.com',
-  linkedin: 'https://www.linkedin.com/jakevancampen',
+  linkedin: 'https://www.linkedin.com/in/jakevancampen/',
   locale: 'en-US',
   analytics: {
     // If you want to use an analytics provider you have to add it to the
@@ -27,15 +24,14 @@ const siteMetadata = {
     plausibleDataDomain: '', // e.g. tailwind-nextjs-starter-blog.vercel.app
     simpleAnalytics: false, // true or false
     umamiWebsiteId: '', // e.g. 123e4567-e89b-12d3-a456-426614174000
-    posthogProjectApiKey: '', // e.g. AhnJK8392ndPOav87as450xd
     googleAnalyticsId: '', // e.g. UA-000000-2 or G-XXXXXXX
   },
   newsletter: {
-    // supports mailchimp, buttondown, convertkit, klaviyo, revue, emailoctopus
+    // supports mailchimp, buttondown, convertkit, klaviyo, revue
     // Please add your .env file and modify it according to your selection
     provider: 'buttondown',
   },
-  comments: {
+  comment: {
     // If you want to use an analytics provider you have to add it to the
     // content security policy in the `next.config.js` file.
     // Select a provider and use the environment variables associated to it
@@ -62,21 +58,23 @@ const siteMetadata = {
       // example: https://giscus.app/themes/custom_example.css
       themeURL: '',
     },
+    utterancesConfig: {
+      // Visit the link below, and follow the steps in the 'configuration' section
+      // https://utteranc.es/
+      repo: process.env.NEXT_PUBLIC_UTTERANCES_REPO,
+      issueTerm: '', // supported options: pathname, url, title
+      label: '', // label (optional): Comment 💬
+      // theme example: github-light, github-dark, preferred-color-scheme
+      // github-dark-orange, icy-dark, dark-blue, photon-dark, boxy-light
+      theme: '',
+      // theme when dark mode
+      darkTheme: '',
+    },
+    disqusConfig: {
+      // https://help.disqus.com/en/articles/1717111-what-s-a-shortname
+      shortname: process.env.NEXT_PUBLIC_DISQUS_SHORTNAME,
+    },
   },
-  // search: {
-  //   provider: 'kbar', // kbar or algolia
-  //   kbarConfig: {
-  //     searchDocumentsPath: 'search.json', // path to load documents to search
-  //   },
-  //   provider: 'algolia',
-  //   algoliaConfig: {
-  //     // The application ID provided by Algolia
-  //     appId: 'R2IYF7ETH7',
-  //     // Public API key: it is safe to commit it
-  //     apiKey: '599cec31baffa4868cae4e79f180729b',
-  //     indexName: 'docsearch',
-  //   },
-  // },
 }
 
 module.exports = siteMetadata
