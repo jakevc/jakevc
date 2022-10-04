@@ -1,0 +1,170 @@
+---
+title: New GATK 4.0
+date: '2018-06-26'
+tags: ['gatk', 'software', 'news']
+draft: false
+summary: 'GATK 4.0 new features'
+---
+
+## What's new in GATK 4.0
+
+- Catered to illumina short read sequencing
+- Pre-processing, variant analysis.
+- Goal is to identify variation between genomes
+
+GATK 4.0 was rewritten from scratch for dramatic performance improvements and new functional capabilities such as:
+
+- structural variant detection
+- advanced machine learning techniques
+- best-practice workflows
+- All Picard tools bundled in GATK executable
+
+## Speed optimizations
+
+- Intel genomics kernal library (GKL) increased spead and hardware optimizations.
+
+- GenomicsDB increases scalability, becasue speed is not enough!
+- Apache Spark support allows for robust parallelism, replaces the (nt/nct Gatk).
+
+- Picard tools greatly benifit from Apache spark.
+
+## Pipeline Standardization
+
+- Want to develope _functional equivalence_ accross studies to eliminae batch effects
+- Reduce cost of pipeline
+- Reduce heterogeneity of implimentations
+
+Most best practices workflows are available in Workflow development language.
+
+The cost of processing one whole genome has dropped from $45 in 2016, to $5 today on a google cloud platform.
+
+Google cloud can stream smaller bits of data for the analysis to allow for faster copy and cost of data storage.
+
+## Workshop examples
+
+The workshop bundle was downloaded from google drive:
+
+https://drive.google.com/drive/folders/1U6Zm_tYn_3yeEgrD1bdxye4SXf5OseIt?usp=sharing
+
+Grab the docker image:
+`docker pull broadinstitute/gatk:4.0.5.1`
+
+Spin up the container, and mount the location of the data bundle inside the docker.
+
+`docker run -v /path/gatk_data:/gatk/gatk_data -it broadinstitute/gatk:4.0.5.1`
+
+GATK can be called by running `gatk` from the command line followed by the tool name, e.g.: `gatk HaplotypeCaller --help`
+
+## GATK
+
+Run a full GATK4 command:
+
+`gatk HaplotypeCaller -R ref/ref.fasta -I bams/mother.bam -O sandbox/variants.vcf`
+
+```
+3:27:43.064 INFO  ProgressMeter -          20:63024713              0.5                210982         391142.0
+23:27:43.064 INFO  ProgressMeter - Traversal complete. Processed 210982 total regions in 0.5 minutes.
+23:27:43.089 INFO  VectorLoglessPairHMM - Time spent in setup for JNI call : 0.0241793
+23:27:43.089 INFO  PairHMM - Total compute time in PairHMM computeLogLikelihoods() : 4.6333234
+23:27:43.090 INFO  SmithWatermanAligner - Total compute time in java Smith-Waterman : 3.63 sec
+23:27:43.090 INFO  HaplotypeCaller - Shutting down engine
+[June 26, 2018 11:27:43 PM UTC] org.broadinstitute.hellbender.tools.walkers.haplotypecaller.HaplotypeCaller done. Elapsed time: 0.57 minutes.
+Runtime.totalMemory()=218103808
+```
+
+## Picard
+
+Run a Picard Command!
+
+`gatk ValidteSamFile -I bams/mother.bam -MODE SUMMARY`
+
+The command outputs the following:
+
+```
+## HISTOGRAM	java.lang.String
+Error Type	Count
+ERROR:MATE_NOT_FOUND	77
+
+[Tue Jun 26 23:36:02 UTC 2018] picard.sam.ValidateSamFile done. Elapsed time: 0.03 minutes.
+Runtime.totalMemory()=195035136
+To get help, see http://broadinstitute.github.io/picard/index.html#GettingHelp
+Tool returned:
+3
+```
+
+## Spark
+
+Run command with Spark multithreading:
+
+```
+gatk --java-options "-Xmx6G" MarkDuplicatesSpark \
+  -R ref/ref.fasta \
+  -I bams/mother.bam \
+  -O sandbox/mother_dedup.bam \
+  -M sandbox/metrics.txt \
+  -- \ # spark library convention to setoff spark options
+  --spark-master local[*]
+```
+
+The `[*]` could be replaced by a desired number of cores (\* requests all available)
+
+Two output files were created:
+
+```
+ mother_dedup.bam  mother_dedup.bam.splitting-bai
+```
+
+The file extension .splitting-bai shows evidence of how spark may break up the bam file to execute on multiple cores.
+
+## GCLOUD
+
+To run the same command on a GCLOUD instance, because the docker image has the gcloud binary, we initalize the instance by typing:
+
+`gcloud init`
+
+then setup a jar cache so that the jar file doesn't have to be re-uploaded:
+export GATK_GCS_STAGING=gs://gatk-jar-cache/
+
+The same command line can then be called on dataproc
+
+```
+gatk --java-options "-Xmx6G" MarkDuplicatesSpark \
+  -R gs://gatk-workshops/GCCBOSC2018/ref/ref.fasta \
+  -I gs://gatk-workshops/GCCBOSC2018/bams/mother.bam \
+  -O gs://my-output/sandbox/mother_dedup.bam \
+  -M gs://my-output/sandbox/metrics.txt \
+  -- \ # spark library convention to setoff spark options
+  --spark-runner GCS \
+  --cluster [cluster name]
+```
+
+Notice the different paths, they point to where the data was copied to on google cloud.
+Geraldine talked about their use of google cloud for all their computing. All sequencing data is uploaded to the cloud as unstructured bams, and analyzed from there. Once data is generated it can be shunted to deep storage. All upload is free, download costs money.
+
+## Four classes of variation
+
+- SNP/SNV
+- INDEL
+- Copy Number (CNV)
+- Structural Variation (SV)
+
+## Germline Short Variant Discovery
+
+- pre-processing
+- per-sample variant calling
+
+New tool "Funcotator" will predict variant effects based on annotation files.
+
+## WDL
+
+All best practices workflows are available at github.com/gatk-workflows, they are written in wdl.
+
+## Firecloud
+
+Broad designed system for pipeline analysis, and collaboration built on google cloud. Firecloud now supports jupyter notebooks so you can go do downstream analyses on the cloud also.
+
+Hail is a genomic analysis framework for downstream analyses in jupyter notebooks. This allows for th
+
+## Best Practices Workflows
+
+GATK 4.0 best practice workflows are hosted on [github](https://github.com/gatk-workflows/).
