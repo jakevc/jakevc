@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+Pro&display=swap');
+
 .task-list-item::before {
   @apply hidden;
 }
