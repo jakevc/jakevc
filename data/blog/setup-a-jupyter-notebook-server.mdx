@@ -1,11 +1,10 @@
 ---
-
-title: Setup a jupyter notebook server
+title: 'Setup a jupyter notebook server'
 date: '2018-06-17'
 tags: ['jupyter', 'server', 'ssh']
 draft: false
 summary: 'Jupyter notebook server'
---
+---
 
 # Setup a jupyter notebook server
 
@@ -21,7 +20,7 @@ wget https://repo.continuum.io/miniconda/Miniconda3-4.5.4-Linux-x86_64.sh
 bash Miniconda3-latest-Linux-x86_64.sh
 ```
 
-Follow the commands to install using defaults, then restart your terminal session. When you update or install programs using this version of conda, their executable is stored in: /home/<user>/miniconda3/bin. To allow these programs to be executable from the command line, you need to prepend this location to your PATH environment variable. Add the following line to your ~/.bashrc file to see minconda3 in your PATH:
+Follow the commands to install using defaults, then restart your terminal session. When you update or install programs using this version of conda, their executable is stored in: `/home/<user>/miniconda3/bin.` To allow these programs to be executable from the command line, you need to prepend this location to your PATH environment variable. Add the following line to your ~/.bashrc file to see minconda3 in your PATH:
 
 ```
 # add miniconda3 bin to PATH
@@ -43,7 +42,7 @@ To run "jupyter notebook" on a computational server and edit jupyter notebooks t
 Open a terminal session on your personal computer and assign the port forward (remote port 8889 to local port 8888), using your login credentials, for example: john777@remote_host. Any two valid ports could be used in this setup.
 
 ssh -N -f -L localhost:8888:localhost:8889 remote_user@remote_host
-Then, ssh into <remote_host> using your linux account credentials, and run:
+Then, ssh into `<remote_host>` using your linux account credentials, and run:
 
 jupyter notebook --no-browser --port-8889
 This sends a jupyter notebook session to port 8889 on the server, and does not attempt to automatically open a browser.
