@@ -1,7 +1,7 @@
 const siteMetadata = {
   title: 'JakeVC',
   author: 'Jake VanCampen',
-  headerTitle: 'JakeVC',
+  // headerTitle: 'JakeVC',
   description: "Jake's technical blog",
   language: 'en-us',
   theme: 'system', // system, dark or light
